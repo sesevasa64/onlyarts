@@ -22,7 +22,7 @@ namespace onlyarts
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<UserContext>();
+                    var context = services.GetRequiredService<OnlyartsContext>();
                     context.Database.Migrate();
                     SeedData.Initialize(services);
                 }

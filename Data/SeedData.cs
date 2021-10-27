@@ -10,9 +10,9 @@ namespace onlyarts.Data
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            using (var context = new UserContext(
+            using (var context = new OnlyartsContext(
                     serviceProvider.GetRequiredService<
-                    DbContextOptions<UserContext>>()))
+                    DbContextOptions<OnlyartsContext>>()))
             {
                 if (context.Users.Any())
                 {

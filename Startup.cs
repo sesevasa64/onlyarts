@@ -25,7 +25,7 @@ namespace onlyarts
             services.AddControllers();
 
             var connectionString = Configuration.GetConnectionString("UsersContext");
-            services.AddDbContext<UserContext>(options =>
+            services.AddDbContext<OnlyartsContext>(options =>
                 options.UseMySql(
                     connectionString,
                     ServerVersion.AutoDetect(connectionString)

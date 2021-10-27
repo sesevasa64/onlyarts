@@ -10,12 +10,12 @@ namespace onlyarts.Controllers
 {
     [ApiController]
     [Route("[controller]/{id:int=-1}")]
-    public class UsersController : ControllerBase
+    public class UsersController : RestController
     {
-        private readonly UserContext _context;
+        private readonly OnlyartsContext _context;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(ILogger<UsersController> logger, UserContext context)
+        public UsersController(ILogger<UsersController> logger, OnlyartsContext context)
         {
             _logger = logger;
             _context = context;
@@ -25,10 +25,9 @@ namespace onlyarts.Controllers
         {
             if (IsDefaultId(id)) {
                 Console.WriteLine("Default id!");
+                return NotFound();
             }
-            else {
-                Console.WriteLine(id);
-            }
+            Console.WriteLine(id);
             return ExampleJson();
         }
         [HttpPost]
@@ -36,10 +35,9 @@ namespace onlyarts.Controllers
         {
             if (IsDefaultId(id)) {
                 Console.WriteLine("Default id!");
+                return NotFound();
             }
-            else {
-                Console.WriteLine(id);
-            }
+            Console.WriteLine(id);
             return ExampleJson();
         }
         [HttpDelete]
@@ -47,20 +45,19 @@ namespace onlyarts.Controllers
         {
             if (IsDefaultId(id)) {
                 Console.WriteLine("Default id!");
+                return NotFound();
             }
-            else {
-                Console.WriteLine(id);
-            }
+            Console.WriteLine(id);
             return ExampleJson();
         }
         private JsonResult ExampleJson() 
         {
             var users = (
                 from user in _context.Users
-                where user.Id == 1
+                where user.Id == 2
                 select user
             ).ToList();
-            return new JsonResult(users);
+            return Json(users);
         }
         private bool IsDefaultId(int id) 
         {

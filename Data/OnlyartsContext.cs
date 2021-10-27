@@ -3,9 +3,9 @@ using onlyarts.Models;
 
 namespace onlyarts.Data
 {
-    public class UserContext : DbContext
+    public class OnlyartsContext : DbContext
     {
-        public UserContext (DbContextOptions<UserContext> options)
+        public OnlyartsContext(DbContextOptions<OnlyartsContext> options)
             : base(options)
         {
         }
