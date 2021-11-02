@@ -9,7 +9,7 @@ using onlyarts.Data;
 namespace onlyarts.Controllers
 {
     [ApiController]
-    [Route("[controller]/{id:int=-1}")]
+    [Route("[controller]")]
     public class UsersController : RestController
     {
         private readonly OnlyartsContext _context;
@@ -21,47 +21,48 @@ namespace onlyarts.Controllers
             _context = context;
         }
         [HttpGet]
+        public ActionResult Get([FromQuery] int[] id)
+        {
+            Console.WriteLine(id.Length);
+            var users = (
+                from user in _context.Users
+                where id.Contains(user.Id)
+                select user
+            ).ToList();
+            if (users.Count == 0) {
+                return NotFound();
+            }
+            return Json(users);
+        }
+        [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            if (IsDefaultId(id)) {
-                Console.WriteLine("Default id!");
-                return NotFound();
-            }
             Console.WriteLine(id);
-            return ExampleJson();
+            return ExampleJson(id);
         }
-        [HttpPost]
+        [HttpPost("{id}")]
         public ActionResult Post(int id)
         {
-            if (IsDefaultId(id)) {
-                Console.WriteLine("Default id!");
-                return NotFound();
-            }
             Console.WriteLine(id);
-            return ExampleJson();
+            return ExampleJson(id);
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            if (IsDefaultId(id)) {
-                Console.WriteLine("Default id!");
-                return NotFound();
-            }
             Console.WriteLine(id);
-            return ExampleJson();
+            return ExampleJson(id);
         }
-        private JsonResult ExampleJson() 
+        private ActionResult ExampleJson(int id) 
         {
             var users = (
                 from user in _context.Users
-                where user.Id == 2
+                where user.Id == id
                 select user
             ).ToList();
+            if (users.Count == 0) {
+                return NotFound();
+            }
             return Json(users);
-        }
-        private bool IsDefaultId(int id) 
-        {
-            return id == -1;
         }
     }
 }

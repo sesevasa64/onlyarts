@@ -8,7 +8,7 @@ using onlyarts.Data;
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    [Migration("20211027094506_InitialCreate")]
+    [Migration("20211028111425_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,9 @@ namespace onlyarts.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Login")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Password")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");

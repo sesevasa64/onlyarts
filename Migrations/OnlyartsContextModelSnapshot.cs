@@ -25,6 +25,9 @@ namespace onlyarts.Migrations
                     b.Property<string>("Login")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Password")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
