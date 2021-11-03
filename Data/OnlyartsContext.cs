@@ -10,5 +10,6 @@ namespace onlyarts.Data
         {
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<Reaction> Reactions { get; set; }
     }
 }
