@@ -12,8 +12,8 @@ namespace onlyarts.Models
         public string Description { get; set; }
         public string ContentType { get; set; }
         public string LinkToContent { get; set; }
-        public int LikesCount { get; set; }
-        public int DislikesCount { get; set; }
+        public int LikesCount { get; set; }     //сделать вычисляемымым
+        public int DislikesCount { get; set; }  //сделать вычисляемымым
         public User User { get; set; }  //соединяемся с User через UserID
     }
 }
