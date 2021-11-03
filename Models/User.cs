@@ -1,3 +1,6 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace onlyarts.Models
 {
     public class User
@@ -10,7 +13,10 @@ namespace onlyarts.Models
         public string Login { get; set; }
         public string Password { get; set; }
         public string Nickname {get; set; }
-        //public DateTime RegisDate = new DateTime() { get; set;}
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime RegisDate { get; set;}
         public uint Money {get; set;}
     }
 }
