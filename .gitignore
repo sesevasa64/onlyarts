@@ -4,6 +4,9 @@
 # VSCode
 .vscode
 
+# Syncthing
+.stignore
+
 # User-specific files
 *.suo
 *.user
