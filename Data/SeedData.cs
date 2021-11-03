@@ -20,7 +20,6 @@ namespace onlyarts.Data
                         new User { Id=0, Login="boba"},
                         new User { Id=1, Login="aboba"}
                     );
-                    return;
                 }
                 if (!context.Contents.Any())
                 {
@@ -40,7 +39,6 @@ namespace onlyarts.Data
                             DislikesCount = 0,
                         }
                     );
-                    return;
                 }
                 context.SaveChanges();
             }
