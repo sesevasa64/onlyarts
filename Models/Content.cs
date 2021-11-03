@@ -2,9 +2,6 @@ namespace onlyarts.Models
 {
     public class Content
     {
-        public Content(int id) {
-            Id = id;
-       }
         public int Id { get; set; }
         public int SubTypeId { get; set; }
         public int AuthorId { get; set; }

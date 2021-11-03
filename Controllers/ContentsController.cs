@@ -10,12 +10,12 @@ namespace onlyarts.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsersController : RestController
+    public class ContentsController : RestController
     {
         private readonly OnlyartsContext _context;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(ILogger<UsersController> logger, OnlyartsContext context)
+        public ContentsController(ILogger<UsersController> logger, OnlyartsContext context)
         {
             _logger = logger;
             _context = context;
@@ -23,46 +23,42 @@ namespace onlyarts.Controllers
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            Console.WriteLine(id.Length);
-            var users = (
-                from user in _context.Users
-                where id.Contains(user.Id)
-                select user
+            var contents = (
+                from content in _context.Contents
+                where id.Contains(content.Id)
+                select content
             ).ToList();
-            if (users.Count == 0) {
+            if (contents.Count == 0) {
                 return NotFound();
             }
-            return Json(users);
+            return Json(contents);
         }
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            Console.WriteLine(id);
             return ExampleJson(id);
         }
         [HttpPost("{id}")]
         public ActionResult Post(int id)
         {
-            Console.WriteLine(id);
             return ExampleJson(id);
         }
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            Console.WriteLine(id);
             return ExampleJson(id);
         }
         private ActionResult ExampleJson(int id) 
         {
-            var users = (
-                from user in _context.Users
-                where user.Id == id
-                select user
+            var contents = (
+                from content in _context.Contents
+                where content.Id == id
+                select content
             ).ToList();
-            if (users.Count == 0) {
+            if (contents.Count == 0) {
                 return NotFound();
             }
-            return Json(users);
+            return Json(contents);
         }
     }
 }
