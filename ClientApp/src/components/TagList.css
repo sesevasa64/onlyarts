@@ -1,0 +1,24 @@
+.tag-list li
+{
+  margin-left: -10px;
+}
+.tag-list li:hover
+{
+  background: lightgray;
+  cursor: pointer;
+}
+
+.tag-list li::marker
+{
+  content: "";
+}
+
+.tag-list li::before
+{
+  content: "#";
+}
+
+.tag-list li:hover::before
+{
+  background: lightblue;
+}
