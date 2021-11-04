@@ -74,3 +74,22 @@ ul.top-menu li:hover
   background: lightblue;
   cursor: pointer;
 }
+
+
+div.right-box, div.left-box
+{
+  display: inline-block;
+  height: 100%;
+}
+
+.right-box
+{
+  width: 35%;
+  margin-left: 1.5%;
+  height: 100%;
+}
+
+.left-box
+{
+  width: 60%;
+}
