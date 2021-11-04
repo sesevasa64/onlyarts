@@ -4,6 +4,7 @@ import HeaderOA from './components/HeaderOA';
 import Logo from './components/Logo';
 import NavigationMenu from './components/NavigationMenu';
 import TagList from './components/TagList';
+import CardsContentBox from './components/CardsContentBox';
 
 class OnlyArts extends Component
 {
@@ -14,6 +15,7 @@ class OnlyArts extends Component
           <HeaderOA/>
           <NavigationMenu/>
           <TagList/>
+          <CardsContentBox/>
       </div>
     );
   }

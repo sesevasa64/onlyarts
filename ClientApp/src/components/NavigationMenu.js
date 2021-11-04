@@ -5,7 +5,7 @@ function NavigationMenu()
     const nav_list = [];
     for(let i = 0; i < 9; i++)
         nav_list.push(
-            <li key={i}>Tags{i}</li>
+            <li key={i}>Menu{i}</li>
         );
     return(
         <div className="box-nav">

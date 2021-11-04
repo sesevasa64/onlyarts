@@ -1,4 +1,5 @@
 import React from 'react';
+import './TagList.css'
 
 function TagList(props)
 {
@@ -9,7 +10,8 @@ function TagList(props)
         );
     return(
         <div className="box-tags">
-            <ul>
+            <p>Популярные теги</p>
+            <ul className="tag-list">
                 {tags_list}
             </ul>
         </div>
