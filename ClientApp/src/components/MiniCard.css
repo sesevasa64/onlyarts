@@ -1,0 +1,90 @@
+.mini-card-box
+{
+  position: relative;
+
+  border-radius: 4px;
+  background: white;
+
+  min-width: 300px;
+  min-height: 180px;
+
+  display: inline-block;
+
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+}
+
+.mini-card-box:hover
+{
+  background-color: lightgrey;
+}
+
+.mini-card-box img
+{
+  display: block;
+
+  height: 90%;
+  width: 100%;
+
+  margin: 0px 0 8px 2px;
+
+  background: lightblue;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+.mini-card-box>:nth-child(2)>p
+{
+  display: inline-block;
+  font-size: 50%;
+}
+
+.mini-card-box>:nth-child(1)>img:hover
+{
+  cursor: pointer;
+}
+
+.profile-line
+{
+  position: relative;
+}
+
+.profile-line>div
+{
+    top: 0px;
+    position: absolute;
+}
+
+.profile-line>div>*
+{
+  display: inline-block;
+}
+
+.profile-line img
+{
+  border-radius: 50%;
+  background: lightgray;
+  width: 25px;
+  height: 25px;
+}
+.profile-line p:nth-child(1)
+{
+  font-weight: bold;
+}
+.profile-line p 
+{
+  margin: 0;
+}
+
+.mini-card-about
+{
+  width: 100%;
+  height: 100px;
+  
+  background: lightblue;
+  
+  display: inline-block;
+  border-radius: 4px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
