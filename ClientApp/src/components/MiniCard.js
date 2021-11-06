@@ -6,12 +6,12 @@ function MiniCard(props)
 {
     return(
         <div className="mini-card-box">
-          <div className="left-box">
             <img src={props.item.facial_image}/>
-          </div>
-          <div className="right-box">
-            <LineProfileData item={props.item}/>
-          </div>
+            <div className="hidden-info">
+              <p>
+              <img  src={props.item.user_image}/>{props.item.user_name}<br/>
+                {props.item.caption}</p>
+            </div>
         </div>
     )
 }
@@ -23,12 +23,12 @@ function LineProfileData(props)
   return (
     <div className="profile-line">
       <div>
-      <p>{props.item.caption}</p>
-      <img src={props.item.user_image}/>
-      <p>{props.item.user_name}</p>
-      <div className="mini-card-about">
-        {props.item.short_about}
-      </div>
+        <p>{props.item.caption}</p>
+        <img src={props.item.user_image}/>
+        <p>{props.item.user_name}</p>
+        <div className="mini-card-about">
+          {props.item.short_about}
+        </div>
       </div>
     </div>
   )
