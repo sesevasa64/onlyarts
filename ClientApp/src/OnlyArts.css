@@ -64,17 +64,25 @@ a
   text-align: center;
 }
 
+ul.top-menu
+{
+  padding: 0%;
+  margin: 0%;
+  height: 100%;
+}
+
 ul.top-menu li
 {
-  display: inline;
-  margin-left: 20px;
+  display: inline-block;
+  height: 100%;
+  padding-left: 20px;
+  text-align: left;
 }
 ul.top-menu li:hover
 {
   background: lightblue;
   cursor: pointer;
 }
-
 
 div.right-box, div.left-box
 {

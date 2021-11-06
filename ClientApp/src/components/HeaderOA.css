@@ -1,0 +1,12 @@
+.SearchInput
+{
+    width: 300px;
+    transition-property: width;
+    transition-duration: 2s;
+    background: white;
+}
+
+.SearchInput:focus
+{
+    width: 500px;
+}

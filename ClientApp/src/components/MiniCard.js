@@ -7,10 +7,10 @@ function MiniCard(props)
     return(
         <div className="mini-card-box">
           <div className="left-box">
-            <img src={props.src}/>
+            <img src={props.item.facial_image}/>
           </div>
           <div className="right-box">
-            <LineProfileData/>
+            <LineProfileData item={props.item}/>
           </div>
         </div>
     )
@@ -18,24 +18,20 @@ function MiniCard(props)
 //https://i.ytimg.com/vi/4lifQfeZo5c/maxresdefault.jpg
 //<LineProfileData/>
 
-function LineProfileData()
+function LineProfileData(props)
 {
   return (
     <div className="profile-line">
       <div>
-      <p>My Aboba</p>
-      <img src="https://gottadotherightthing.com/wp-content/uploads/2018/12/beautiful-blur-blurred-background-733872-1.jpg"/>
-      <p>Diana3821</p>
+      <p>{props.item.caption}</p>
+      <img src={props.item.user_image}/>
+      <p>{props.item.user_name}</p>
       <div className="mini-card-about">
-      Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, Python, PHP,
-      Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, Python, PHP,
-      Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, Python, PHP,
-      Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, Python, PHP,
-      Well organized and easy to understand Web building tutorials with lots of examples of how to use HTML, CSS, JavaScript, SQL, Python, PHP,
+        {props.item.short_about}
       </div>
       </div>
     </div>
   )
 }
 
-export default MiniCard;
+export {MiniCard, LineProfileData};
