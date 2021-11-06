@@ -1,11 +1,22 @@
+ul.tag-list
+{
+  padding-left: 0px;
+  text-align: left;
+}
+
 .tag-list li
 {
-  margin-left: -10px;
+  width: 100%;
+  padding-left: 10%;
+
+  transition-property: background-color, padding;
+  transition-duration: 0.2s;
 }
 .tag-list li:hover
 {
-  background: lightgray;
+  background: #577CA1;
   cursor: pointer;
+  padding-left: 20%;
 }
 
 .tag-list li::marker
@@ -16,9 +27,10 @@
 .tag-list li::before
 {
   content: "#";
+  font-weight: bold;
 }
 
 .tag-list li:hover::before
 {
-  background: lightblue;
+  background: #577CA1;
 }
