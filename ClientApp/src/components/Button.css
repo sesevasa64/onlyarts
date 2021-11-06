@@ -1,0 +1,14 @@
+input[type='button'], button
+{
+    background: #4676F3;
+    border-color: #4676F3;
+    border-style: dashed;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+input[type='button']:hover, button:hover
+{
+    background: #2857FF;
+    border-color: #2857FF;
+}
