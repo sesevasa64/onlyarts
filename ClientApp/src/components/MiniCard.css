@@ -12,8 +12,6 @@
 
   box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
 
-  transition-property: background-color;
-  transition-duration: 0.5s;
 }
 
 .mini-card-box:hover
@@ -25,19 +23,16 @@
 {
   display: block;
 
-  height: 90%;
+  height: 100%;
   width: 100%;
 
-  margin: 0px 0 8px 2px;
-
-  background: #D5E0FE;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .mini-card-box>:nth-child(2)>p
 {
   display: inline-block;
-  font-size: 50%;
 }
 
 .mini-card-box>:nth-child(1)>img:hover
@@ -90,4 +85,53 @@
 
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+.hidden-info
+{
+  top: 0px;
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  
+  display: flex;  
+  align-items: flex-end;
+
+  transition-property: color, background-color, opacity;
+  transition-duration: 0.75s;
+
+  opacity: 0;
+  filter: alpha;
+}
+
+.hidden-info:hover
+{
+  color: white;
+  background: linear-gradient(0, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.25) );
+  cursor: pointer;
+
+  opacity: 1;
+  filter: alpha;
+}
+
+.hidden-info p 
+{
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  
+  text-align: center;
+  font-size: 16pt;
+}
+
+.hidden-info  img
+{
+  display: inline;
+  border-radius: 50%;
+  background: lightgray;
+  width: 25px;
+  height: 25px;
+
 }
