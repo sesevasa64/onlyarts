@@ -1,16 +1,17 @@
 import React from 'react';
+import './NavigationMenu.css'
 
 function NavigationMenu()
 {
     const nav_list = [];
-    for(let i = 0; i < 9; i++)
+    for(let i = 0; i < 5; i++)
         nav_list.push(
-            <li key={i}>Menu{i}</li>
+            <li key={i}><a>Menu{i}</a></li>
         );
     return(
         <div className="box-nav">
-            <ul className="top-menu">
-                {nav_list}
+            <ul className="menu-main">
+               {nav_list}
             </ul>
         </div>
     );

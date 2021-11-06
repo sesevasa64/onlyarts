@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import MiniCard from './MiniCard';
+import {MiniCard} from './MiniCard';
 import './CardsContentBox.css'
 
 class CardsContentBox extends Component
@@ -14,15 +14,15 @@ class CardsContentBox extends Component
         };
     }
 
-    renderMiniCards(content)
+    renderMiniCards(content_item)
     {
         return(
-            <MiniCard src={content}/>
+            <MiniCard item={content_item}/>
         );
     }
     render()
     {
-        const content = this.state.content;
+        const content = this.props.content;
         const cards = [];
         
         for(let i = 0; i < content.length; i++){
