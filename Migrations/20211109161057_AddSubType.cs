@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace onlyarts.Migrations
 {
-    public partial class AddST132 : Migration
+    public partial class AddSubType : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

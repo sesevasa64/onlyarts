@@ -9,8 +9,8 @@ using onlyarts.Data;
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    [Migration("20211103143948_Cont1")]
-    partial class Cont1
+    [Migration("20211109161451_AddContent")]
+    partial class AddContent
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,9 +23,6 @@ namespace onlyarts.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
                     b.Property<string>("ContentType")
@@ -46,36 +43,59 @@ namespace onlyarts.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("SubTypeId")
+                    b.Property<int?>("SubTypeId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SubTypeId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Contents");
                 });
 
-            modelBuilder.Entity("onlyarts.Models.Reaction", b =>
+            modelBuilder.Entity("onlyarts.Models.SubType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<bool>("Type")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(65,30)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("Duration")
                         .HasColumnType("int");
+
+                    b.Property<byte>("SubLevel")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.ToTable("SubTypes");
+                });
 
-                    b.ToTable("Reactions");
+            modelBuilder.Entity("onlyarts.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("TagName")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("onlyarts.Models.User", b =>
@@ -87,8 +107,8 @@ namespace onlyarts.Migrations
                     b.Property<string>("Login")
                         .HasColumnType("longtext");
 
-                    b.Property<uint>("Money")
-                        .HasColumnType("int unsigned");
+                    b.Property<decimal>("Money")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Nickname")
                         .HasColumnType("longtext");
@@ -106,20 +126,15 @@ namespace onlyarts.Migrations
 
             modelBuilder.Entity("onlyarts.Models.Content", b =>
                 {
+                    b.HasOne("onlyarts.Models.SubType", "SubType")
+                        .WithMany()
+                        .HasForeignKey("SubTypeId");
+
                     b.HasOne("onlyarts.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("onlyarts.Models.Reaction", b =>
-                {
-                    b.HasOne("onlyarts.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("SubType");
 
                     b.Navigation("User");
                 });

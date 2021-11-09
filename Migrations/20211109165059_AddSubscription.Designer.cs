@@ -9,8 +9,8 @@ using onlyarts.Data;
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    [Migration("20211109123246_AddLinkTag")]
-    partial class AddLinkTag
+    [Migration("20211109165059_AddSubscription")]
+    partial class AddSubscription
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,7 @@ namespace onlyarts.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("SubTypeId")
+                    b.Property<int?>("SubTypeId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -53,6 +53,8 @@ namespace onlyarts.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubTypeId");
 
                     b.HasIndex("UserId");
 
@@ -104,6 +106,58 @@ namespace onlyarts.Migrations
                     b.ToTable("Reactions");
                 });
 
+            modelBuilder.Entity("onlyarts.Models.SubType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("SubLevel")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubTypes");
+                });
+
+            modelBuilder.Entity("onlyarts.Models.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndSubDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("SubTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SubUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("SubTypeId");
+
+                    b.HasIndex("SubUserId");
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("onlyarts.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -127,8 +181,8 @@ namespace onlyarts.Migrations
                     b.Property<string>("Login")
                         .HasColumnType("longtext");
 
-                    b.Property<uint>("Money")
-                        .HasColumnType("int unsigned");
+                    b.Property<decimal>("Money")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Nickname")
                         .HasColumnType("longtext");
@@ -146,9 +200,15 @@ namespace onlyarts.Migrations
 
             modelBuilder.Entity("onlyarts.Models.Content", b =>
                 {
+                    b.HasOne("onlyarts.Models.SubType", "SubType")
+                        .WithMany()
+                        .HasForeignKey("SubTypeId");
+
                     b.HasOne("onlyarts.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("SubType");
 
                     b.Navigation("User");
                 });
@@ -181,6 +241,27 @@ namespace onlyarts.Migrations
                     b.Navigation("Content");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("onlyarts.Models.Subscription", b =>
+                {
+                    b.HasOne("onlyarts.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("onlyarts.Models.SubType", "SubType")
+                        .WithMany()
+                        .HasForeignKey("SubTypeId");
+
+                    b.HasOne("onlyarts.Models.User", "SubUser")
+                        .WithMany()
+                        .HasForeignKey("SubUserId");
+
+                    b.Navigation("Author");
+
+                    b.Navigation("SubType");
+
+                    b.Navigation("SubUser");
                 });
 #pragma warning restore 612, 618
         }

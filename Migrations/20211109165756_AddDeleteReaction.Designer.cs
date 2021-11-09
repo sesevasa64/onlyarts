@@ -9,8 +9,8 @@ using onlyarts.Data;
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    [Migration("20211109125025_AddST132")]
-    partial class AddST132
+    [Migration("20211109165756_AddDeleteReaction")]
+    partial class AddDeleteReaction
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,7 @@ namespace onlyarts.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("SubTypeId")
+                    b.Property<int?>("SubTypeId")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -53,6 +53,8 @@ namespace onlyarts.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubTypeId");
 
                     b.HasIndex("UserId");
 
@@ -80,30 +82,6 @@ namespace onlyarts.Migrations
                     b.ToTable("LinkTags");
                 });
 
-            modelBuilder.Entity("onlyarts.Models.Reaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ContentId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Type")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reactions");
-                });
-
             modelBuilder.Entity("onlyarts.Models.SubType", b =>
                 {
                     b.Property<int>("Id")
@@ -125,6 +103,35 @@ namespace onlyarts.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SubTypes");
+                });
+
+            modelBuilder.Entity("onlyarts.Models.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndSubDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("SubTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SubUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("SubTypeId");
+
+                    b.HasIndex("SubUserId");
+
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("onlyarts.Models.Tag", b =>
@@ -150,8 +157,8 @@ namespace onlyarts.Migrations
                     b.Property<string>("Login")
                         .HasColumnType("longtext");
 
-                    b.Property<uint>("Money")
-                        .HasColumnType("int unsigned");
+                    b.Property<decimal>("Money")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Nickname")
                         .HasColumnType("longtext");
@@ -169,9 +176,15 @@ namespace onlyarts.Migrations
 
             modelBuilder.Entity("onlyarts.Models.Content", b =>
                 {
+                    b.HasOne("onlyarts.Models.SubType", "SubType")
+                        .WithMany()
+                        .HasForeignKey("SubTypeId");
+
                     b.HasOne("onlyarts.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("SubType");
 
                     b.Navigation("User");
                 });
@@ -191,19 +204,25 @@ namespace onlyarts.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("onlyarts.Models.Reaction", b =>
+            modelBuilder.Entity("onlyarts.Models.Subscription", b =>
                 {
-                    b.HasOne("onlyarts.Models.Content", "Content")
+                    b.HasOne("onlyarts.Models.User", "Author")
                         .WithMany()
-                        .HasForeignKey("ContentId");
+                        .HasForeignKey("AuthorId");
 
-                    b.HasOne("onlyarts.Models.User", "User")
+                    b.HasOne("onlyarts.Models.SubType", "SubType")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("SubTypeId");
 
-                    b.Navigation("Content");
+                    b.HasOne("onlyarts.Models.User", "SubUser")
+                        .WithMany()
+                        .HasForeignKey("SubUserId");
 
-                    b.Navigation("User");
+                    b.Navigation("Author");
+
+                    b.Navigation("SubType");
+
+                    b.Navigation("SubUser");
                 });
 #pragma warning restore 612, 618
         }

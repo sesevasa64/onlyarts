@@ -3,52 +3,53 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace onlyarts.Migrations
 {
-    public partial class AddLinkTag : Migration
+    public partial class AddDeleteReaction : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Reactions");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
             migrationBuilder.CreateTable(
-                name: "LinkTags",
+                name: "Reactions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    TagId = table.Column<int>(type: "int", nullable: true),
-                    ContentId = table.Column<int>(type: "int", nullable: true)
+                    ContentId = table.Column<int>(type: "int", nullable: true),
+                    Type = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LinkTags", x => x.Id);
+                    table.PrimaryKey("PK_Reactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LinkTags_Contents_ContentId",
+                        name: "FK_Reactions_Contents_ContentId",
                         column: x => x.ContentId,
                         principalTable: "Contents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_LinkTags_Tags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tags",
+                        name: "FK_Reactions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LinkTags_ContentId",
-                table: "LinkTags",
+                name: "IX_Reactions_ContentId",
+                table: "Reactions",
                 column: "ContentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LinkTags_TagId",
-                table: "LinkTags",
-                column: "TagId");
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "LinkTags");
+                name: "IX_Reactions_UserId",
+                table: "Reactions",
+                column: "UserId");
         }
     }
 }

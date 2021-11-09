@@ -10,7 +10,7 @@ namespace onlyarts.Data
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            using (var context = new OnlyartsContext(
+           /* using (var context = new OnlyartsContext(
                     serviceProvider.GetRequiredService<
                     DbContextOptions<OnlyartsContext>>()))
             {
@@ -41,7 +41,7 @@ namespace onlyarts.Data
                     );
                 }
                 context.SaveChanges();
-            }
+            }*/
         }
     }
 }
