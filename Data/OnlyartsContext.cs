@@ -13,5 +13,7 @@ namespace onlyarts.Data
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<Content> Contents { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<LinkTag> LinkTags { get; set; }
+        public DbSet<SubType> SubTypes { get; set; }
     }
 }

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlyarts.Data;
 
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    partial class OnlyartsContextModelSnapshot : ModelSnapshot
+    [Migration("20211109123246_AddLinkTag")]
+    partial class AddLinkTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,29 +102,6 @@ namespace onlyarts.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Reactions");
-                });
-
-            modelBuilder.Entity("onlyarts.Models.SubType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("SubLevel")
-                        .HasColumnType("tinyint unsigned");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SubTypes");
                 });
 
             modelBuilder.Entity("onlyarts.Models.Tag", b =>
