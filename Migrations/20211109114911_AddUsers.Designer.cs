@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlyarts.Data;
 
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    partial class OnlyartsContextModelSnapshot : ModelSnapshot
+    [Migration("20211109114911_AddUsers")]
+    partial class AddUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,9 @@ namespace onlyarts.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
                     b.Property<string>("ContentType")
@@ -63,36 +68,17 @@ namespace onlyarts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ContentId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Type")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ContentId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Reactions");
-                });
-
-            modelBuilder.Entity("onlyarts.Models.Tag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("TagName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("onlyarts.Models.User", b =>
@@ -132,15 +118,11 @@ namespace onlyarts.Migrations
 
             modelBuilder.Entity("onlyarts.Models.Reaction", b =>
                 {
-                    b.HasOne("onlyarts.Models.Content", "Content")
-                        .WithMany()
-                        .HasForeignKey("ContentId");
-
                     b.HasOne("onlyarts.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Content");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

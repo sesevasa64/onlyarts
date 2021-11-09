@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlyarts.Data;
 
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    partial class OnlyartsContextModelSnapshot : ModelSnapshot
+    [Migration("20211109120040_AddTag2")]
+    partial class AddTag2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,18 +65,13 @@ namespace onlyarts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ContentId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Type")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ContentId");
 
                     b.HasIndex("UserId");
 
@@ -132,15 +129,11 @@ namespace onlyarts.Migrations
 
             modelBuilder.Entity("onlyarts.Models.Reaction", b =>
                 {
-                    b.HasOne("onlyarts.Models.Content", "Content")
-                        .WithMany()
-                        .HasForeignKey("ContentId");
-
                     b.HasOne("onlyarts.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Content");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
