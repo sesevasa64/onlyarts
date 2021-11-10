@@ -10,15 +10,15 @@ namespace onlyarts.Data
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-           /* using (var context = new OnlyartsContext(
+            using (var context = new OnlyartsContext(
                     serviceProvider.GetRequiredService<
                     DbContextOptions<OnlyartsContext>>()))
             {
                 if (!context.Users.Any())
                 {
                     context.Users.AddRange(
-                        new User { Id=0, Login="boba"},
-                        new User { Id=1, Login="aboba"}
+                        new User { Id=1, Login="boba"},
+                        new User { Id=2, Login="aboba"}
                     );
                 }
                 if (!context.Contents.Any())
@@ -41,7 +41,7 @@ namespace onlyarts.Data
                     );
                 }
                 context.SaveChanges();
-            }*/
+            }
         }
     }
 }
