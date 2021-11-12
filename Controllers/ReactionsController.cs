@@ -9,7 +9,7 @@ using onlyarts.Data;
 namespace onlyarts.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ReactionsController : RestController
     {
         private readonly OnlyartsContext _context;
