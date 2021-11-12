@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlyarts.Data;
 
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    partial class OnlyartsContextModelSnapshot : ModelSnapshot
+    [Migration("20211109170031_AddReaction")]
+    partial class AddReaction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,30 +80,6 @@ namespace onlyarts.Migrations
                     b.HasIndex("TagId");
 
                     b.ToTable("LinkTags");
-                });
-
-            modelBuilder.Entity("onlyarts.Models.Reaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ContentId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Type")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reactions");
                 });
 
             modelBuilder.Entity("onlyarts.Models.SubType", b =>
@@ -224,21 +202,6 @@ namespace onlyarts.Migrations
                     b.Navigation("Content");
 
                     b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("onlyarts.Models.Reaction", b =>
-                {
-                    b.HasOne("onlyarts.Models.Content", "Content")
-                        .WithMany()
-                        .HasForeignKey("ContentId");
-
-                    b.HasOne("onlyarts.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Content");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("onlyarts.Models.Subscription", b =>

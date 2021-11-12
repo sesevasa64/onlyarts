@@ -9,8 +9,8 @@ using onlyarts.Data;
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    [Migration("20211103134611_AddUsersDatetimeAndMoney")]
-    partial class AddUsersDatetimeAndMoney
+    [Migration("20211109161057_AddSubType")]
+    partial class AddSubType
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,21 +19,41 @@ namespace onlyarts.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.11");
 
-            modelBuilder.Entity("onlyarts.Models.Reaction", b =>
+            modelBuilder.Entity("onlyarts.Models.SubType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<bool>("Type")
-                        .HasColumnType("tinyint(1)");
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(65,30)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("Duration")
                         .HasColumnType("int");
+
+                    b.Property<byte>("SubLevel")
+                        .HasColumnType("tinyint unsigned");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reactions");
+                    b.ToTable("SubTypes");
+                });
+
+            modelBuilder.Entity("onlyarts.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("TagName")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("onlyarts.Models.User", b =>
@@ -45,8 +65,8 @@ namespace onlyarts.Migrations
                     b.Property<string>("Login")
                         .HasColumnType("longtext");
 
-                    b.Property<uint>("Money")
-                        .HasColumnType("int unsigned");
+                    b.Property<decimal>("Money")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Nickname")
                         .HasColumnType("longtext");

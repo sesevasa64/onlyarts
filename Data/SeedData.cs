@@ -14,14 +14,32 @@ namespace onlyarts.Data
                     serviceProvider.GetRequiredService<
                     DbContextOptions<OnlyartsContext>>()))
             {
-                if (context.Users.Any())
+                if (!context.Users.Any())
                 {
-                    return;
+                    context.Users.AddRange(
+                        new User { Id=1, Login="boba"},
+                        new User { Id=2, Login="aboba"}
+                    );
                 }
-                context.Users.AddRange(
-                    new User(0, "boba"),
-                    new User(1, "aboba")
-                );
+                if (!context.Contents.Any())
+                {
+                    context.Contents.AddRange(
+                        new Content {
+                            Id = 1,
+                            Name = "boba",
+                            Description = "ne aboba",
+                            LikesCount = 0,
+                            DislikesCount = 0,
+                        },
+                        new Content {
+                            Id = 2,
+                            Name = "aboba",
+                            Description = "ne boba",
+                            LikesCount = 0,
+                            DislikesCount = 0,
+                        }
+                    );
+                }
                 context.SaveChanges();
             }
         }
