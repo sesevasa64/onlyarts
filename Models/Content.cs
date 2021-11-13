@@ -5,7 +5,7 @@ namespace onlyarts.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string ContentType { get; set; }
+        public string ContentType { get; set; }     //pic или vid
         public string LinkToPreview { get; set; }   //ссылка на превью
         public string LinkToBlur { get; set; }  //ссылка на размытое превью
         public int LikesCount { get; set; }     //сделать вычисляемымым
