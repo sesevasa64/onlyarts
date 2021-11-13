@@ -6,7 +6,8 @@ namespace onlyarts.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string ContentType { get; set; }
-        public string LinkToContent { get; set; }
+        public string LinkToPreview { get; set; }   //ссылка на превью
+        public string LinkToBlur { get; set; }  //ссылка на размытое превью
         public int LikesCount { get; set; }     //сделать вычисляемымым
         public int DislikesCount { get; set; }  //сделать вычисляемымым
         public int ViewCount { get; set; } 

@@ -1,0 +1,9 @@
+namespace onlyarts.Models
+{
+    public class Image
+    {
+        public int Id { get; set; }
+        public string LinkToImage { get; set; } //ссылка на изображение
+        public Content Content { get; set; }
+    }
+}
