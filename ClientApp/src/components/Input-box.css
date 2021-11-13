@@ -1,0 +1,49 @@
+.main-input-box
+{
+    position: absolute;
+    left: 30%;
+    top: 20%;
+
+    width: 400px;
+    height: 550px;
+}
+
+.center-input-box
+{
+    width: 90%;
+    height: 98%;
+    
+    margin: 1% auto;
+
+    background: whitesmoke;
+}
+.center-input-box>p
+{
+    margin: 0;
+    
+    font-weight: bold;
+    text-align: center;
+}
+
+.center-input-box-input-container *
+{
+    display: block;
+    margin: 8px auto;
+}
+
+.center-input-box-input-container p, label
+{
+    text-align: center;
+}
+
+.center-input-box-input-container input[type='text'], input[type='password']
+{
+    height: 30px;
+    width: 250px;
+}
+
+.center-input-box-input-container button
+{
+    height: 40px;
+    cursor: pointer;
+}

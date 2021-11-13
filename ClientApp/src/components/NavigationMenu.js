@@ -11,7 +11,9 @@ function NavigationMenu()
     return(
         <div className="box-nav">
             <ul className="menu-main">
-               {nav_list}
+                <li><a>Создать пост</a></li>
+                <li><a>Моя  страница</a></li>
+                <li><a>Мои подписки</a></li>
             </ul>
         </div>
     );

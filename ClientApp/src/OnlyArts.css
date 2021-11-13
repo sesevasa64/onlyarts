@@ -1,6 +1,6 @@
 body
 {
-  background: linear-gradient(70deg, #D2DFF8, #FFFFFF);
+  background: linear-gradient(70deg, #8fade6, #FFFFFF);
   font-family: "Montserrat";
 }
 a 
@@ -56,6 +56,7 @@ a
 {
   grid-area: tb;
   background: white;
+  border-radius: 4px;
 }
 
 .box-tags p
@@ -100,4 +101,154 @@ div.right-box, div.left-box
 .left-box
 {
   width: 60%;
+}
+
+.absolute-form
+{
+  position: fixed;
+  top: -0px;
+  left: -0px;
+  bottom: -0px;
+  z-index: 2;
+  
+  width: 100vw;
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.auth
+{
+  position: absolute;
+  top: 15%;
+  left: 35%;
+  width: 400px;
+  height: 550px;
+
+  background-color: #FFFFFF;
+  font-size: 14px;
+}
+
+div#auth-top h1, h2
+{
+    font-size: 20pt;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 2px;
+}
+
+#data-help
+{
+    /*Это нужно чтобы убрать отступы*/
+    letter-spacing : -.36em;
+}
+#data-help div
+{
+    /*Восстанавливает пропуски после букв*/
+    letter-spacing: normal;
+}
+
+#data-enter-help
+{
+    height: 80px;
+}
+
+#data-enter-help div hr
+{
+    display: inline-block;
+    vertical-align:middle;
+    width: 30%;
+}
+
+#data-enter-help div p
+{
+    display: inline-block;
+}
+
+#auth-bottom
+{
+    margin: 32px 0 50px 0;
+}
+
+.input-container
+{
+    width: 67.5%;
+    margin: 0 auto;
+}
+
+.auth input[type="button"], button
+{
+    background-color: #6A45FF;
+    background: linear-gradient(70deg, #FCF672, #E15992);
+    color: white;
+
+    display: block;
+
+    margin: 10px auto 10px auto;
+
+    border-radius: 2px;
+    border-width: 0px;
+
+    font-size: 14pt;
+
+    min-width: 165px;
+    min-height: 31px;
+
+    filter: drop-shadow(2px 4px 4px rgba(0, 45, 160, 0.25));
+}
+
+.auth input[type="button"]:hover
+{
+    cursor: pointer;
+    background-color: #3B0BF8;
+    background: linear-gradient(70deg, #FEF746, #E15992);
+}
+
+a
+{
+    padding: 0%;
+}
+
+div.divs-in-line
+{
+    width: 50%;
+    display: inline-block;
+}
+
+div.another-resource
+{
+    width: 32px;
+    height: 32px;
+    margin: 0 32px 0 32px;
+}
+
+div.another-resource:hover
+{
+    cursor: pointer;
+    filter: drop-shadow(2px 4px 4px rgba(47, 47, 47, 0.25));
+}
+
+div.resources-container
+{
+    display: flex;
+    justify-content: center;
+}
+
+.StandartInput /*input[type="text"], .StandartInput.input[type="password"]*/
+{
+    background-color: #DAE4FF;
+
+    border-width: 1px;
+    border-color: #6A80F4;
+    border-radius: 2px;
+
+    min-width: 270px;
+    min-height: 40px;
+
+    font-size: 14pt;
+}
+
+input[type="text"]:hover, input[type="password"]:hover
+{
+    border-color: #3B0BF8;
 }

@@ -1,3 +1,8 @@
+.box-header>div
+{
+    display: inline-block;
+}
+
 .SearchInput
 {
     width: 300px;

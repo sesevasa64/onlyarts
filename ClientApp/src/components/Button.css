@@ -1,4 +1,4 @@
-input[type='button'], button
+input[type='button']
 {
     background: #4676F3;
     border-color: #4676F3;
@@ -7,7 +7,7 @@ input[type='button'], button
     transition-duration: 0.2s;
 }
 
-input[type='button']:hover, button:hover
+input[type='button']:hover
 {
     background: #2857FF;
     border-color: #2857FF;
