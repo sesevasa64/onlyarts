@@ -16,5 +16,6 @@ namespace onlyarts.Data
         public DbSet<LinkTag> LinkTags { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Image> Images { get; set; }
     }
 }
