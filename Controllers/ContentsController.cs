@@ -59,9 +59,16 @@ namespace onlyarts.Controllers
         [HttpGet("tags/{name}")]
         public ActionResult Get(string name, [FromQuery] int limit)
         {
-            // Задача для Артема Юнусова
-            // Нужно вернуть популярный контент с min по max позиции
-            return NotFound();
+            var content = GetContentsByTag(name);
+            if (limit == 0) {
+                return Json(content);
+            }
+            try {
+                return Json(content.GetRange(0, limit));
+            } 
+            catch (ArgumentException) {
+                return NotFound();
+            }
         }
         [HttpGet("users/{id}")]
         public ActionResult Get(int id, [FromQuery] int min, [FromQuery] int max)
