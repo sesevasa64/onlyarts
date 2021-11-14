@@ -10,13 +10,13 @@ using onlyarts.Data;
 namespace onlyarts.Controllers
 {
     [ApiController]
-    [Route("api/users")]
-    public class UsersController : RestController
+    [Route("api/tags")]
+    public class TagsController : RestController
     {
         private readonly OnlyartsContext _context;
-        private readonly ILogger<UsersController> _logger;
+        private readonly ILogger<TagsController> _logger;
 
-        public UsersController(ILogger<UsersController> logger, OnlyartsContext context)
+        public TagsController(ILogger<TagsController> logger, OnlyartsContext context)
         {
             _logger = logger;
             _context = context;
@@ -24,15 +24,15 @@ namespace onlyarts.Controllers
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            var users = (
-                from user in _context.Users
-                where id.Contains(user.Id)
-                select user
+            var tags = (
+                from tag in _context.Tags
+                where id.Contains(tag.Id)
+                select tag
             ).ToList();
-            if (users.Count == 0) {
+            if (tags.Count == 0) {
                 return NotFound();
             }
-            return Json(users);
+            return Json(tags);
         }
         [HttpGet("{id}")]
         public ActionResult Get(int id)
@@ -42,8 +42,11 @@ namespace onlyarts.Controllers
         [HttpGet("popular")]
         public ActionResult Get([FromQuery] int min, [FromQuery] int max)
         {
+            if (min == 0 & max == 0) {
+                return NotFound();
+            }
             // Задача для Артема Юнусова
-            // Нужно вернуть список популярных юзеров с min по max позиции
+            // Нужно вернуть популярные теги с min по max позиции
             return NotFound();
         }
         [HttpPost("{id}")]
@@ -58,15 +61,15 @@ namespace onlyarts.Controllers
         }
         private ActionResult ExampleJson(int id) 
         {
-            var users = (
-                from user in _context.Users
-                where user.Id == id
-                select user
+            var tags = (
+                from tag in _context.Tags
+                where tag.Id == id
+                select tag
             ).ToList();
-            if (users.Count == 0) {
+            if (tags.Count == 0) {
                 return NotFound();
             }
-            return Json(users);
+            return Json(tags);
         }
     }
 }
