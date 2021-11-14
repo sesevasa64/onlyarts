@@ -20,7 +20,7 @@ namespace onlyarts.Data
                     Login="alexeisuhanov",
                     Password = "cringe1",
                     Nickname = "Alex",
-                    LinkToAvatar = "ava1",
+                    LinkToAvatar = "https://img5.goodfon.ru/wallpaper/nbig/a/fd/cyberpunk-2077-samurai-logo.jpg",
                     RegisDate = DateTime.Now,
                     Money = 0
                 };
@@ -30,7 +30,7 @@ namespace onlyarts.Data
                     Login="a.yunusov",
                     Password = "b@sed",
                     Nickname = "Yun",
-                    LinkToAvatar = "ava2",
+                    LinkToAvatar = "https://realava.ru/wp-content/gallery/kartinki-na-avu-dlya-patsanov/Q71nV-KbbXc.jpg",
                     RegisDate = DateTime.Now,
                     Money = 0
                 };
@@ -40,7 +40,7 @@ namespace onlyarts.Data
                     Login="oleg.rad",
                     Password = "b@sed",
                     Nickname = "Rad",
-                    LinkToAvatar = "ava3",
+                    LinkToAvatar = "https://i.pinimg.com/736x/4b/7b/b4/4b7bb44e4cfcc154af52ef6b6f3f8f1f.jpg",
                     RegisDate = DateTime.Now,
                     Money = 0
                 };
@@ -50,7 +50,7 @@ namespace onlyarts.Data
                     Login="sesevasa",
                     Password = "zxc1000-7",
                     Nickname = "Aboba",
-                    LinkToAvatar = "ava4",
+                    LinkToAvatar = "https://i.pinimg.com/originals/db/66/49/db664957ab0ba56c9b74b691c545bfde.jpg",
                     RegisDate = DateTime.Now,
                     Money = 0
                 };
@@ -94,17 +94,66 @@ namespace onlyarts.Data
                     ViewCount = 0
                 };
 
+                Tag T1 = new Tag
+                {
+                    Id = 1,
+                    TagName = "фото"
+                };
+                Tag T2 = new Tag
+                {
+                    Id = 2,
+                    TagName = "арт"
+                };
+                Tag T3 = new Tag
+                {
+                    Id = 3,
+                    TagName = "мем"
+                };
+
+                LinkTag LT1 = new LinkTag
+                {
+                    Id = 1,
+                    Tag = T1,
+                    Content = Con1
+                };
+                LinkTag LT2 = new LinkTag
+                {
+                    Id = 2,
+                    Tag = T1,
+                    Content = Con2
+                };
+                LinkTag LT3 = new LinkTag
+                {
+                    Id = 3,
+                    Tag = T2,
+                    Content = Con3
+                };
+                LinkTag LT4 = new LinkTag
+                {
+                    Id = 4,
+                    Tag = T3,
+                    Content = Con3
+                };
+
                
                 var users = context.Users.Where(U => U.Id > 0);
                 context.Users.RemoveRange(users);
-
                 context.Users.AddRange(u1,u2,u3,u4);
                 context.SaveChanges();             
 
                 var contents = context.Contents.Where(C => C.Id > 0);
                 context.Contents.RemoveRange(contents);
-        
                 context.Contents.AddRange(Con1,Con2,Con3);
+                context.SaveChanges();
+
+                var tags = context.Tags.Where(T => T.Id > 0);
+                context.Tags.RemoveRange(tags);
+                context.Tags.AddRange(T1,T2,T3);
+                context.SaveChanges();
+
+                var linktags = context.LinkTags.Where(LT => LT.Id > 0);
+                context.LinkTags.RemoveRange(linktags);
+                context.LinkTags.AddRange(LT1,LT2,LT3,LT4);
                 context.SaveChanges();
             }
         }
