@@ -10,7 +10,7 @@ using onlyarts.Data;
 namespace onlyarts.Controllers
 {
     [ApiController]
-    [Route("api/subscriptions")]
+    [Route("api/[controller]")]
     public class SubsController : RestController
     {
         private readonly OnlyartsContext _context;

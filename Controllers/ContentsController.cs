@@ -10,7 +10,7 @@ using onlyarts.Data;
 namespace onlyarts.Controllers
 {
     [ApiController]
-    [Route("api/contents")]
+    [Route("api/[controller]")]
     public class ContentsController : RestController
     {
         private readonly OnlyartsContext _context;
@@ -28,7 +28,9 @@ namespace onlyarts.Controllers
                 from content in _context.Contents
                 where id.Contains(content.Id)
                 select content
-            ).ToList();
+            ).Include(contents => contents.User)
+            .Include(contents => contents.SubType)
+            .ToList();
             if (contents.Count == 0) {
                 return NotFound();
             }
