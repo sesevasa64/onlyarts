@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using onlyarts.Data;
 
 namespace onlyarts.Controllers
 {
     [ApiController]
-    [Route("api/tags")]
+    [Route("api/[controller]")]
     public class TagsController : RestController
     {
         private readonly OnlyartsContext _context;
@@ -34,6 +35,7 @@ namespace onlyarts.Controllers
             }
             return Json(tags);
         }
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {

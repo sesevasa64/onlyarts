@@ -10,7 +10,7 @@ using onlyarts.Data;
 namespace onlyarts.Controllers
 {
     [ApiController]
-    [Route("api/reactions")]
+    [Route("api/[controller]")]
     public class ReactionsController : RestController
     {
         private readonly OnlyartsContext _context;

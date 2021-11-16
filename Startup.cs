@@ -1,12 +1,16 @@
-using onlyarts.Data;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using onlyarts.Services;
+using onlyarts.Data;
 
 namespace onlyarts
 {
@@ -15,6 +19,7 @@ namespace onlyarts
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            AuthOptions.Init(configuration);
         }
 
         public IConfiguration Configuration { get; }
@@ -32,11 +37,26 @@ namespace onlyarts
                 )
             );
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
+                    };
+                });
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddScoped<TokenGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +78,9 @@ namespace onlyarts
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => 
             {
