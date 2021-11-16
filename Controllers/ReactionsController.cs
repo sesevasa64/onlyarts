@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using onlyarts.Data;
 
 namespace onlyarts.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/reactions")]
     public class ReactionsController : RestController
     {
         private readonly OnlyartsContext _context;
@@ -50,15 +51,17 @@ namespace onlyarts.Controllers
         }
         private ActionResult ExampleJson(int id) 
         {
-            var users = (
-                from user in _context.Users
-                where user.Id == id
-                select user
-            ).ToList();
-            if (users.Count == 0) {
+            var reactions = (
+                from reaction in _context.Reactions
+                where reaction.Id == id
+                select reaction
+            ).Include(reactions => reactions.User)
+            .Include(reactions => reactions.Content)
+            .ToList();
+            if (reactions.Count == 0) {
                 return NotFound();
             }
-            return Json(users);
+            return Json(reactions);
         }
     }
 }
