@@ -86,6 +86,7 @@ namespace onlyarts.Controllers
                 return NotFound();
             }
             content.LikesCount += 1;
+            _context.SaveChanges();
             return Ok();
         }
         [HttpPatch("{id}/dislikes")]
@@ -96,6 +97,7 @@ namespace onlyarts.Controllers
                 return NotFound();
             }
             content.DislikesCount += 1;
+            _context.SaveChanges();
             return Ok();
         }
         [HttpPatch("{id}/view")]

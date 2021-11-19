@@ -39,7 +39,7 @@ namespace onlyarts.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-         var tag = _helper.getByID<Tag>(id);
+            var tag = _helper.getByID<Tag>(id);
             if (tag == null) {
                 return NotFound();
             }
