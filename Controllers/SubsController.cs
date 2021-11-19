@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using onlyarts.Services;
+using onlyarts.Models;
 using onlyarts.Data;
 
 namespace onlyarts.Controllers
@@ -13,24 +15,20 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class SubsController : RestController
     {
+        private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly ILogger<SubsController> _logger;
-        public SubsController(ILogger<SubsController> logger, OnlyartsContext context)
+        public SubsController(ILogger<SubsController> logger, OnlyartsContext context, QueryHelper helper)
         {
+            _helper = helper;
             _logger = logger;
             _context = context;
         }
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            var subs = (
-                from sub in _context.Subscriptions
-                where id.Contains(sub.Id)
-                select sub
-            ).Include(subs => subs.Author)
-            .Include(subs => subs.SubUser)
-            .Include(subs => subs.SubType)
-            .ToList();
+            var includes = new string[] {"Author", "SubUser", "SubType"};
+            var subs = _helper.getMultipleByID<Subscription>(id, includes);
             if (subs.Count == 0) {
                 return NotFound();
             }
@@ -39,7 +37,12 @@ namespace onlyarts.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return ExampleJson(id);
+            var includes = new string[] {"Author", "SubUser", "SubType"};
+            var subs = _helper.getByID<Subscription>(id, includes);
+            if (subs == null) {
+                return NotFound();
+            }
+            return Json(subs);
         }
         [HttpGet("users/{id}")]
         public ActionResult Get(int id, [FromQuery] int min, [FromQuery] int max)
@@ -58,27 +61,7 @@ namespace onlyarts.Controllers
         [HttpPost("{id}")]
         public ActionResult Post(int id)
         {
-            return ExampleJson(id);
-        }
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            return ExampleJson(id);
-        }
-        private ActionResult ExampleJson(int id) 
-        {
-            var subs = (
-                from sub in _context.Subscriptions
-                where sub.Id == id
-                select sub
-            ).Include(subs => subs.Author)
-            .Include(subs => subs.SubUser)
-            .Include(subs => subs.SubType)
-            .ToList();
-            if (subs.Count == 0) {
-                return NotFound();
-            }
-            return Json(subs);
+            return Get(id);
         }
         // Метод, который возвращает подписчиков юзера с идентификатором id
         private List<Models.User> GetUserSubs(int id) 

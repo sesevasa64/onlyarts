@@ -15,11 +15,13 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class UsersController : RestController
     {
+        private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly TokenGenerator _tokenGenerator;
         private readonly ILogger<UsersController> _logger;
-        public UsersController(ILogger<UsersController> logger, OnlyartsContext context, TokenGenerator tokenGenerator)
+        public UsersController(ILogger<UsersController> logger, OnlyartsContext context, TokenGenerator tokenGenerator, QueryHelper helper)
         {
+            _helper = helper;
             _logger = logger;
             _context = context;
             _tokenGenerator = tokenGenerator;
@@ -32,28 +34,22 @@ namespace onlyarts.Controllers
             if (!(isIdEmpty ^ isLoginNull)) {
                 return BadRequest();
             }
-            else if (!isIdEmpty) {
-                var users = (
-                    from user in _context.Users
-                    where id.Contains(user.Id)
-                    select user
-                ).ToList();
+            if (!isIdEmpty) {
+                var users = _helper.getMultipleByID<User>(id);
                 if (users.Count == 0) {
                     return NotFound();
                 }
                 return Json(users);
             }
-            else {
-                var user = (
-                    from _user in _context.Users
-                    where _user.Login == login
-                    select _user
-                ).SingleOrDefault();
-                if (user == null) {
-                    return NotFound();
-                }
-                return Json(user);
+            var user = (
+                from _user in _context.Users
+                where _user.Login == login
+                select _user
+            ).SingleOrDefault();
+            if (user == null) {
+                return NotFound();
             }
+            return Json(user);
         }
         [HttpPost]
         public ActionResult Post(RegistrationRequest request)
@@ -83,7 +79,11 @@ namespace onlyarts.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return ExampleJson(id);
+            var user = _helper.getByID<User>(id);
+            if (user == null) {
+                return NotFound();
+            }
+            return Json(user);
         }
         [HttpGet("popular")]
         public ActionResult Get([FromQuery] int min, [FromQuery] int max)
@@ -91,18 +91,6 @@ namespace onlyarts.Controllers
             // Задача для Артема Юнусова
             // Нужно вернуть список популярных юзеров с min по max позиции
             return NotFound();
-        }
-        private ActionResult ExampleJson(int id) 
-        {
-            var users = (
-                from user in _context.Users
-                where user.Id == id
-                select user
-            ).ToList();
-            if (users.Count == 0) {
-                return NotFound();
-            }
-            return Json(users);
         }
         [HttpPost("auth")]
         public ActionResult Auth(AuthenticationRequest request) 

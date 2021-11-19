@@ -1,6 +1,8 @@
+using onlyarts.Interfaces;
+
 namespace onlyarts.Models
 {
-    public class SubType
+    public class SubType : IEntity
     {
         public int Id { get; set; }
         public string Type { get; set; }

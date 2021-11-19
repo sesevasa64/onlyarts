@@ -1,15 +1,16 @@
 using System;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
+using onlyarts.Interfaces;
 
 namespace onlyarts.Models
 {
-      public class User
+    public class User : IEntity
     {
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
 
-        public  int Id { get; set; }
+        public int Id { get; set; }
         public string Login { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
