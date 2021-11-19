@@ -51,6 +51,21 @@ namespace onlyarts.Controllers
             ).ToList();
             return Json(likes);
         }
+        [HttpPatch("{id}/view")]
+        public ActionResult PatchViewCount(int id)
+        {
+            var content = (
+                from _content in _context.Contents
+                where _content.Id == id
+                select _content
+            ).SingleOrDefault();
+            if (content == null) {
+                return NotFound();
+            }
+            content.ViewCount += 1;
+            _context.SaveChanges();
+            return Ok();
+        }
         [HttpGet("popular")]
         public ActionResult Get([FromQuery] int min, [FromQuery] int max)
         {
