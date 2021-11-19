@@ -25,17 +25,60 @@ namespace onlyarts.Controllers
             _tokenGenerator = tokenGenerator;
         }
         [HttpGet]
-        public ActionResult Get([FromQuery] int[] id)
+        public ActionResult Get([FromQuery] int[] id, [FromQuery] string login)
         {
-            var users = (
-                from user in _context.Users
-                where id.Contains(user.Id)
-                select user
-            ).ToList();
-            if (users.Count == 0) {
-                return NotFound();
+            bool isIdEmpty = id.Length == 0;
+            bool isLoginNull = login == null;
+            if (!(isIdEmpty ^ isLoginNull)) {
+                return BadRequest();
             }
-            return Json(users);
+            else if (!isIdEmpty) {
+                var users = (
+                    from user in _context.Users
+                    where id.Contains(user.Id)
+                    select user
+                ).ToList();
+                if (users.Count == 0) {
+                    return NotFound();
+                }
+                return Json(users);
+            }
+            else {
+                var user = (
+                    from _user in _context.Users
+                    where _user.Login == login
+                    select _user
+                ).SingleOrDefault();
+                if (user == null) {
+                    return NotFound();
+                }
+                return Json(user);
+            }
+        }
+        [HttpPost]
+        public ActionResult Post(RegistrationRequest request)
+        {
+            var check = (
+                from _user in _context.Users
+                where _user.Login == request.Login || _user.Email == request.Email
+                select _user
+            ).ToList();
+            if (check.Count != 0) {
+                return Conflict();
+            }
+            var user = new User 
+            {
+                Login = request.Login,
+                Password = request.Password,
+                Nickname = request.Nickname,
+                Email = request.Email,
+                LinkToAvatar = request.LinkToAvatar,
+                RegisDate = DateTime.Now,
+                Money = 0
+            };
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return Ok();
         }
         [HttpGet("{id}")]
         public ActionResult Get(int id)
@@ -48,16 +91,6 @@ namespace onlyarts.Controllers
             // Задача для Артема Юнусова
             // Нужно вернуть список популярных юзеров с min по max позиции
             return NotFound();
-        }
-        [HttpPost("{id}")]
-        public ActionResult Post(int id)
-        {
-            return ExampleJson(id);
-        }
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            return ExampleJson(id);
         }
         private ActionResult ExampleJson(int id) 
         {
@@ -81,8 +114,7 @@ namespace onlyarts.Controllers
                 select _user
             ).SingleOrDefault();
             if (user == null) {
-                // Должно быть 401 а не 404
-                return NotFound();
+                return Unauthorized();
             }
             return Json(new AuthenticationResponse {
                 AuthToken = _tokenGenerator.generateAuthToken(user)
