@@ -20,6 +20,7 @@ namespace onlyarts.Data
                     Login="alexeisuhanov",
                     Password = "cringe1",
                     Nickname = "Alex",
+                    Email = "asd@mail.ru",
                     LinkToAvatar = "https://img5.goodfon.ru/wallpaper/nbig/a/fd/cyberpunk-2077-samurai-logo.jpg",
                     RegisDate = DateTime.Now,
                     Money = 0
@@ -30,6 +31,7 @@ namespace onlyarts.Data
                     Login="a.yunusov",
                     Password = "b@sed",
                     Nickname = "Yun",
+                    Email = "zxcvn@mail.ru",
                     LinkToAvatar = "https://realava.ru/wp-content/gallery/kartinki-na-avu-dlya-patsanov/Q71nV-KbbXc.jpg",
                     RegisDate = DateTime.Now,
                     Money = 0
@@ -40,6 +42,7 @@ namespace onlyarts.Data
                     Login="oleg.rad",
                     Password = "b@sed",
                     Nickname = "Rad",
+                    Email = "qwerty@mail.ru",
                     LinkToAvatar = "https://i.pinimg.com/736x/4b/7b/b4/4b7bb44e4cfcc154af52ef6b6f3f8f1f.jpg",
                     RegisDate = DateTime.Now,
                     Money = 0
@@ -50,6 +53,7 @@ namespace onlyarts.Data
                     Login="sesevasa",
                     Password = "zxc1000-7",
                     Nickname = "Aboba",
+                    Email = "fghjd@mail.ru",
                     LinkToAvatar = "https://i.pinimg.com/originals/db/66/49/db664957ab0ba56c9b74b691c545bfde.jpg",
                     RegisDate = DateTime.Now,
                     Money = 0
@@ -134,8 +138,6 @@ namespace onlyarts.Data
                     Tag = T3,
                     Content = Con3
                 };
-
-               
                 var users = context.Users.Where(U => U.Id > 0);
                 context.Users.RemoveRange(users);
                 context.Users.AddRange(u1,u2,u3,u4);
@@ -155,6 +157,7 @@ namespace onlyarts.Data
                 context.LinkTags.RemoveRange(linktags);
                 context.LinkTags.AddRange(LT1,LT2,LT3,LT4);
                 context.SaveChanges();
+
             }
         }
     }
