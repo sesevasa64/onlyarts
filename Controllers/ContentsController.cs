@@ -78,6 +78,26 @@ namespace onlyarts.Controllers
             }
             return Json(content.LikesCount);
         }
+        [HttpPatch("{id}/likes")]
+        public ActionResult PatchLikes(int id)
+        {
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            content.LikesCount += 1;
+            return Ok();
+        }
+        [HttpPatch("{id}/dislikes")]
+        public ActionResult PatchDislikes(int id)
+        {
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            content.DislikesCount += 1;
+            return Ok();
+        }
         [HttpPatch("{id}/view")]
         public ActionResult PatchViewCount(int id)
         {
