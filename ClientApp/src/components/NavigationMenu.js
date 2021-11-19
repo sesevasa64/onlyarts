@@ -1,7 +1,8 @@
 import React from 'react';
-import './NavigationMenu.css'
+import {Link} from 'react-router-dom'
+import './css/NavigationMenu.css'
 
-function NavigationMenu()
+function NavigationMenu(props)
 {
     const nav_list = [];
     for(let i = 0; i < 5; i++)
@@ -11,9 +12,11 @@ function NavigationMenu()
     return(
         <div className="box-nav">
             <ul className="menu-main">
-                <li><a>Создать пост</a></li>
-                <li><a>Моя  страница</a></li>
-                <li><a>Мои подписки</a></li>
+                <li><Link to="/">Главная страница</Link></li>
+                <li><a>Популярные</a></li>
+                {!props.isAuth || <li><a>Создать пост</a></li>}
+                {!props.isAuth || <li><a>Моя страница</a></li>}
+                {!props.isAuth || <li><a>Мои подписки</a></li>}
             </ul>
         </div>
     );

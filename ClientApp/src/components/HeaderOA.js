@@ -1,8 +1,8 @@
 import React from 'react';
 import RoundButton from './RoundButton';
 
-import './Button.css'
-import './HeaderOA.css'
+import './css/Button.css'
+import './css/HeaderOA.css'
 
 function HeaderOA(props)
 {
@@ -14,8 +14,10 @@ function HeaderOA(props)
           <input type="button" value="Найти"></input>
         </div>
       </div>
-      <div>
-        <RoundButton onClick={props.onLoginClick} value={"Логин"}/>
+      <div className="box-header-left">
+        {props.isAuth || <RoundButton onClick={props.onLoginClick} value={"Логин"}/>}
+        {!props.isAuth || <p>{props.user.login}</p>}
+        {!props.isAuth || <RoundButton onClick={props.onExitClick} value={"Выйти"}></RoundButton>}
       </div>
     </div>
     );

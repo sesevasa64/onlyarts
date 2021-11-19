@@ -21,7 +21,7 @@ a
     "logo mh mh mh"
     "- mn mn mn"
     "tb cb cb cb";
-  grid-template-rows: 60px 1fr 10fr 1fr;
+  grid-template-rows: 100px 1fr 10fr 1fr;
   grid-template-columns: 1.2fr 2fr 2fr 2fr 1fr;
   grid-gap: 10px;
   width: 99%;
@@ -39,6 +39,7 @@ a
   grid-area: mh;
   /*background:yellow;*/
 }
+
 .box-main *
 {
   display: inline-block;
@@ -57,6 +58,42 @@ a
   grid-area: tb;
   background: white;
   border-radius: 4px;
+}
+
+.main-content-block
+{
+  grid-area: cb;
+}
+
+.main-block-title
+{
+  text-align: left;
+  background: white;
+  border-radius: 4px;
+}
+
+
+@media (max-width: 500px) {
+  .main-box
+  {
+    display: grid;
+
+    grid-template-areas:
+      "logo mh"
+      "- mn"
+      "- tb"
+      "- cb";
+    grid-template-rows: 1fr 4fr;
+    grid-template-columns: 1.2fr 2fr 2fr 2fr 1fr;
+    grid-gap: 10px;
+    width: 99%;
+    height: 900px;
+    margin-left: 1%;
+  }
+  button
+  {
+    width: 100%;
+  }
 }
 
 .box-tags p
@@ -176,7 +213,7 @@ div#auth-top h1, h2
     margin: 0 auto;
 }
 
-.auth input[type="button"], button
+.auth input[type="button"], .auth button
 {
     background-color: #6A45FF;
     background: linear-gradient(70deg, #FCF672, #E15992);
@@ -251,4 +288,9 @@ div.resources-container
 input[type="text"]:hover, input[type="password"]:hover
 {
     border-color: #3B0BF8;
+}
+
+.uncorrect-output
+{
+  color: red;
 }
