@@ -22,6 +22,7 @@ namespace onlyarts.Data
                     Nickname = "Alex",
                     Email = "asd@mail.ru",
                     LinkToAvatar = "https://img5.goodfon.ru/wallpaper/nbig/a/fd/cyberpunk-2077-samurai-logo.jpg",
+                    Info = "Ну да, я Лёха, просто Лёха",
                     RegisDate = DateTime.Now,
                     Money = 0
                 };
@@ -33,6 +34,7 @@ namespace onlyarts.Data
                     Nickname = "Yun",
                     Email = "zxcvn@mail.ru",
                     LinkToAvatar = "https://realava.ru/wp-content/gallery/kartinki-na-avu-dlya-patsanov/Q71nV-KbbXc.jpg",
+                    Info = "Учу C#",
                     RegisDate = DateTime.Now,
                     Money = 0
                 };
@@ -44,6 +46,7 @@ namespace onlyarts.Data
                     Nickname = "Rad",
                     Email = "qwerty@mail.ru",
                     LinkToAvatar = "https://i.pinimg.com/736x/4b/7b/b4/4b7bb44e4cfcc154af52ef6b6f3f8f1f.jpg",
+                    Info = "Квантовый человек",
                     RegisDate = DateTime.Now,
                     Money = 0
                 };
@@ -55,6 +58,7 @@ namespace onlyarts.Data
                     Nickname = "Aboba",
                     Email = "fghjd@mail.ru",
                     LinkToAvatar = "https://i.pinimg.com/originals/db/66/49/db664957ab0ba56c9b74b691c545bfde.jpg",
+                    Info = "Торчист - питонист",
                     RegisDate = DateTime.Now,
                     Money = 0
                 };

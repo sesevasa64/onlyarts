@@ -14,6 +14,7 @@ namespace onlyarts.Models
         public string Nickname {get; set; }
         public string Email {get; set; }
         public string LinkToAvatar {get; set; }     //ссылка на аву
+        public string Info {get; set; } 
         public DateTime RegisDate { get; set; }
         public decimal Money { get; set; }
     }
