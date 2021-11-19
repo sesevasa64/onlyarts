@@ -1,0 +1,66 @@
+.user-info-box
+{
+    width: 100%;
+    display: flex;
+    margin-bottom: 4px;
+}
+.user-avatar-container
+{
+    display: flex;
+
+    /*border: 1px solid gray;
+    background: white;*/
+    border-radius: 4px;
+    
+    width: 200px;
+    height: 200px;
+    
+    justify-content: center;
+}
+.user-avatar
+{
+    width: 95%;
+    height: 95%;
+
+    border: 4px solid white;
+    
+}
+.user-text
+{
+    background: white;
+
+    flex-grow: 1;
+    
+    margin-left: 1%;
+    
+    border-radius: 4px;
+    height: 200px;
+}
+.user-text p
+{
+    margin: 1%;
+}
+.user-nickname
+{
+    font-weight: bold;
+}
+.user-about
+{
+    background: lightblue;
+    border-radius: 4px;
+}
+.user-about-header, .user-nickname
+{
+    margin: 0px;
+}
+
+@media (max-width: 500px) {
+    .user-info-box
+    {
+        flex-wrap: wrap;
+    }
+    .user-avatar-container
+    {
+        width: 100%;
+    }
+}

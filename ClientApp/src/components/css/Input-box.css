@@ -47,3 +47,13 @@
     height: 40px;
     cursor: pointer;
 }
+
+.uncorrect-input
+{
+    border: 1px solid red;
+}
+
+.correct-input
+{
+    border: 1px solid greenyellow;
+}
