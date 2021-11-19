@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using onlyarts.Data;
 
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    partial class OnlyartsContextModelSnapshot : ModelSnapshot
+    [Migration("20211119133430_UsersInfo")]
+    partial class UsersInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -199,9 +201,6 @@ namespace onlyarts.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Info")
                         .HasColumnType("longtext");
 
                     b.Property<string>("LinkToAvatar")
