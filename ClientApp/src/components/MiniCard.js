@@ -1,37 +1,34 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
+import './css/MiniCard.css'
 import '../OnlyArts.css'
-import './MiniCard.css'
+import { LineProfileData } from './LineProfileData'
+import views from './resources/views.png';
+import likes from './resources/likes.png';
 
 function MiniCard(props)
 {
+    var user_obj = props.item.user;
+    if(!user_obj)
+    {
+      return(
+        <div key={props.mc_key}></div>
+      )
+    }
+
     return(
-        <div className="mini-card-box">
-            <img src={props.item.facial_image}/>
-            <div className="hidden-info">
-              <p>
-              <img  src={props.item.user_image}/>{props.item.user_name}<br/>
-                {props.item.caption}</p>
+        <div key={props.mc_key} className="mini-card-box" onClick={() => props.onClick(props.item)}>
+          <Link key={`$mc-link-${props.mc_key}`} to={`/ContentPage/${props.item.id}`}>
+            <img key={`$mc-img-blur-${props.mc_key}`} src={props.item.linkToBlur}/>
+            <div key={`$mc-hidden-info-${props.mc_key}`} className="hidden-info">
+              <p key={`$mc-p-${props.mc_key}`}>
+              <img key={`$mc-img-profile-${props.mc_key}`} src={user_obj.linkToAvatar}/>{user_obj.nickname}<br/>
+                {props.item.name}
+                </p>
             </div>
+            </Link>
         </div>
     )
 }
-//https://i.ytimg.com/vi/4lifQfeZo5c/maxresdefault.jpg
-//<LineProfileData/>
 
-function LineProfileData(props)
-{
-  return (
-    <div className="profile-line">
-      <div>
-        <p>{props.item.caption}</p>
-        <img src={props.item.user_image}/>
-        <p>{props.item.user_name}</p>
-        <div className="mini-card-about">
-          {props.item.short_about}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export {MiniCard, LineProfileData};
+export {MiniCard};

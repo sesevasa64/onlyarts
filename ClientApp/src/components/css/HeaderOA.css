@@ -1,0 +1,29 @@
+.box-header
+{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.SearchInput
+{
+    width: 300px;
+    transition-property: width;
+    transition-duration: 2s;
+    background: white;
+}
+
+.SearchInput:focus
+{
+    width: 500px;
+}
+
+.box-header-left button, .box-header-left p
+{
+    display: inline-block;
+}
+.box-header-left p
+{
+    margin-right: 10px;
+}

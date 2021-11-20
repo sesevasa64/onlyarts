@@ -1,0 +1,18 @@
+.round-button
+{
+    color: white;
+
+    background-color: rgb(79, 23, 233);
+    border-radius: 8px;
+    border: 0px;
+
+    transition-property: background-color;
+    transition-duration: 1s;
+}
+
+.round-button:hover
+{
+    cursor: pointer;
+    background-color:blue;
+}
+

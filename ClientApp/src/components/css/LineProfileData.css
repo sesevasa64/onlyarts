@@ -1,0 +1,5 @@
+.likes_button:hover
+{
+    background: red;
+    cursor: pointer;
+}
