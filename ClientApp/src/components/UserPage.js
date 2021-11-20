@@ -15,7 +15,7 @@ function UserPage(props)
       });
 
     useEffect(() => {
-      fetch(`https://localhost:5001/api/users/${match.params.login}`)
+      fetch(`https://localhost:5001/api/users?login=${match.params.login}`)
         .then(res => res.json())
         .then(
           (result) => {
@@ -45,7 +45,7 @@ function UserPage(props)
                   <div className="user-text">
                       <p className="user-nickname">{user.nickname}</p>
                       <p className="user-about-header">Обо мне</p>
-                      <p className="user-about">Ну да я Леха, хочешь узнать, почему я Леха. Ну просто Лёха, ну так, Лёха. Назвали меня так</p>
+                      <p className="user-about">{user.info || "Да-да, инфы нет, соре. ПацаНы!!"}</p>
                   </div>
               </div>
               {props.content}
