@@ -21,7 +21,7 @@ function renderImages(content_item)
 }
 
 
-function ContentPage() {
+function ContentPage(props) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
@@ -61,7 +61,7 @@ function ContentPage() {
                             {renderImages(items)}
                         </div>
                         <div className="right-flex-box">
-                            <LineProfileData item={items}/>
+                            <LineProfileData onLikeClick={() => props.onLikeClick(items.id)} item={items}/>
                         </div>
                     </div>
                 </div>
