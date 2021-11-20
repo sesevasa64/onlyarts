@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import '../OnlyArts.css'
 
+import MD5 from '../models/md5.js';
+import HashModel from '../models/HashModel.js';
+let hash_model = new HashModel(MD5);
 
 class AuthForm extends Component
 {
@@ -9,7 +12,7 @@ class AuthForm extends Component
         super(props);
         this.state = {
             login: "",
-            password: "",
+            password: "",  
         }
         this.auth_onClick = this.auth_onClick.bind(this);
     }
@@ -18,42 +21,25 @@ class AuthForm extends Component
     {
         let user = {
             Login: this.state.login,
-            Password: this.state.password
+            Password: hash_model.get_hash(this.state.password)
         }
-        console.log("dasdas");
-        console.log(JSON.stringify(user));
-        fetch(`https://localhost:5001/api/users/auth`,{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(user)
-        })
-        .then((response) => {
-            if(response.ok)
-            {
-                return response.json()
-            }
-            else
-            {
-                return 0;
-            }
-        })
-        .then((result) => 
-        {
-            if(result)
-            {
-                this.props.authFunc(result.authToken, user.Login)
-            }
-        });
+        this.props.authFunc(user);
     }
     loginChange = (event) => this.setState({login: event.target.value,})
+
     passwordChange = (event) => this.setState({password: event.target.value,})
     
+    onAuthRender = () => 
+    {
+        this.state.setState({
+            absolute_form: document.getElementsByClassName('absolute-form')[0],
+        })
+    }
+
     render()
     {
         return (
-            <div className="absolute-form">
+            <div className="absolute-form" onClick={(event)=> event.target == this.state.absolute_form ? event : null}>
                 <div className="auth">
                     <h2>Добро пожаловать</h2>
                     <div id="auth-top">
@@ -71,14 +57,14 @@ class AuthForm extends Component
                         <hr/>
                     </div>
                     <div id="auth-bottom">
-                        <input type="button" value="Регистрация" onClick={function (){
-                        this.props.closeBox(false);
-                        this.props.reg_onClick(true);
+                        <input type="button" value="Регистрация" onClick={() => {
+                            this.props.closeBox(false);
+                            this.props.reg_onClick(true);
                         return;
                         }}/>
                     </div>
-                    <button onClick={()=>this.props.closeBox(false)}>
-                    Закрыть
+                    <button onClick={(event)=> this.props.closeBox(false)}>
+                        Закрыть
                     </button>
                 </div>
             </div>
