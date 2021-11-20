@@ -7,7 +7,7 @@ function UserPage(props)
 {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
+    const [user, setItems] = useState([]);
     const match = useRouteMatch({
         path: '/UserPage/:login',
         strict: true,
@@ -35,23 +35,26 @@ function UserPage(props)
     } else if (!isLoaded) {
       return <div className="content-page">Загрузка...</div>;
     } else {
-      return (
-        items.map(user =>(
-        <div className="main-content-block">
-            <div className="user-info-box">
-                <div className="user-avatar-container">
-                    <img className="user-avatar" width="200px" height="200px" src={user.linkToAvatar}></img>
-                </div>
-                <div className="user-text">
-                    <p className="user-nickname">{user.nickname}</p>
-                    <p className="user-about-header">Обо мне</p>
-                    <p className="user-about">Ну да я Леха, хочешь узнать, почему я Леха. Ну просто Лёха, ну так, Лёха. Назвали меня так</p>
-                </div>
-            </div>
-            {props.content}
-        </div>
-        ))
-      );
+      if(user.length!= 0){
+        return (
+          <div className="main-content-block">
+              <div className="user-info-box">
+                  <div className="user-avatar-container">
+                      <img className="user-avatar" width="200px" height="200px" src={user.linkToAvatar}></img>
+                  </div>
+                  <div className="user-text">
+                      <p className="user-nickname">{user.nickname}</p>
+                      <p className="user-about-header">Обо мне</p>
+                      <p className="user-about">Ну да я Леха, хочешь узнать, почему я Леха. Ну просто Лёха, ну так, Лёха. Назвали меня так</p>
+                  </div>
+              </div>
+              {props.content}
+          </div>
+          );
+      }
+      else{
+        return <div>Загрузка ...</div>
+      }
     }
 }
 

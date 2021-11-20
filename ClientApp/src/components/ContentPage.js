@@ -46,15 +46,33 @@ function ContentPage() {
           }
         )
     }, [])
-  
     if (error) {
       return <div>Ошибка: {error.message}</div>;
     } else if (!isLoaded) {
       return <div className="content-page">Загрузка...</div>;
-    } else {
-        //console.log(items);
-      return (
-        items.map(current_item =>(
+    } else
+    {
+        console.log(items)
+        if(items.length != 0){
+            return (
+                <div className="main-content-block">
+                    <div className="content-page">
+                        <div className="left-flex-box">
+                            {renderImages(items)}
+                        </div>
+                        <div className="right-flex-box">
+                            <LineProfileData item={items}/>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        else{
+            return <div>Загрузка...</div>
+        }
+    }
+}
+/*items.map(current_item =>(
         <div className="main-content-block">
             <div className="content-page">
                 <div className="left-flex-box">
@@ -64,11 +82,7 @@ function ContentPage() {
                     <LineProfileData item={current_item}/>
                 </div>
             </div>
-        </div>))
-      );
-    }
-}
-
+        </div>))*/
 /*
 function ContentPage (props)
 {

@@ -49,22 +49,20 @@ class OnlyArts extends Component
 
   async loadPopularCards()
   {
+    let card;
+    let answer = []; // Карточки на стринице
     let response = await fetch("https://localhost:5001/api/contents/1")
-    let response2 = await fetch("https://localhost:5001/api/contents/2")
-    console.log("asdas");
-    if(response.ok)
+    let i = 2;
+    while(response.ok)
     {
-      let json = await response.json();
-      let json1 = await response2.json();
-      json = [json[0], json1[0]];
-      this.setState({
-        content_cards: json,
-      });
+      card = await response.json();
+      answer.push(card);
+      response = await fetch(`https://localhost:5001/api/contents/${i}`)
+      i++;
     }
-    else
-    {
-      alert("Ошибка HTTP: " + response.status);
-    }
+    this.setState({
+       content_cards: answer,
+    });
   }
 
   async getContentById(contentId)

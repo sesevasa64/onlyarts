@@ -22,7 +22,6 @@ class CardsContentBox extends Component
     {
         const content = this.props.content;
         const cards = [];
-        
         for(let i = 0; i < content.length; i++){
             cards.push(
                 this.renderMiniCards(content[i], "MiniCard-" + i)
