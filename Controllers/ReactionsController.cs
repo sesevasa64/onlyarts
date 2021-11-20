@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using onlyarts.Services;
+using onlyarts.Models;
 using onlyarts.Data;
 
 namespace onlyarts.Controllers
@@ -13,11 +15,13 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class ReactionsController : RestController
     {
+        private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly ILogger<UsersController> _logger;
 
-        public ReactionsController(ILogger<UsersController> logger, OnlyartsContext context)
+        public ReactionsController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper)
         {
+            _helper = helper;
             _logger = logger;
             _context = context;
         }
@@ -37,31 +41,16 @@ namespace onlyarts.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return ExampleJson(id);
+            var reaction = _helper.getByID<Reaction>(id, new string[] {"User", "Content"});
+            if (reaction == null) {
+                return NotFound();
+            }
+            return Json(reaction);
         }
         [HttpPost("{id}")]
         public ActionResult Post(int id)
         {
-            return ExampleJson(id);
-        }
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            return ExampleJson(id);
-        }
-        private ActionResult ExampleJson(int id) 
-        {
-            var reactions = (
-                from reaction in _context.Reactions
-                where reaction.Id == id
-                select reaction
-            ).Include(reactions => reactions.User)
-            .Include(reactions => reactions.Content)
-            .ToList();
-            if (reactions.Count == 0) {
-                return NotFound();
-            }
-            return Json(reactions);
+            return Get(id);
         }
     }
 }

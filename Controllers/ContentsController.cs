@@ -1,10 +1,13 @@
 using System;
+using System.Net;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using onlyarts.Services;
+using onlyarts.Models;
 using onlyarts.Data;
 
 namespace onlyarts.Controllers
@@ -13,52 +16,94 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class ContentsController : RestController
     {
+        private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly ILogger<UsersController> _logger;
 
-        public ContentsController(ILogger<UsersController> logger, OnlyartsContext context)
+        public ContentsController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper)
         {
+            _helper = helper;
             _logger = logger;
             _context = context;
         }
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            var contents = (
-                from content in _context.Contents
-                where id.Contains(content.Id)
-                select content
-            ).Include(contents => contents.User)
-            .Include(contents => contents.SubType)
-            .ToList();
+            var contents = _helper.getMultipleByID<User>(id, new string[] {"User", "SubType"});
             if (contents.Count == 0) {
                 return NotFound();
             }
             return Json(contents);
         }
+        [HttpPost]
+        public ActionResult Post(ContentRequest request)
+        {
+            var user = _helper.getByID<User>(request.UserID);
+            var subType = _helper.getByID<SubType>(request.SubTypeID);
+            if (user == null || subType == null) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+            var content = new Content
+            {
+                Name = request.Name,
+                Description = request.Description,
+                ContentType = request.ContentType,
+                LinkToPreview = request.LinkToPreview,
+                LinkToBlur = request.LinkToBlur,
+                LikesCount = 0,
+                DislikesCount = 0,
+                ViewCount = 0,
+                User = user,
+                SubType = subType
+            };
+            _context.Contents.Add(content);
+            _context.SaveChanges();
+            return Ok();
+        }
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return ExampleJson(id);
+            var content = _helper.getByID<Content>(id, new string[] {"User", "SubType"});
+            if (content == null) {
+                return NotFound();
+            }
+            return Json(content);
         }
         [HttpGet("{id}/likes")]
         public ActionResult GetLikes(int id)
         {
-            var likes = (
-                from content in _context.Contents
-                where content.Id == id
-                select content.LikesCount
-            ).ToList();
-            return Json(likes);
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            return Json(content.LikesCount);
+        }
+        [HttpPatch("{id}/likes")]
+        public ActionResult PatchLikes(int id)
+        {
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            content.LikesCount += 1;
+            _context.SaveChanges();
+            return Ok();
+        }
+        [HttpPatch("{id}/dislikes")]
+        public ActionResult PatchDislikes(int id)
+        {
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            content.DislikesCount += 1;
+            _context.SaveChanges();
+            return Ok();
         }
         [HttpPatch("{id}/view")]
         public ActionResult PatchViewCount(int id)
         {
-            var content = (
-                from _content in _context.Contents
-                where _content.Id == id
-                select _content
-            ).SingleOrDefault();
+            var content = _helper.getByID<Content>(id);
             if (content == null) {
                 return NotFound();
             }
@@ -100,30 +145,6 @@ namespace onlyarts.Controllers
             catch (ArgumentException) {
                 return NotFound();
             }
-        }
-        [HttpPost("{id}")]
-        public ActionResult Post(int id)
-        {
-            return ExampleJson(id);
-        }
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            return ExampleJson(id);
-        }
-        private ActionResult ExampleJson(int id) 
-        {
-            var contents = (
-                from content in _context.Contents
-                where content.Id == id
-                select content
-            ).Include(contents => contents.User)
-            .Include(contents => contents.SubType)
-            .ToList();
-            if (contents.Count == 0) {
-                return NotFound();
-            }
-            return Json(contents);
         }
         private List<Models.Content> GetUserContent(int id) 
         {

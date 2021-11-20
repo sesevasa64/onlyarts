@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using onlyarts.Services;
+using onlyarts.Models;
 using onlyarts.Data;
 
 namespace onlyarts.Controllers
@@ -14,22 +16,20 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class TagsController : RestController
     {
+        private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly ILogger<TagsController> _logger;
 
-        public TagsController(ILogger<TagsController> logger, OnlyartsContext context)
+        public TagsController(ILogger<TagsController> logger, OnlyartsContext context, QueryHelper helper)
         {
+            _helper = helper;
             _logger = logger;
             _context = context;
         }
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            var tags = (
-                from tag in _context.Tags
-                where id.Contains(tag.Id)
-                select tag
-            ).ToList();
+            var tags = _helper.getMultipleByID<Tag>(id);
             if (tags.Count == 0) {
                 return NotFound();
             }
@@ -39,7 +39,16 @@ namespace onlyarts.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            return ExampleJson(id);
+            var tag = _helper.getByID<Tag>(id);
+            if (tag == null) {
+                return NotFound();
+            }
+            return Json(tag);
+        }
+        [HttpPost("{id}")]
+        public ActionResult Post(int id)
+        {
+            return Get(id);
         }
         [HttpGet("popular")]
         public ActionResult Get([FromQuery] int min, [FromQuery] int max)
@@ -50,28 +59,6 @@ namespace onlyarts.Controllers
             // Задача для Артема Юнусова
             // Нужно вернуть популярные теги с min по max позиции
             return NotFound();
-        }
-        [HttpPost("{id}")]
-        public ActionResult Post(int id)
-        {
-            return ExampleJson(id);
-        }
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            return ExampleJson(id);
-        }
-        private ActionResult ExampleJson(int id) 
-        {
-            var tags = (
-                from tag in _context.Tags
-                where tag.Id == id
-                select tag
-            ).ToList();
-            if (tags.Count == 0) {
-                return NotFound();
-            }
-            return Json(tags);
         }
     }
 }

@@ -1,6 +1,8 @@
+using onlyarts.Interfaces;
+
 namespace onlyarts.Models
 {
-    public class Reaction
+    public class Reaction : IEntity
     {
         public int Id { get; set; }
         public bool Type { get; set; }

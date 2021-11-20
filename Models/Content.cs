@@ -1,6 +1,8 @@
+using onlyarts.Interfaces;
+
 namespace onlyarts.Models
 {
-    public class Content
+    public class Content : IEntity 
     {
         public int Id { get; set; }
         public string Name { get; set; }
