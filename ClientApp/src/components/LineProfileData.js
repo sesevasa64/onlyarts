@@ -12,13 +12,13 @@ function LineProfileData(props)
       <div>
         <p>{props.item.name}</p><br/>
         <img src={props.item.user.linkToAvatar}/>
-        <p><Link to={`/UserPage/${props.item.user.id}`}>{props.item.user.nickname}</Link></p>
+        <p><Link to={`/UserPage/${props.item.user.login}`}>{props.item.user.nickname}</Link></p>
         <div className="mini-card-about">
           {props.item.description}
         </div>
         <div>
           <img src={views}></img> {props.item.viewCount}
-          <img className="likes_button" src={likes}></img> {props.item.likesCount}
+          <img className="likes_button" src={likes} onClick={props.onLikeClick}></img> {props.item.likesCount}
         </div>
       </div>
     </div>
