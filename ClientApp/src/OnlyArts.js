@@ -35,10 +35,12 @@ class OnlyArts extends Component
 	    
       isAuth: false,
       user:{
-        login:""
+        Login:""
       },
     }
     this.loadPopularCards();
+    this.onLikeClick = this.onLikeClick.bind(this);
+    this.authFunc = this.authFunc.bind(this);
     this.userExit = this.userExit.bind(this);
 	  this.userAuthorize = this.userAuthorize.bind(this);
     this.getContentById = this.getContentById.bind(this);
@@ -107,7 +109,7 @@ class OnlyArts extends Component
 		 isAuth: true,
 		 outputLoginBox: false,
      user: {
-       login: login
+       Login: login
      },
 	 })
   }
@@ -116,26 +118,74 @@ class OnlyArts extends Component
     this.setState({
       isAuth: false,
       user:{
-        login: ""
+        Login: ""
       }
     })
+  }
+
+  authFunc(user)
+    {
+        /*
+        User is var with fields: {
+            Login: "",
+            Password: ""
+        }
+        */
+        fetch(`https://localhost:5001/api/users/auth`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(user)
+        })
+        .then((response) => {
+            if(response.ok){
+                return response.json()
+            }
+            else{
+                return 0;
+            }
+        })
+        .then((result) => 
+        {
+            if(result)
+            {
+              this.userAuthorize(result.authToken, user.Login)
+            }
+        });
+    }
+
+  async onLikeClick(content_id)
+  {
+    let response = await fetch(`https://localhost:5001/api/content/${content_id}/like`,{
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'API-key': this.state.authToken
+      } 
+    });
+    if(response.ok)
+    {
+      console.log("Like");
+    }
   }
 
   render () {
     return (
       <div className="main-box">
-          {(this.state.outputLoginBox && !this.state.isAuth) ? <AuthForm authFunc={this.userAuthorize} closeBox={this.renderLoginBox} reg_onClick = {this.renderRegistrationForm}/> : "" }
-          {!this.state.outputRegistationForm || <RegistrationForm close_onClick={this.renderRegistrationForm}/>}
+          {(this.state.outputLoginBox && !this.state.isAuth) ? <AuthForm authFunc={this.authFunc} closeBox={this.renderLoginBox} reg_onClick = {this.renderRegistrationForm}/> : "" }
+          {!this.state.outputRegistationForm || <RegistrationForm authFunc={this.authFunc} close_onClick={this.renderRegistrationForm}/>}
           <Logo/>
           <HeaderOA isAuth={this.state.isAuth} user={this.state.user} onLoginClick={this.renderLoginBox} onExitClick={this.userExit}/>
-          <NavigationMenu isAuth={this.state.isAuth}/>
+          <NavigationMenu user={this.state.user} isAuth={this.state.isAuth}/>
           <TagList/>
           <Switch>
             <Route path={'/ContentPage/:contentId'}> 
-              <ContentPage/>
+              <ContentPage onLikeClick={this.onLikeClick}/>
             </Route>
             <Route path={'/UserPage/:login'}>
-              <UserPage content={<CardsContentBox content_onClick={this.renderSelectedContent}
+              <UserPage content={<CardsContentBox
+                                            content_onClick={this.renderSelectedContent}
                                             content={this.state.content_cards}
                                             title={`Карточки пользователя`}/>}/>
             </Route>
