@@ -132,6 +132,22 @@ namespace onlyarts.Controllers
                 return NotFound();
             }
         }
+        [HttpGet("users")]
+        public ActionResult Get([FromQuery] string login)
+        {
+            var user = _helper.getUserByLogin(login);
+            var content = (
+                from _content in _context.Contents
+                where _content.User == user
+                select _content
+            ).Include(content => content.User)
+            .Include(content => content.SubType)
+            .ToList();
+            if (content.Count == 0) {
+                return NotFound();
+            }
+            return Json(content);
+        }
         [HttpGet("users/{id}")]
         public ActionResult Get(int id, [FromQuery] int min, [FromQuery] int max)
         {
