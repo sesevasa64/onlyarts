@@ -66,11 +66,8 @@ namespace onlyarts.Controllers
         // Метод, который возвращает подписчиков юзера с идентификатором id
         private List<Models.User> GetUserSubs(int id) 
         {
-            var subscribers = (
-                        from subscriber in _context.Subscriptions
-                        where subscriber.Author.Id == id
-                        select subscriber.SubUser).ToList();
-            return subscribers;
+            // Задача для Артема Юнусова
+            return null;
         }
     }
 }
