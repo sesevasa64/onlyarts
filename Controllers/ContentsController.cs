@@ -114,6 +114,7 @@ namespace onlyarts.Controllers
         {
             // Задача для Артема Юнусова
             // Нужно вернуть популярный контент с min по max позиции
+            
             return NotFound();
         }
         [HttpGet("tags/{name}")]
@@ -160,17 +161,14 @@ namespace onlyarts.Controllers
         // Метод, который возвращает контент с тегом name
         private List<Models.Content> GetContentsByTag(string name)
         {
-            // Задача для Артема Юнусова
-            // Раскоментировать и понять почему не работает join :)
-            // ну и доделать по возможности
-            /*
             var contents = (
-                from linkTag in _context.LinkTags
-                join tag in _context.Tags
-                on linkTag.Tag equals tag.Id
-            )
-            */
-            return null;
+                from content in _context.Contents
+                join linkTag in _context.LinkTags 
+                on content equals linkTag.Content
+                where linkTag.Tag.TagName == name
+                select content 
+            ).ToList();
+            return contents;
         }
     }
 }
