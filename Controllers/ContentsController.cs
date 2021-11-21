@@ -136,6 +136,9 @@ namespace onlyarts.Controllers
         public ActionResult Get([FromQuery] string login)
         {
             var user = _helper.getUserByLogin(login);
+            if (user == null) {
+                return NotFound();
+            }
             var content = (
                 from _content in _context.Contents
                 where _content.User == user
