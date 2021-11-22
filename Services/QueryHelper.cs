@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using onlyarts.Extensions;
 using onlyarts.Interfaces;
+using onlyarts.Models;
 using onlyarts.Data;
 
 namespace onlyarts.Services
@@ -35,6 +36,15 @@ namespace onlyarts.Services
             ).GetAllIncluding(includes)
             .ToList();
             return result;
+        }
+        public User getUserByLogin(string login)
+        {
+            var user = (
+                from _user in _context.Users
+                where _user.Login == login
+                select _user
+            ).SingleOrDefault();
+            return user;
         }
     }
 }

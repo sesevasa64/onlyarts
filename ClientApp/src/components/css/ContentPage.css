@@ -1,0 +1,32 @@
+.content-page
+{
+
+  background: white;
+  border-radius: 4px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.left-flex-box
+{
+  width: 800px;
+}
+
+.left-flex-box img
+{
+  margin-top: 20px;
+  margin-left: 10px;
+
+  border-radius: 8px;
+}
+
+.right-flex-box
+{
+  margin-top: 20px;
+  margin-left: 20px;
+  width: 20%;
+  min-width: 200px;
+}

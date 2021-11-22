@@ -28,11 +28,7 @@ namespace onlyarts.Controllers
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            var reactions = (
-                from reaction in _context.Reactions
-                where id.Contains(reaction.Id)
-                select reaction
-            ).ToList();
+            var reactions = _helper.getMultipleByID<Reaction>(id);
             if (reactions.Count == 0) {
                 return NotFound();
             }

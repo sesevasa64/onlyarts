@@ -1,6 +1,6 @@
 body
 {
-  background: linear-gradient(70deg, #D2DFF8, #FFFFFF);
+  background: linear-gradient(70deg, #8fade6, #FFFFFF);
   font-family: "Montserrat";
 }
 a 
@@ -21,7 +21,7 @@ a
     "logo mh mh mh"
     "- mn mn mn"
     "tb cb cb cb";
-  grid-template-rows: 60px 1fr 10fr 1fr;
+  grid-template-rows: 100px 1fr 10fr 1fr;
   grid-template-columns: 1.2fr 2fr 2fr 2fr 1fr;
   grid-gap: 10px;
   width: 99%;
@@ -39,6 +39,7 @@ a
   grid-area: mh;
   /*background:yellow;*/
 }
+
 .box-main *
 {
   display: inline-block;
@@ -56,6 +57,43 @@ a
 {
   grid-area: tb;
   background: white;
+  border-radius: 4px;
+}
+
+.main-content-block
+{
+  grid-area: cb;
+}
+
+.main-block-title
+{
+  text-align: left;
+  background: white;
+  border-radius: 4px;
+}
+
+
+@media (max-width: 500px) {
+  .main-box
+  {
+    display: grid;
+
+    grid-template-areas:
+      "logo mh"
+      "- mn"
+      "- tb"
+      "- cb";
+    grid-template-rows: 1fr 4fr;
+    grid-template-columns: 1.2fr 2fr 2fr 2fr 1fr;
+    grid-gap: 10px;
+    width: 99%;
+    height: 900px;
+    margin-left: 1%;
+  }
+  button
+  {
+    width: 100%;
+  }
 }
 
 .box-tags p
@@ -100,4 +138,163 @@ div.right-box, div.left-box
 .left-box
 {
   width: 60%;
+}
+
+.absolute-form
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px;
+}
+
+.auth
+{
+
+  position: -webkit-sticky;
+  position: sticky;
+  width: 400px;
+  border-radius: 4px;
+
+  background-color: #FFFFFF;
+  font-size: 14px;
+}
+
+div#auth-top h1, h2
+{
+    font-size: 20pt;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 2px;
+}
+
+#data-help
+{
+    /*Это нужно чтобы убрать отступы*/
+    letter-spacing : -.36em;
+}
+#data-help div
+{
+    /*Восстанавливает пропуски после букв*/
+    letter-spacing: normal;
+}
+
+#data-enter-help
+{
+    height: 80px;
+}
+
+#data-enter-help div hr
+{
+    display: inline-block;
+    vertical-align:middle;
+    width: 30%;
+}
+
+#data-enter-help div p
+{
+    display: inline-block;
+}
+
+#auth-bottom
+{
+    margin: 32px 0 50px 0;
+}
+
+.input-container
+{
+    width: 67.5%;
+    margin: 0 auto;
+}
+
+.auth input[type="button"], .auth button
+{
+    background-color: #6A45FF;
+    background: linear-gradient(70deg, #FCF672, #E15992);
+    color: white;
+
+    display: block;
+
+    margin: 10px auto 10px auto;
+
+    border-radius: 2px;
+    border-width: 0px;
+
+    font-size: 14pt;
+
+    min-width: 165px;
+    min-height: 31px;
+
+    filter: drop-shadow(2px 4px 4px rgba(0, 45, 160, 0.25));
+}
+
+.auth input[type="button"]:hover
+{
+    cursor: pointer;
+    background-color: #3B0BF8;
+    background: linear-gradient(70deg, #FEF746, #E15992);
+}
+
+a
+{
+    padding: 0%;
+}
+
+div.divs-in-line
+{
+    width: 50%;
+    display: inline-block;
+}
+
+div.another-resource
+{
+    width: 32px;
+    height: 32px;
+    margin: 0 32px 0 32px;
+}
+
+div.another-resource:hover
+{
+    cursor: pointer;
+    filter: drop-shadow(2px 4px 4px rgba(47, 47, 47, 0.25));
+}
+
+div.resources-container
+{
+    display: flex;
+    justify-content: center;
+}
+
+.StandartInput /*input[type="text"], .StandartInput.input[type="password"]*/
+{
+    background-color: #DAE4FF;
+
+    border-width: 1px;
+    border-color: #6A80F4;
+    border-radius: 2px;
+
+    min-width: 270px;
+    min-height: 40px;
+
+    font-size: 14pt;
+}
+
+input[type="text"]:hover, input[type="password"]:hover
+{
+    border-color: #3B0BF8;
+}
+
+.uncorrect-output
+{
+  color: red;
 }

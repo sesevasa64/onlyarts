@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {MiniCard} from './MiniCard';
-import './CardsContentBox.css'
+import './css/CardsContentBox.css'
 
 class CardsContentBox extends Component
 {
@@ -8,32 +8,32 @@ class CardsContentBox extends Component
     {
         super(props);
         this.state = {
-            content: ["https://i.ytimg.com/vi/4lifQfeZo5c/maxresdefault.jpg", 
-                       "https://cdn-ru0.puzzlegarage.com/img/puzzle/5/5765_preview_r.v1.jpg",
-                       "https://avatars.mds.yandex.net/get-zen_doc/1880741/pub_60ebc44a0f1e1b2a8ceb58e7_60ebc559b56ded7a70c250ed/scale_1200"],
+            
         };
     }
 
-    renderMiniCards(content_item)
+    renderMiniCards(content_item, card_key)
     {
         return(
-            <MiniCard item={content_item}/>
+            <MiniCard key={`$mc-${card_key}`} mc_key={card_key} onClick={this.props.content_onClick} item={content_item}/>
         );
     }
     render()
     {
         const content = this.props.content;
         const cards = [];
-        
         for(let i = 0; i < content.length; i++){
             cards.push(
-                this.renderMiniCards(content[i])
+                this.renderMiniCards(content[i], "MiniCard-" + i)
             );
         }
 
         return (
-            <div className="box-content">
-                {cards}
+            <div className="main-content-block">
+                <h2 className="main-block-title">{this.props.title}</h2>
+                <div className="box-content">
+                    {cards}
+                </div>
             </div>
         );
     }

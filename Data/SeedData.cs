@@ -62,6 +62,16 @@ namespace onlyarts.Data
                     RegisDate = DateTime.Now,
                     Money = 0
                 };
+
+                //БЕСПЛАТНАЯ ПОДПИСКА НЕ НАДО ПРОВЕРЯТЬ НА ДАТУ ОКОНЧАНИЯ, 0 ПРОСТО ДЛЯ ВИДУ
+                SubType FreeSub = new SubType
+                {
+                    Id = 1,
+                    Type = "Бесплатная",
+                    Cost = 0,
+                    Duration = 0,   
+                    SubLevel = 0
+                };
                 Content Con1 = new Content 
                 {
                     Id = 1,
@@ -145,7 +155,12 @@ namespace onlyarts.Data
                 var users = context.Users.Where(U => U.Id > 0);
                 context.Users.RemoveRange(users);
                 context.Users.AddRange(u1,u2,u3,u4);
-                context.SaveChanges();             
+                context.SaveChanges(); 
+
+                var subtypes = context.SubTypes.Where(C => C.Id > 0);
+                context.SubTypes.RemoveRange(subtypes);
+                context.SubTypes.AddRange(FreeSub);
+                context.SaveChanges();
 
                 var contents = context.Contents.Where(C => C.Id > 0);
                 context.Contents.RemoveRange(contents);

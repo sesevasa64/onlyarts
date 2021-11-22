@@ -41,11 +41,7 @@ namespace onlyarts.Controllers
                 }
                 return Json(users);
             }
-            var user = (
-                from _user in _context.Users
-                where _user.Login == login
-                select _user
-            ).SingleOrDefault();
+            var user = _helper.getUserByLogin(login);
             if (user == null) {
                 return NotFound();
             }
