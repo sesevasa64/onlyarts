@@ -114,8 +114,22 @@ namespace onlyarts.Controllers
         {
             // Задача для Артема Юнусова
             // Нужно вернуть популярный контент с min по max позиции
-            
-            return NotFound();
+            var contents = (
+                from content in _context.Contents
+                orderby content.ViewCount, content.LikesCount descending
+                select content
+            ).Include(contents => contents.User)
+            .Include(contents => contents.SubType)
+            .ToList();
+            if (min == 0 && max == 0) {
+                return Json(contents);
+            }
+            try {
+                return Json(contents.GetRange(min, max - min));
+            } 
+            catch (ArgumentException) {
+                return NotFound();
+            }
         }
         [HttpGet("tags/{name}")]
         public ActionResult Get(string name, [FromQuery] int limit)
@@ -167,7 +181,9 @@ namespace onlyarts.Controllers
                 on content equals linkTag.Content
                 where linkTag.Tag.TagName == name
                 select content 
-            ).ToList();
+            ).Include(contents => contents.User)
+            .Include(contents => contents.SubType)
+            .ToList();
             return contents;
         }
     }
