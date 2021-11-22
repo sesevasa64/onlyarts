@@ -86,7 +86,6 @@ namespace onlyarts.Controllers
                 return NotFound();
             }
             content.LikesCount += 1;
-            _context.SaveChanges();
             return Ok();
         }
         [HttpPatch("{id}/dislikes")]
@@ -97,7 +96,6 @@ namespace onlyarts.Controllers
                 return NotFound();
             }
             content.DislikesCount += 1;
-            _context.SaveChanges();
             return Ok();
         }
         [HttpPatch("{id}/view")]
@@ -116,7 +114,22 @@ namespace onlyarts.Controllers
         {
             // Задача для Артема Юнусова
             // Нужно вернуть популярный контент с min по max позиции
-            return NotFound();
+            var contents = (
+                from content in _context.Contents
+                orderby content.ViewCount, content.LikesCount descending
+                select content
+            ).Include(contents => contents.User)
+            .Include(contents => contents.SubType)
+            .ToList();
+            if (min == 0 && max == 0) {
+                return Json(contents);
+            }
+            try {
+                return Json(contents.GetRange(min, max - min));
+            } 
+            catch (ArgumentException) {
+                return NotFound();
+            }
         }
         [HttpGet("tags/{name}")]
         public ActionResult Get(string name, [FromQuery] int limit)
@@ -131,25 +144,6 @@ namespace onlyarts.Controllers
             catch (ArgumentException) {
                 return NotFound();
             }
-        }
-        [HttpGet("users")]
-        public ActionResult Get([FromQuery] string login)
-        {
-            var user = _helper.getUserByLogin(login);
-            if (user == null) {
-                return NotFound();
-            }
-            var content = (
-                from _content in _context.Contents
-                where _content.User == user
-                select _content
-            ).Include(content => content.User)
-            .Include(content => content.SubType)
-            .ToList();
-            if (content.Count == 0) {
-                return NotFound();
-            }
-            return Json(content);
         }
         [HttpGet("users/{id}")]
         public ActionResult Get(int id, [FromQuery] int min, [FromQuery] int max)
@@ -181,17 +175,16 @@ namespace onlyarts.Controllers
         // Метод, который возвращает контент с тегом name
         private List<Models.Content> GetContentsByTag(string name)
         {
-            // Задача для Артема Юнусова
-            // Раскоментировать и понять почему не работает join :)
-            // ну и доделать по возможности
-            /*
             var contents = (
-                from linkTag in _context.LinkTags
-                join tag in _context.Tags
-                on linkTag.Tag equals tag.Id
-            )
-            */
-            return null;
+                from content in _context.Contents
+                join linkTag in _context.LinkTags 
+                on content equals linkTag.Content
+                where linkTag.Tag.TagName == name
+                select content 
+            ).Include(contents => contents.User)
+            .Include(contents => contents.SubType)
+            .ToList();
+            return contents;
         }
     }
 }

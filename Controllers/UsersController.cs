@@ -41,7 +41,11 @@ namespace onlyarts.Controllers
                 }
                 return Json(users);
             }
-            var user = _helper.getUserByLogin(login);
+            var user = (
+                from _user in _context.Users
+                where _user.Login == login
+                select _user
+            ).SingleOrDefault();
             if (user == null) {
                 return NotFound();
             }
@@ -86,7 +90,23 @@ namespace onlyarts.Controllers
         {
             // Задача для Артема Юнусова
             // Нужно вернуть список популярных юзеров с min по max позиции
-            return NotFound();
+            var subsCount = (
+                from sub in _context.Subscriptions.Include(x => x.Author).Include(x => x.SubUser).AsEnumerable()
+                group sub by sub.Author into subGB
+                select new {User = subGB.Key, SubUser = from s in subGB select s.SubUser, Count = (from s in subGB select s.SubUser).Count()});
+            var users = (
+                from user in subsCount
+                orderby user.Count descending
+                select user.User).ToList();
+            if (min == 0 && max == 0) {
+                return Json(users);
+            }
+            try {
+                return Json(users.GetRange(min, max - min));
+            }
+            catch (ArgumentException) {
+                return NotFound();
+            }
         }
         [HttpPost("auth")]
         public ActionResult Auth(AuthenticationRequest request) 
