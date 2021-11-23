@@ -4,10 +4,11 @@ import './css/TagList.css'
 function TagList(props)
 {
     const tags_list = [];
-    for(let i = 0; i < 9; i++)
+    for(let i = 0; i < props.tags.length; i++)
         tags_list.push(
-            <li key={i}>Tags{i}</li>
+            <li key={i}>{props.tags[i].tagName}</li>
         );
+    console.log(tags_list);
     return(
         <div className="box-tags">
                 <p>Популярные теги</p>

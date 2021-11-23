@@ -5,6 +5,8 @@ import {Route, NavLink, HashRouter,
         Link
 } from 'react-router-dom'
 
+import {getCookie, setCookie, deleteCookie} from './models/forCookies';
+
 import './OnlyArts.css'
 
 import HeaderOA from './components/HeaderOA';
@@ -28,6 +30,9 @@ class OnlyArts extends Component
     {
       content_cards: [],
       current_content: 0,
+
+      tags: [],
+
       outputLoginBox: false,
       outputRegistationForm: false,
       contentIsSelect: false,
@@ -35,13 +40,19 @@ class OnlyArts extends Component
 	    
       isAuth: false,
       user:{
-        Login:""
+        Login: ""
       },
     }
-    this.loadPopularCards();
+  }
+
+  componentWillMount()
+  {
+    this.userExit = this.userExit.bind(this);
+    this.checkAuth();
+    this.loadPopularCards(0, 3);
+    this.loadPopularTags(0, 3);
     this.onLikeClick = this.onLikeClick.bind(this);
     this.authFunc = this.authFunc.bind(this);
-    this.userExit = this.userExit.bind(this);
 	  this.userAuthorize = this.userAuthorize.bind(this);
     this.getContentById = this.getContentById.bind(this);
     this.renderLoginBox = this.renderLoginBox.bind(this);
@@ -49,18 +60,29 @@ class OnlyArts extends Component
     this.renderSelectedContent = this.renderSelectedContent.bind(this);
   }
 
-  async loadPopularCards()
+  async loadPopularTags(from, to)
+  {
+    let tags = [];
+    let response = await fetch(`https://localhost:5001/api/tags/popular?min=${from}&max=${to}`)
+    if(response.ok)
+    {
+      tags = await response.json();
+      this.setState({
+        tags: tags,
+      })
+    }
+  }
+
+  async loadPopularCards(from, to)
   {
     let card;
     let answer = []; // Карточки на стринице
-    let response = await fetch("https://localhost:5001/api/contents/1")
-    let i = 2;
-    while(response.ok)
+    let response = await fetch(`https://localhost:5001/api/contents/popular?min=${from}&max=${to}`)
+
+    if(response.ok)
     {
       card = await response.json();
-      answer.push(card);
-      response = await fetch(`https://localhost:5001/api/contents/${i}`)
-      i++;
+      answer = card;
     }
     this.setState({
        content_cards: answer,
@@ -99,31 +121,56 @@ class OnlyArts extends Component
     this.setState({
       outputRegistationForm: output,
     });
-    this.loadPopularCards();
+    this.loadPopularCards(0, 3);
   }
   
-  userAuthorize(authToken, login)
+  checkAuth()
   {
-	 this.setState({
-		 authToken: authToken,
-		 isAuth: true,
-		 outputLoginBox: false,
-     user: {
-       Login: login
-     },
-	 })
+    let authToken = getCookie("authToken");
+    let login = getCookie("Login");
+    if(authToken && login)
+    {
+      console.log(login);
+      this.setState({
+        authToken: authToken,
+        user: {
+          Login: login
+        },
+        isAuth: true,
+        outputLoginBox: false,
+      })
+    }
+  }
+
+  userAuthorize(authToken, login, saveAuth)
+  {
+    this.setState({
+      authToken: authToken,
+		  isAuth: true,
+		  outputLoginBox: false,
+      user: {
+        Login: login
+      },
+	  })
+    if(saveAuth)
+    {
+      setCookie("authToken", authToken);
+      setCookie("Login", login);
+    }
   }
   userExit(login)
   {
     this.setState({
       isAuth: false,
       user:{
-        Login: ""
+        login: ""
       }
     })
+    deleteCookie("authToken");
+    deleteCookie("Login");
   }
 
-  authFunc(user)
+  authFunc(user, rememberAuth)
     {
         /*
         User is var with fields: {
@@ -150,7 +197,7 @@ class OnlyArts extends Component
         {
             if(result)
             {
-              this.userAuthorize(result.authToken, user.Login)
+              this.userAuthorize(result.authToken, user.Login, rememberAuth)
             }
         });
     }
@@ -169,8 +216,8 @@ class OnlyArts extends Component
       console.log("Like");
     }
   }
-
   render () {
+    console.log(this.state.isAuth);
     return (
       <div className="main-box">
           {(this.state.outputLoginBox && !this.state.isAuth) ? <AuthForm authFunc={this.authFunc} closeBox={this.renderLoginBox} reg_onClick = {this.renderRegistrationForm}/> : "" }
@@ -178,7 +225,7 @@ class OnlyArts extends Component
           <Logo/>
           <HeaderOA isAuth={this.state.isAuth} user={this.state.user} onLoginClick={this.renderLoginBox} onExitClick={this.userExit}/>
           <NavigationMenu user={this.state.user} isAuth={this.state.isAuth}/>
-          <TagList/>
+          <TagList tags={this.state.tags}/>
           <Switch>
             <Route path={'/ContentPage/:contentId'}> 
               <ContentPage onLikeClick={this.onLikeClick}/>
