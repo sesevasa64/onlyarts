@@ -199,7 +199,7 @@ class RegistrationForm extends React.Component
                 this.props.authFunc({
                     Login: user.Login,
                     Password: user.Password
-                })
+                }, true)
                 return 1;
             }
             else{

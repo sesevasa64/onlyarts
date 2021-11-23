@@ -11,9 +11,11 @@ class AuthForm extends Component
     {
         super(props);
         this.state = {
-            login: "",
-            password: "",  
+            Login: "",
+            Password: "",
+            rememberAuth: false,
         }
+        this.rememberOnChange = this.rememberOnChange.bind(this);
         this.auth_onClick = this.auth_onClick.bind(this);
     }
 
@@ -23,7 +25,8 @@ class AuthForm extends Component
             Login: this.state.login,
             Password: hash_model.get_hash(this.state.password)
         }
-        this.props.authFunc(user);
+        console.log(this.state.rememberAuth)
+        this.props.authFunc(user, this.state.rememberAuth);
     }
     loginChange = (event) => this.setState({login: event.target.value,})
 
@@ -35,6 +38,7 @@ class AuthForm extends Component
             absolute_form: document.getElementsByClassName('absolute-form')[0],
         })
     }
+    rememberOnChange = (event) => this.setState({rememberAuth: event.target.checked})
 
     render()
     {
@@ -44,7 +48,10 @@ class AuthForm extends Component
                     <h2>Добро пожаловать</h2>
                     <div id="auth-top">
                         <h2>Вход</h2>
-                        <LoginForm loginChange={this.loginChange} passwordChange={this.passwordChange} 
+                        <LoginForm  
+                        rememberOnChange={this.rememberOnChange}
+                        loginChange={this.loginChange} 
+                        passwordChange={this.passwordChange} 
                         auth_onClick={this.auth_onClick}/>
                     </div>
                     <div id="data-enter-help">
@@ -105,7 +112,7 @@ function LoginForm(props)
                 </div>
                 <div id="data-help" className="input-container">
                     <div className="divs-in-line">
-                        <input type="checkbox"/> Запомнить
+                        <input type="checkbox" onChange={props.rememberOnChange}/> Запомнить
                     </div>
                     <div className="divs-in-line">
                         <a href="./test.html">Забыли пароль?</a>
