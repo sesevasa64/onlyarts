@@ -53,12 +53,28 @@ namespace onlyarts.Controllers
         [HttpGet("popular")]
         public ActionResult Get([FromQuery] int min, [FromQuery] int max)
         {
+            // Подсчёт количества встречающихся тегов
+            // На выходе {Tag ; Количество упоминаний тега в контентах}
+            var tagsCount = (
+                from linkTag in _context.LinkTags.Include(x => x.Tag).AsEnumerable()
+                group linkTag by linkTag.Tag into linkTagGB
+                select new {Tag = linkTagGB.Key, Count = linkTagGB.Count()});
+            var tags = (
+                from tag in tagsCount
+                orderby tag.Count descending
+                select tag.Tag
+            ).Distinct().ToList();
             if (min == 0 & max == 0) {
+                return Json(tags);
+            }
+            try {
+                return Json(tags.GetRange(min, max - min));
+            }
+            catch (ArgumentException) {
                 return NotFound();
             }
             // Задача для Артема Юнусова
             // Нужно вернуть популярные теги с min по max позиции
-            return NotFound();
         }
     }
 }
