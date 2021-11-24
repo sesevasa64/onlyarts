@@ -1,5 +1,49 @@
+.profile-line
+{
+  position: relative;
+}
+
+.profile-line>div
+{
+    top: 0px;
+}
+
+.profile-line>div>*
+{
+  display: inline-block;
+}
+
+.profile-line img
+{
+  border-radius: 50%;
+  background: lightgray;
+  width: 25px;
+  height: 25px;
+}
+.profile-line p:nth-child(1)
+{
+  font-weight: bold;
+}
+.profile-line p 
+{
+  margin: 0;
+}
+
+.content-name
+{
+    text-align: center;
+}
+
 .likes_button:hover
 {
     background: red;
     cursor: pointer;
+}
+
+@media (max-width: 1200px)
+{
+    .profile-line
+    {
+        margin: 0 20px;
+    }
 }

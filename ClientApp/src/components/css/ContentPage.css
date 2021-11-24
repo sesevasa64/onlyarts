@@ -1,13 +1,15 @@
 .content-page
 {
-
   background: white;
   border-radius: 4px;
 
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  align-items: stretch;
+  justify-content: flex-start;
+  flex-wrap: wrap-reverse;
+  align-items: flex-end;
+
+  height: 100%;
 }
 
 .left-flex-box
@@ -17,7 +19,7 @@
 
 .left-flex-box img
 {
-  margin-top: 20px;
+  
   margin-left: 10px;
 
   border-radius: 8px;
@@ -25,8 +27,51 @@
 
 .right-flex-box
 {
-  margin-top: 20px;
   margin-left: 20px;
-  width: 20%;
   min-width: 200px;
+  
+}
+
+.content-container
+{
+  height: 600px;
+
+  margin: 10px 0px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  overflow-y: hidden;
+  
+}
+
+.content-container:hover
+{
+  overflow-y: scroll;
+  
+}
+
+.container-img
+{
+  
+}
+
+.content-container img
+{
+  margin-top: 4px;
+  max-width: 98%;
+}
+
+@media (max-width: 1200px)
+{
+  .right-flex-box
+  {
+    width: 100%;
+  }
+  .left-flex-box
+  {
+    width: 100%;
+  }
 }

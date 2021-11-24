@@ -16,7 +16,7 @@
 
 .mini-card-box:hover
 {
-  background-color: lightgrey;
+  background-color: #DAE4FF;
 }
 
 .mini-card-box img
@@ -40,38 +40,6 @@
   cursor: pointer;
 }
 
-.profile-line
-{
-  position: relative;
-}
-
-.profile-line>div
-{
-    top: 0px;
-    position: absolute;
-}
-
-.profile-line>div>*
-{
-  display: inline-block;
-}
-
-.profile-line img
-{
-  border-radius: 50%;
-  background: lightgray;
-  width: 25px;
-  height: 25px;
-}
-.profile-line p:nth-child(1)
-{
-  font-weight: bold;
-}
-.profile-line p 
-{
-  margin: 0;
-}
-
 .mini-card-about
 {
   width: 100%;
@@ -79,7 +47,7 @@
   
   background: #D5E0FE;
   
-  display: inline-block;
+  
   border-radius: 4px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
 
