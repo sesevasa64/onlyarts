@@ -19,6 +19,7 @@ import RegistrationForm from './components/RegistrationForm';
 import {t1, t2, t3, t4} from './models/TestContentCard'
 import AuthForm from './components/AuthForm';
 import UserPage from './components/UserPage';
+import NewPostPage from './components/NewPostPage';
 
 
 class OnlyArts extends Component
@@ -78,11 +79,11 @@ class OnlyArts extends Component
     let card;
     let answer = []; // Карточки на стринице
     let response = await fetch(`https://localhost:5001/api/contents/popular?min=${from}&max=${to}`)
-
     if(response.ok)
     {
       card = await response.json();
       answer = card;
+      answer = [...answer, ...answer, ...answer, ...answer, ...answer, ...answer];
     }
     this.setState({
        content_cards: answer,
@@ -222,24 +223,31 @@ class OnlyArts extends Component
       <div className="main-box">
           {(this.state.outputLoginBox && !this.state.isAuth) ? <AuthForm authFunc={this.authFunc} closeBox={this.renderLoginBox} reg_onClick = {this.renderRegistrationForm}/> : "" }
           {!this.state.outputRegistationForm || <RegistrationForm authFunc={this.authFunc} close_onClick={this.renderRegistrationForm}/>}
-          <Logo/>
-          <HeaderOA isAuth={this.state.isAuth} user={this.state.user} onLoginClick={this.renderLoginBox} onExitClick={this.userExit}/>
-          <NavigationMenu user={this.state.user} isAuth={this.state.isAuth}/>
-          <TagList tags={this.state.tags}/>
-          <Switch>
-            <Route path={'/ContentPage/:contentId'}> 
-              <ContentPage onLikeClick={this.onLikeClick}/>
-            </Route>
-            <Route path={'/UserPage/:login'}>
-              <UserPage content={<CardsContentBox
-                                            content_onClick={this.renderSelectedContent}
-                                            content={this.state.content_cards}
-                                            title={`Карточки пользователя`}/>}/>
-            </Route>
-            <Route path="/" render={()=><CardsContentBox content_onClick={this.renderSelectedContent}
-                                            content={this.state.content_cards}
-                                            title={"Главная страница"}/>}/>
-          </Switch>
+          <div className="top-flex-div">
+            <Logo/>
+            <HeaderOA isAuth={this.state.isAuth} user={this.state.user} onLoginClick={this.renderLoginBox} onExitClick={this.userExit}/>
+          </div>
+          <div className="menu-flex-div">
+            <NavigationMenu user={this.state.user} isAuth={this.state.isAuth}/>
+          </div>
+          <div className="center-flex-div">
+            <TagList tags={this.state.tags}/>
+            <Switch>
+              <Route path={'/ContentPage/:contentId'}> 
+                <ContentPage onLikeClick={this.onLikeClick}/>
+              </Route>
+              <Route path={'/UserPage/:login'}>
+                <UserPage content={<CardsContentBox
+                                              content_onClick={this.renderSelectedContent}
+                                              content={this.state.content_cards}
+                                              title={`Карточки пользователя`}/>}/>
+              </Route>
+              <Route exact path="/" render={()=><CardsContentBox content_onClick={this.renderSelectedContent}
+                                              content={this.state.content_cards}
+                                              title={"Главная страница"}/>}/>
+              <Route path="/NewPost/" render={() => <NewPostPage/>}/>
+            </Switch>
+          </div>
       </div>
     );
   }

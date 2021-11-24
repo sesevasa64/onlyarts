@@ -13,9 +13,11 @@ function timeout(delay) {
 function renderImages(content_item)
 {
     const images_box = [];
-    for(let i = 0; i < 3; i++)
+    for(let i = 0; i < 10; i++)
         images_box.push(
-            <img src={content_item.linkToPreview} width="100%" height="400px"></img>
+            <div className="container-img">
+                <img src={content_item.linkToPreview}></img>
+            </div>
         )
     return images_box;
 }
@@ -49,7 +51,13 @@ function ContentPage(props) {
     if (error) {
       return <div>Ошибка: {error.message}</div>;
     } else if (!isLoaded) {
-      return <div className="content-page">Загрузка...</div>;
+      return (
+        <div className="main-content-block">
+            <div className="content-page">
+                Загрузка...
+            </div>
+        </div>
+        );
     } else
     {
         console.log(items)
@@ -58,7 +66,9 @@ function ContentPage(props) {
                 <div className="main-content-block">
                     <div className="content-page">
                         <div className="left-flex-box">
-                            {renderImages(items)}
+                            <div className="content-container">
+                                {renderImages(items)}
+                            </div>
                         </div>
                         <div className="right-flex-box">
                             <LineProfileData onLikeClick={() => props.onLikeClick(items.id)} item={items}/>
@@ -68,7 +78,13 @@ function ContentPage(props) {
             );
         }
         else{
-            return <div>Загрузка...</div>
+            return (
+            <div className="main-content-block">
+                <div className="content-page">
+                    Загрузка...
+                </div>
+            </div>
+            )
         }
     }
 }
