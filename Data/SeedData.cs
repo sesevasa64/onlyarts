@@ -79,8 +79,8 @@ namespace onlyarts.Data
                     Name = "Ночной Челябинск",
                     Description = "Челябинск ночью",
                     ContentType = "pic",
-                    LinkToPreview = "https://pbs.twimg.com/media/EWyzpzRXsAA5UV6.jpg",
-                    LinkToBlur = "https://pbs.twimg.com/media/EWyzpzRXsAA5UV6.jpg",
+                    LinkToPreview = "https://img-fotki.yandex.ru/get/5800/18746936.23/0_6929f_3ff82e94_XXL.jpg",
+                    LinkToBlur = "https://img-fotki.yandex.ru/get/5800/18746936.23/0_6929f_3ff82e94_XXL.jpg",
                     LikesCount = 0,
                     DislikesCount = 0,
                     ViewCount = 0
@@ -110,6 +110,40 @@ namespace onlyarts.Data
                     LikesCount = 0,
                     DislikesCount = 0,
                     ViewCount = 0
+                };
+
+                Image Im11 = new Image
+                {
+                    Id = 1,
+                    LinkToImage = "https://img-fotki.yandex.ru/get/5800/18746936.23/0_6929f_3ff82e94_XXL.jpg",
+                    Content = Con1,
+                    
+                };
+
+                Image Im12 = new Image
+                {
+                    Id = 2,
+                    LinkToImage = "https://photoreporter.ru/wp-content/uploads/2018/10/img_2594.jpg",
+                    Content = Con1,
+                };
+
+                Image Im13 = new Image
+                {
+                    Id = 3,
+                    LinkToImage = "https://nashchelyabinsk.ru/media/images/bb4bb9fca82847be952dccfe1a1d17fe.normal.jpg",
+                    Content = Con1,
+                };
+                Image Im21 = new Image
+                {
+                    Id = 4,
+                    LinkToImage = "https://i.mycdn.me/i?r=AzEPZsRbOZEKgBhR0XGMT1RkMYCDWEYeb5SlcObYi8Mo1KaKTM5SRkZCeTgDn6uOyic",
+                    Content = Con2
+                };
+                Image Im31 = new Image
+                {
+                    Id = 5,
+                    LinkToImage = "https://avatars.mds.yandex.net/i?id=b65bd6f623c3ee550acc09c2fd9a7ef6-4504894-images-thumbs&n=13",
+                    Content = Con3,
                 };
 
                 Tag T1 = new Tag
@@ -175,6 +209,11 @@ namespace onlyarts.Data
                 var linktags = context.LinkTags.Where(LT => LT.Id > 0);
                 context.LinkTags.RemoveRange(linktags);
                 context.LinkTags.AddRange(LT1,LT2,LT3,LT4);
+                context.SaveChanges();
+
+                var images = context.Images.Where(Im => Im.Id > 0);
+                context.Images.RemoveRange(images);
+                context.Images.AddRange(Im11,Im12,Im13,Im21,Im31);
                 context.SaveChanges();
 
             }
