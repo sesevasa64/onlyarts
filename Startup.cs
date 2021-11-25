@@ -58,6 +58,7 @@ namespace onlyarts
 
             services.AddScoped<TokenGenerator>();
             services.AddScoped<QueryHelper>();
+            services.AddScoped<FileUploader>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

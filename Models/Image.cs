@@ -1,6 +1,8 @@
+using onlyarts.Interfaces;
+
 namespace onlyarts.Models
 {
-    public class Image
+    public class Image : IEntity
     {
         public int Id { get; set; }
         public string LinkToImage { get; set; } //ссылка на изображение

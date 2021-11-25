@@ -1,8 +1,11 @@
 using System;
 using System.Net;
 using System.Linq;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
@@ -16,15 +19,17 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class ContentsController : RestController
     {
+        private readonly FileUploader _uploader;
         private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly ILogger<UsersController> _logger;
 
-        public ContentsController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper)
+        public ContentsController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper, FileUploader uploader)
         {
             _helper = helper;
             _logger = logger;
             _context = context;
+            _uploader = uploader;
         }
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
@@ -35,9 +40,16 @@ namespace onlyarts.Controllers
             }
             return Json(contents);
         }
+        public static Dictionary<String, Object> parse(byte[] json){
+            string jsonStr = Encoding.UTF8.GetString(json);
+            return JsonConvert.DeserializeObject<Dictionary<String, Object>>(jsonStr);
+        }
         [HttpPost]
         public ActionResult Post(ContentRequest request)
         {
+            if (request.Images.Count == 0) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
             var user = _helper.getByID<User>(request.UserID);
             var subType = _helper.getByID<SubType>(request.SubTypeID);
             if (user == null || subType == null) {
@@ -56,8 +68,32 @@ namespace onlyarts.Controllers
                 User = user,
                 SubType = subType
             };
+            
+            var returnCodes = new List<int>();
+            for (int i = 0; i < request.Images.Count; i++) {
+                var result = _uploader.UploadFile(request.Images[i]);
+                if (result.ContainsKey("error")) {
+                    returnCodes.Add(i);
+                    continue;
+                }
+                var data = (result["data"] as JObject).ToObject<Dictionary<string, object>>();
+                var url = data["url"].ToString();
+                var image = new Image {
+                    Content = content,
+                    LinkToImage = url
+                };
+                _context.Images.Add(image);
+            }
+            if (returnCodes.Count == request.Images.Count) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+
             _context.Contents.Add(content);
             _context.SaveChanges();
+
+            if (returnCodes.Count != 0) {
+                return UnprocessableEntity(Json(returnCodes));
+            }
             return Ok();
         }
         [HttpGet("{id}")]
