@@ -1,8 +1,9 @@
 using System;
 using System.Net;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +17,22 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class ContentsController : RestController
     {
+        private readonly FileUploader _uploader;
         private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly ILogger<UsersController> _logger;
-
-        public ContentsController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper)
+        private readonly string[] includes = new string[] {"User", "SubType"};
+        public ContentsController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper, FileUploader uploader)
         {
             _helper = helper;
             _logger = logger;
             _context = context;
+            _uploader = uploader;
         }
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            var contents = _helper.getMultipleByID<User>(id, new string[] {"User", "SubType"});
+            var contents = _helper.getMultipleByID<User>(id, includes);
             if (contents.Count == 0) {
                 return NotFound();
             }
@@ -38,6 +41,9 @@ namespace onlyarts.Controllers
         [HttpPost]
         public ActionResult Post(ContentRequest request)
         {
+            if (request.Images.Count == 0) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
             var user = _helper.getByID<User>(request.UserID);
             var subType = _helper.getByID<SubType>(request.SubTypeID);
             if (user == null || subType == null) {
@@ -56,14 +62,38 @@ namespace onlyarts.Controllers
                 User = user,
                 SubType = subType
             };
+            
+            var returnCodes = new List<int>();
+            for (int i = 0; i < request.Images.Count; i++) {
+                var result = _uploader.UploadFile(request.Images[i]);
+                if (result.ContainsKey("error")) {
+                    returnCodes.Add(i);
+                    continue;
+                }
+                var data = (result["data"] as JObject).ToObject<Dictionary<string, object>>();
+                var url = data["url"].ToString();
+                var image = new Image {
+                    Content = content,
+                    LinkToImage = url
+                };
+                _context.Images.Add(image);
+            }
+            if (returnCodes.Count == request.Images.Count) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+
             _context.Contents.Add(content);
             _context.SaveChanges();
+
+            if (returnCodes.Count != 0) {
+                return UnprocessableEntity(Json(returnCodes));
+            }
             return Ok();
         }
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            var content = _helper.getByID<Content>(id, new string[] {"User", "SubType"});
+            var content = _helper.getByID<Content>(id, includes);
             if (content == null) {
                 return NotFound();
             }
@@ -78,27 +108,119 @@ namespace onlyarts.Controllers
             }
             return Json(content.LikesCount);
         }
-        [HttpPatch("{id}/likes")]
-        public ActionResult PatchLikes(int id)
+        [HttpGet("{id}/dislikes")]
+        public ActionResult GetDislikes(int id)
         {
             var content = _helper.getByID<Content>(id);
             if (content == null) {
                 return NotFound();
             }
-            content.LikesCount += 1;
+            return Json(content.DislikesCount);
+        }
+        [HttpPatch("{id}/likes")]
+        public ActionResult PatchLikes(int id, [FromQuery] int userID = -1)
+        {
+            if (userID == -1) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            var user = _helper.getByID<User>(userID);
+            if (user == null) {
+                return NotFound();
+            }
+            var reactions = GetUserReactionsOnContent(user, content);
+            if (reactions != null) {
+                return Conflict();
+            }
+            var reaction = CreateReaction(user, content, false);
+            _context.Reactions.Add(reaction);
+            _context.SaveChanges();
+            return Ok();
+        }
+        [HttpDelete("{id}/likes")]
+        public ActionResult DeleteLikes(int id, [FromQuery] int userID = -1)
+        {
+            if (userID == -1) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            var user = _helper.getByID<User>(userID);
+            if (user == null) {
+                return NotFound();
+            }
+            var reaction = GetUserReactionsOnContent(user, content);
+            if (reaction == null) {
+                return Conflict();
+            }
+            if (reaction.Type == true) {
+                return Conflict();
+            }
+            _context.Remove(reaction);
             _context.SaveChanges();
             return Ok();
         }
         [HttpPatch("{id}/dislikes")]
-        public ActionResult PatchDislikes(int id)
+        public ActionResult PatchDislikes(int id, [FromQuery] int userID = -1)
+        {
+            if (userID == -1) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            var user = _helper.getByID<User>(userID);
+            if (user == null) {
+                return NotFound();
+            }
+            var reactions = GetUserReactionsOnContent(user, content);
+            if (reactions != null) {
+                return Conflict();
+            }
+            var reaction = CreateReaction(user, content, true);
+            _context.Reactions.Add(reaction);
+            _context.SaveChanges();
+            return Ok();
+        }
+        [HttpDelete("{id}/dislikes")]
+        public ActionResult DeleteDislikes(int id, [FromQuery] int userID = -1)
+        {
+            if (userID == -1) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            var user = _helper.getByID<User>(userID);
+            if (user == null) {
+                return NotFound();
+            }
+            var reaction = GetUserReactionsOnContent(user, content);
+            if (reaction == null) {
+                return Conflict();
+            }
+            if (reaction.Type == false) {
+                return Conflict();
+            }
+            _context.Remove(reaction);
+            _context.SaveChanges();
+            return Ok();
+        }
+        [HttpGet("{id}/view")]
+        public ActionResult GetViewCount(int id)
         {
             var content = _helper.getByID<Content>(id);
             if (content == null) {
                 return NotFound();
             }
-            content.DislikesCount += 1;
-            _context.SaveChanges();
-            return Ok();
+            return Json(content.ViewCount);
         }
         [HttpPatch("{id}/view")]
         public ActionResult PatchViewCount(int id)
@@ -206,6 +328,24 @@ namespace onlyarts.Controllers
             .Include(contents => contents.SubType)
             .ToList();
             return contents;
+        }
+        private Reaction GetUserReactionsOnContent(User user, Content content)
+        {
+           var reactions = (
+                from _reaction in _context.Reactions
+                where _reaction.Content == content && _reaction.User == user
+                select _reaction
+            ).SingleOrDefault(); 
+            return reactions;
+        }
+        private Reaction CreateReaction(User user, Content content, bool Type) 
+        {
+            var reaction = new Reaction {
+                Type = Type,
+                User = user,
+                Content = content
+            };
+            return reaction;
         }
     }
 }

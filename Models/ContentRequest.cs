@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace onlyarts.Models
 {
     public class ContentRequest
@@ -9,5 +11,6 @@ namespace onlyarts.Models
         public string LinkToBlur { get; set; }
         public int UserID { get; set; }
         public int SubTypeID { get; set; }
+        public List<string> Images { get; set; }
     }
 }
