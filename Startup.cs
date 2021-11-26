@@ -1,4 +1,5 @@
 using System.Text;
+using Newtonsoft;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,8 +28,11 @@ namespace onlyarts
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
+            
             var connectionString = Configuration.GetConnectionString("UsersContext");
             services.AddDbContext<OnlyartsContext>(options =>
                 options.UseMySql(
