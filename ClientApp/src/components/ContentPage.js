@@ -2,9 +2,11 @@ import React, {Component, useState, useEffect} from 'react'
 import {useParams, useRouteMatch} from 'react-router-dom';
 
 import {LineProfileData} from './LineProfileData'
+import LoadingPage from './LoadingPage';
 
 import '../OnlyArts.css'
 import './css/ContentPage.css'
+
 
 function timeout(delay) {
     return new Promise( res => setTimeout(res, delay) );
@@ -54,7 +56,7 @@ function ContentPage(props) {
       return (
         <div className="main-content-block">
             <div className="content-page">
-                Загрузка...
+                <LoadingPage/>
             </div>
         </div>
         );
@@ -81,7 +83,7 @@ function ContentPage(props) {
             return (
             <div className="main-content-block">
                 <div className="content-page">
-                    Загрузка...
+                    <LoadingPage/>
                 </div>
             </div>
             )
