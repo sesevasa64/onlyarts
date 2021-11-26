@@ -18,6 +18,7 @@ namespace onlyarts.Controllers
         private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly ILogger<SubsController> _logger;
+        private readonly string[] includes = new string[] {"Author", "SubUser", "SubType"};
         public SubsController(ILogger<SubsController> logger, OnlyartsContext context, QueryHelper helper)
         {
             _helper = helper;
@@ -27,7 +28,6 @@ namespace onlyarts.Controllers
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            var includes = new string[] {"Author", "SubUser", "SubType"};
             var subs = _helper.getMultipleByID<Subscription>(id, includes);
             if (subs.Count == 0) {
                 return NotFound();
@@ -37,7 +37,6 @@ namespace onlyarts.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            var includes = new string[] {"Author", "SubUser", "SubType"};
             var subs = _helper.getByID<Subscription>(id, includes);
             if (subs == null) {
                 return NotFound();

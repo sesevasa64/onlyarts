@@ -18,7 +18,7 @@ namespace onlyarts.Controllers
         private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly ILogger<UsersController> _logger;
-
+        private readonly string[] includes = new string[] {"Content"};
         public ImagesController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper)
         {
             _helper = helper;
@@ -28,7 +28,7 @@ namespace onlyarts.Controllers
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            var images = _helper.getMultipleByID<Image>(id, new string[] {"Content"});
+            var images = _helper.getMultipleByID<Image>(id, includes);
             if (images.Count == 0) {
                 return NotFound();
             }
@@ -37,7 +37,7 @@ namespace onlyarts.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            var images = _helper.getByID<Image>(id, new string[] {"Content"});
+            var images = _helper.getByID<Image>(id, includes);
             if (images == null) {
                 return NotFound();
             }

@@ -18,6 +18,7 @@ namespace onlyarts.Controllers
         private readonly QueryHelper _helper;
         private readonly OnlyartsContext _context;
         private readonly ILogger<UsersController> _logger;
+        private readonly string[] includes = new string[] {"User", "Content"};
 
         public ReactionsController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper)
         {
@@ -28,7 +29,7 @@ namespace onlyarts.Controllers
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
         {
-            var reactions = _helper.getMultipleByID<Reaction>(id);
+            var reactions = _helper.getMultipleByID<Reaction>(id, includes);
             if (reactions.Count == 0) {
                 return NotFound();
             }
@@ -37,7 +38,7 @@ namespace onlyarts.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            var reaction = _helper.getByID<Reaction>(id, new string[] {"User", "Content"});
+            var reaction = _helper.getByID<Reaction>(id, includes);
             if (reaction == null) {
                 return NotFound();
             }
