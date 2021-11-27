@@ -12,13 +12,35 @@ function timeout(delay) {
     return new Promise( res => setTimeout(res, delay) );
 }
 
-function renderImages(content_item)
+function getImagesByContentId(id, callback_func)
+{
+    fetch(`https://localhost:5001/api/images/contents/${id}`)
+    .then((response)=>{
+        if(response.ok)
+        {
+            return response.json();
+        }
+        else
+        {
+            return 0;
+        }
+    })
+    .then((value)=>{
+        if(value){
+            console.log(value);
+            callback_func(value);
+        }
+        callback_func(0);
+    })
+}
+
+function renderImages(images)
 {
     const images_box = [];
-    for(let i = 0; i < 10; i++)
+    for(let i = 0; i < images.length; i++)
         images_box.push(
             <div className="container-img">
-                <img src={content_item.linkToPreview}></img>
+                <img src={images[i]}></img>
             </div>
         )
     return images_box;
@@ -29,6 +51,7 @@ function ContentPage(props) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
+    const [images, setImages] = useState([]);
     const match = useRouteMatch({
         path: '/ContentPage/:contentId',
         strict: true,
@@ -40,8 +63,6 @@ function ContentPage(props) {
         .then(res => res.json())
         .then(
           (result) => {
-            setIsLoaded(true);
-            console.log(result);
             setItems(result);
           },
           (error) => {
@@ -49,6 +70,16 @@ function ContentPage(props) {
             setError(error);
           }
         )
+        .then((value)=>{
+            getImagesByContentId(match.params.contentId, (result)=>
+            {
+                if(result)
+                {
+                    setIsLoaded(true);
+                    setImages(result);
+                }
+            })
+        })
     }, [])
     if (error) {
       return <div>Ошибка: {error.message}</div>;
@@ -62,14 +93,13 @@ function ContentPage(props) {
         );
     } else
     {
-        console.log(items)
         if(items.length != 0){
             return (
                 <div className="main-content-block">
                     <div className="content-page">
                         <div className="left-flex-box">
                             <div className="content-container">
-                                {renderImages(items)}
+                                {renderImages(images)}
                             </div>
                         </div>
                         <div className="right-flex-box">

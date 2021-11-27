@@ -9,17 +9,17 @@ function LineProfileData(props)
 {
   return (
     <div className="profile-line">
-        <p className="content-name">{props.item.name}</p><br/> 
+        <p className="content-name">{props.item.Name}</p><br/> 
         <div>
-          <img src={props.item.user.linkToAvatar}/>
-          <p><Link to={`/UserPage/${props.item.user.login}`}>{props.item.user.nickname}</Link></p>
+          <img src={props.item.User.LinkToAvatar}/>
+          <p><Link to={`/UserPage/${props.item.User.Login}`}>{props.item.User.Nickname}</Link></p>
         </div>
         <div className="mini-card-about">
-          {props.item.description}
+          {props.item.Description}
         </div>
         <div>
-          <img src={views}></img> {props.item.viewCount}
-          <img className="likes_button" src={likes} onClick={props.onLikeClick}></img> {props.item.likesCount}
+          <img src={views}></img> {props.item.ViewCount}
+          <img className="likes_button" src={likes} onClick={props.onLikeClick}></img> {props.item.LikesCount}
         </div>
       
     </div>

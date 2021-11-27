@@ -16,7 +16,7 @@ function HeaderOA(props)
       </div>
       <div className="box-header-left">
         {props.isAuth || <RoundButton onClick={props.onLoginClick} value={"Логин"}/>}
-        {!props.isAuth || <p>{props.user.Login}</p>}
+        {!props.isAuth || <p>{props.User.Login}</p>}
         {!props.isAuth || <RoundButton onClick={props.onExitClick} value={"Выйти"}></RoundButton>}
       </div>
     </div>
