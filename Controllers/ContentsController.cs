@@ -248,6 +248,10 @@ namespace onlyarts.Controllers
             if (min == 0 && max == 0) {
                 return Json(contents);
             }
+            if (contents.Count < max)
+            {
+                return Json(contents.GetRange(min, contents.Count - min));
+            }
             try {
                 return Json(contents.GetRange(min, max - min));
             } 

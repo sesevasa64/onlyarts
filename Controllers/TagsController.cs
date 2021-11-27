@@ -67,6 +67,10 @@ namespace onlyarts.Controllers
             if (min == 0 & max == 0) {
                 return Json(tags);
             }
+            if (tags.Count < max)
+            {
+                return Json(tags.GetRange(min, tags.Count - min));
+            }
             try {
                 return Json(tags.GetRange(min, max - min));
             }
