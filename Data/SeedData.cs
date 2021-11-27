@@ -184,6 +184,7 @@ namespace onlyarts.Data
                     {
                         Id = i + 1,
                         User = user[i / 2],
+                        SubType = FreeSub,
                         Name = name[i],
                         Description = description[i],
                         ContentType = "pic",
