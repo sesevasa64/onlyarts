@@ -58,7 +58,7 @@ namespace onlyarts.Controllers
             var images = (
                 from image in _context.Images
                 where image.Content == content
-                select image
+                select image.LinkToImage
             ).ToList();
             if (images.Count == 0) {
                 return NotFound();
