@@ -1,0 +1,58 @@
+.successful-page
+{
+    width: 100%;
+    position: relative;
+}
+
+.successful-page>div
+{
+    height: 25%;
+    text-align: center;
+}
+
+.successful-page p
+{
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    animation-name: Appearance;
+    animation-duration: 3s;
+    animation-timing-function: cubic-bezier(.1,-.6,.2,0);
+}
+
+.successful-page img
+{
+    margin: 0 auto;
+    width: 15%;
+    height: 15%;
+
+    animation-name: Appearance;
+    animation-duration: 2s;
+    animation-timing-function: cubic-bezier(.1,-.6,.2,0);
+}
+
+.error-message
+{
+    color: red;
+    font-weight: bold;
+}
+
+@-webkit-keyframes Appearance {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+  }
+  
+  @-o-keyframes Appearance {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+  }
+  
+  @-moz-keyframes Appearance {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+  }
+  
+  @keyframes Appearance {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+  }

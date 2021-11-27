@@ -9,6 +9,8 @@
   flex-wrap: wrap-reverse;
   align-items: flex-end;
 
+  padding: 8px;
+
   height: 100%;
 }
 
@@ -19,10 +21,8 @@
 
 .left-flex-box img
 {
-  
-  margin-left: 10px;
-
-  border-radius: 8px;
+  margin-bottom: 8px;
+  border-radius: 0px;
 }
 
 .right-flex-box
@@ -60,8 +60,7 @@
 
 .content-container img
 {
-  margin-top: 4px;
-  max-width: 98%;
+  max-width: 100%;
 }
 
 @media (max-width: 1200px)

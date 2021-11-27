@@ -6,7 +6,7 @@ function TagList(props)
     const tags_list = [];
     for(let i = 0; i < props.tags.length; i++)
         tags_list.push(
-            <li key={i}>{props.tags[i].tagName}</li>
+            <li key={i}>{props.tags[i].TagName}</li>
         );
     console.log(tags_list);
     return(

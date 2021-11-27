@@ -183,7 +183,6 @@ class RegistrationForm extends React.Component
             Nickname: this.state.nickname,
             LinkToAvatar: this.state.linkToAvatar ? this.state.linkToAvatar : null
         }
-        console.log(JSON.stringify(user));
         fetch('https://localhost:5001/api/users',{
             method: 'POST',
             headers: {

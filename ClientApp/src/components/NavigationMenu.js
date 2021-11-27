@@ -15,7 +15,7 @@ function NavigationMenu(props)
                 <li><Link to="/">Главная страница</Link></li>
                 <li><a>Популярные</a></li>
                 {!props.isAuth || <li><Link to="/NewPost/">Создать пост</Link></li>}
-                {!props.isAuth || <li><Link to={`/UserPage/${props.user.Login}`}>Моя страница</Link></li>}
+                {!props.isAuth || <li><Link to={`/UserPage/${props.User.Login}`}>Моя страница</Link></li>}
                 {!props.isAuth || <li><a>Мои подписки</a></li>}
             </ul>
         </div>

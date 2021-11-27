@@ -1,0 +1,14 @@
+#drop_zone {
+    border: 2px dashed blue;
+    border-radius: 16px;
+    width:  100%;
+    height: 100px;
+    
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+#drop_zone:hover
+{
+    background-color:rgb(242, 249, 251);
+}

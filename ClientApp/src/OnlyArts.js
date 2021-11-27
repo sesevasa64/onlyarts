@@ -21,6 +21,7 @@ import AuthForm from './components/AuthForm';
 import UserPage from './components/UserPage';
 import NewPostPage from './components/NewPostPage';
 
+const max_cont = 100;
 
 class OnlyArts extends Component
 {
@@ -40,18 +41,20 @@ class OnlyArts extends Component
       selectedContent: null,
 	    
       isAuth: false,
-      user:{
+      User:{
         Login: ""
       },
     }
   }
 
-  componentWillMount()
+  componentWillMount() 
   {
     this.userExit = this.userExit.bind(this);
     this.checkAuth();
-    this.loadPopularCards(0, 3);
+    this.loadPopularCards(0, max_cont);
     this.loadPopularTags(0, 3);
+    this.addNewPost = this.addNewPost.bind(this);
+    this.getUserByLogin = this.getUserByLogin.bind(this);
     this.onLikeClick = this.onLikeClick.bind(this);
     this.authFunc = this.authFunc.bind(this);
 	  this.userAuthorize = this.userAuthorize.bind(this);
@@ -83,7 +86,6 @@ class OnlyArts extends Component
     {
       card = await response.json();
       answer = card;
-      answer = [...answer, ...answer, ...answer, ...answer, ...answer, ...answer];
     }
     this.setState({
        content_cards: answer,
@@ -99,6 +101,29 @@ class OnlyArts extends Component
       let json = await response.json();
     }
     return json;
+  }
+
+  async getUserByLogin(login)
+  {
+    fetch(`https://localhost:5001/api/users?login=${login}`)
+    .then((response)=>{
+      if(response.ok){
+        let user = response.json();
+        user['Login'] = login;
+        return user;
+      }
+      else{
+        return 0;
+      }
+    })
+    .then((value)=>{
+      if(value)
+      {
+        this.setState({
+          User: value,
+        })
+      }
+    })
   }
 
   renderSelectedContent(content)
@@ -122,7 +147,7 @@ class OnlyArts extends Component
     this.setState({
       outputRegistationForm: output,
     });
-    this.loadPopularCards(0, 3);
+    this.loadPopularCards(0, max_cont);
   }
   
   checkAuth()
@@ -131,12 +156,9 @@ class OnlyArts extends Component
     let login = getCookie("Login");
     if(authToken && login)
     {
-      console.log(login);
+      this.getUserByLogin(login)
       this.setState({
         authToken: authToken,
-        user: {
-          Login: login
-        },
         isAuth: true,
         outputLoginBox: false,
       })
@@ -149,7 +171,7 @@ class OnlyArts extends Component
       authToken: authToken,
 		  isAuth: true,
 		  outputLoginBox: false,
-      user: {
+      User: {
         Login: login
       },
 	  })
@@ -159,35 +181,36 @@ class OnlyArts extends Component
       setCookie("Login", login);
     }
   }
+
   userExit(login)
   {
     this.setState({
       isAuth: false,
-      user:{
+      User:{
         login: ""
       }
     })
     deleteCookie("authToken");
     deleteCookie("Login");
   }
-
-  authFunc(user, rememberAuth)
-    {
-        /*
+  /*
         User is var with fields: {
             Login: "",
             Password: ""
         }
-        */
+  */
+  authFunc(User, rememberAuth)
+  {
         fetch(`https://localhost:5001/api/users/auth`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify(User)
         })
         .then((response) => {
             if(response.ok){
+                this.getUserByLogin(User.Login);
                 return response.json()
             }
             else{
@@ -198,10 +221,54 @@ class OnlyArts extends Component
         {
             if(result)
             {
-              this.userAuthorize(result.authToken, user.Login, rememberAuth)
+              this.userAuthorize(result.authToken, User.Login, rememberAuth)
             }
         });
     }
+
+    /*
+    Content = {
+      "Name": Name1
+      "Description": Description1,
+      "ContentType": ContentType1,
+      "LinkToPreview": LinkToPreview1,
+      "LinkToBlur": LinkToBlur1,
+      "UserID": 1,
+      "SubTypeID": 1,
+      "Images": [
+        base64,
+        base64,
+        ...
+      ]
+    }
+    */
+  addNewPost(Content, callback_func)
+  {
+    let json_to_post = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify(Content)
+    }
+    console.log(Content);
+    fetch(`https://localhost:5001/api/contents`, json_to_post).
+    then((response) =>{
+      console.log(response.ok)
+      if(response.ok)
+      {
+        callback_func(true);
+        return true;
+      }
+      else
+      {
+        callback_func(false);
+        return true;
+      }
+    }).then((value)=>{
+      return false;
+    })
+  }
 
   async onLikeClick(content_id)
   {
@@ -218,17 +285,16 @@ class OnlyArts extends Component
     }
   }
   render () {
-    console.log(this.state.isAuth);
     return (
       <div className="main-box">
           {(this.state.outputLoginBox && !this.state.isAuth) ? <AuthForm authFunc={this.authFunc} closeBox={this.renderLoginBox} reg_onClick = {this.renderRegistrationForm}/> : "" }
           {!this.state.outputRegistationForm || <RegistrationForm authFunc={this.authFunc} close_onClick={this.renderRegistrationForm}/>}
           <div className="top-flex-div">
             <Logo/>
-            <HeaderOA isAuth={this.state.isAuth} user={this.state.user} onLoginClick={this.renderLoginBox} onExitClick={this.userExit}/>
+            <HeaderOA isAuth={this.state.isAuth} User={this.state.User} onLoginClick={this.renderLoginBox} onExitClick={this.userExit}/>
           </div>
           <div className="menu-flex-div">
-            <NavigationMenu user={this.state.user} isAuth={this.state.isAuth}/>
+            <NavigationMenu User={this.state.User} isAuth={this.state.isAuth}/>
           </div>
           <div className="center-flex-div">
             <TagList tags={this.state.tags}/>
@@ -245,7 +311,7 @@ class OnlyArts extends Component
               <Route exact path="/" render={()=><CardsContentBox content_onClick={this.renderSelectedContent}
                                               content={this.state.content_cards}
                                               title={"Главная страница"}/>}/>
-              <Route path="/NewPost/" render={() => <NewPostPage/>}/>
+              <Route path="/NewPost/" render={() => <NewPostPage User={this.state.User} addNewPost={this.addNewPost}/>}/>
             </Switch>
           </div>
       </div>
