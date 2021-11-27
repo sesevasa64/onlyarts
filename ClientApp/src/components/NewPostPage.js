@@ -3,6 +3,8 @@ import React, {Component} from 'react'
 import './css/NewPostPage.css'
 import RoundButton from './RoundButton';
 import DragAndDrop from './DragAndDrop';
+import LoadingPage from './LoadingPage';
+import SuccessfulPage from './SuccessfulPage';
 
 class NewPostPage extends Component
 {
@@ -23,7 +25,13 @@ class NewPostPage extends Component
             maxNameCount: 30,
             curAboutLength: 0,
             maxAboutCount: 300,
+            
+            contentIsSuccessfulLoad: false,
+            contentIsPushing: false,
+            flagStart: true,
         };
+        this.pushContentCallback = this.pushContentCallback.bind(this);
+        this.publishOnClick = this.publishOnClick.bind(this);
         this.selectLoadedImages = this.selectLoadedImages.bind(this);
         this.addFiles = this.addFiles.bind(this);
     }
@@ -99,28 +107,103 @@ class NewPostPage extends Component
         }
     }
 
+    getImagesAsBase64(files, callback)
+    {
+        let Images = [];
+        if(files.length === 0)
+        {
+            callback(Images);
+        }
+        for(let i = 0; i < files.length; i++)
+        {
+            let reader = new FileReader();
+            reader.readAsDataURL(files[i]);
+            reader.onload = () => {
+                let image_base64 = reader.result;
+                let from = image_base64.search(',') + 1;
+                Images.push(image_base64.substring(from, image_base64.length));
+                if(i == files.length - 1)
+                {
+                    callback(Images);
+                }
+            }
+        }
+        return Images;
+    }
+
+    publishOnClick()
+    {
+        this.setState({
+            contentIsPushing: true,
+        });
+        console.log("Publish click");
+        let callback = (Images) => {
+            this.props.addNewPost({
+                Name: this.state.Name,
+                Description: this.state.Description,
+                ContentType: "aboba",
+                LinkToPreview: "aboba",
+                LinkToBlur: "aboba",
+                UserID: this.props.User.Id,
+                SubTypeID: 1,
+                Images: Images
+            }, this.pushContentCallback);
+        }
+        this.getImagesAsBase64(this.state.files, callback);
+    }
+
+    pushContentCallback(result)
+    {
+        this.setState({
+            contentIsSuccessfulLoad: result,
+            contentIsPushing: false,
+            flagStart: false,
+        })
+    }
+
     render()
     {
-        console.log("render post page");
-        return(
-            <div className="main-content-block">
-                <div className="content-page create-post-page">
-                    <h2>Новый пост</h2>
-                    <label>Название (Осталось символов: {this.state.maxNameCount - this.state.curNameLength})</label>
-                    <input type="text" onChange={this.changeNameLength}></input>
-                    <label>О посте (Осталось символов: {this.state.maxAboutCount - this.state.curAboutLength})</label>
-                    <textarea onChange={this.changeAboutLength}></textarea>
-                    <div className="add-images-block">
-                        <div>
-                            <img src={this.state.img}></img>
-                        </div>
-                        {this.renderSelectBox(this.state.files)}
+        if(this.state.contentIsPushing)
+        {
+            return(
+                <div className="main-content-block">
+                    <div className="content-page">
+                        <LoadingPage/>
                     </div>
-                    <DragAndDrop addFiles={this.addFiles}/>
-                    <RoundButton value="Опубликовать"></RoundButton>
                 </div>
-            </div>
-        );
+            )
+        }
+        else if(this.state.contentIsSuccessfulLoad)
+        {
+            return(
+                <div className="main-content-block">
+                    <div className="content-page">
+                        <SuccessfulPage/>
+                    </div>
+                </div>
+            )
+        }
+        return(
+                <div className="main-content-block">
+                    <div className="content-page create-post-page">
+                        <h2>Новый пост</h2>
+                        {!this.state.contentIsLoad && !this.state.flagStart ? <p className="error-message">Проверьте корректность введеных данных</p> : ""}
+                        <label>Название (Осталось символов: {this.state.maxNameCount - this.state.curNameLength})</label>
+                        <input type="text" onChange={this.changeNameLength} defaultValue={this.state.Name}></input>
+                        <label>О посте (Осталось символов: {this.state.maxAboutCount - this.state.curAboutLength})</label>
+                        <textarea onChange={this.changeAboutLength} defaultValue={this.state.Description}></textarea>
+                        <div className="add-images-block">
+                            <div>
+                                <img src={this.state.img}></img>
+                            </div>
+                            {this.renderSelectBox(this.state.files)}
+                        </div>
+                        <DragAndDrop addFiles={this.addFiles}/>
+                        <RoundButton value="Опубликовать" onClick={this.publishOnClick}></RoundButton>
+                        {this.state.contentIsLoad && <p>Контент успешно загружен</p>}
+                    </div>
+                </div>
+            )
     }
 }
 
