@@ -35,7 +35,9 @@ class NewPostPage extends Component
         this.selectLoadedImages = this.selectLoadedImages.bind(this);
         this.addFiles = this.addFiles.bind(this);
     }
-
+    /*
+    Функция, обрабатывающая событие onchange компонента select для того, чтобы отобразить выбранное пользователем изображение в поле. 
+    */
     selectLoadedImages = (event) =>
     {
         let selected_file = this.state.files[event.target.selectedIndex];
@@ -47,7 +49,10 @@ class NewPostPage extends Component
             })
         };
     }
-
+    /*
+    Функция, занимающаяся генерацией компонента select, а именно
+    она загружает из массива items название имен файлов в компонент select и возвращаяет вновь созданный компонент
+    */
     renderSelectBox(items)
     {        
         let elem_select = [];
@@ -63,7 +68,9 @@ class NewPostPage extends Component
             </select>
         )
     }
-
+    /*
+        Функция ограничивающая ввод в строку имя
+    */
     changeNameLength  = (event) =>
     {
         let Name = event.target.value;
@@ -79,7 +86,15 @@ class NewPostPage extends Component
             event.target.value = this.state.Name;
         }
     }
+    //Функция проверяющая корректность длины имени
+    nameLengthIsCorrect = (name) => name.length >= 3 && name.length <= 30 
 
+    //Функция проверяющая корректность длины описания
+    descriptionLengthIsCorrect = (name) => name.length >= 3 && name.length <= 300
+
+    /*
+    Функция ограничивающая ввод в строку описания
+    */
     changeAboutLength  = (event) =>
     {
         let Description = event.target.value;
@@ -95,7 +110,10 @@ class NewPostPage extends Component
             event.target.value = this.state.Description;
         }
     }
-
+    /*
+        Функция добавляющая новые файлы в массив файлов.
+        new_file - указатель на файл, который будет добавлен в массив files
+    */
     addFiles(new_file)
     {
         if(new_file)
@@ -106,7 +124,12 @@ class NewPostPage extends Component
             })
         }
     }
-
+    /*
+    Функция преобразующая массив файлов в строку в формате base64,
+    fails - массив файлов
+    callback - функция, вызывающаяся после того, как все файлы были загружены, 
+    принимающая параметры Images - массив изображений в формате строк base64
+    */
     getImagesAsBase64(files, callback)
     {
         let Images = [];
@@ -130,28 +153,36 @@ class NewPostPage extends Component
         }
         return Images;
     }
-
+    //Функция обрабатывающая нажатие на кнопку "Опубликовать"
     publishOnClick()
     {
-        this.setState({
-            contentIsPushing: true,
-        });
-        console.log("Publish click");
-        let callback = (Images) => {
-            this.props.addNewPost({
-                Name: this.state.Name,
-                Description: this.state.Description,
-                ContentType: "aboba",
-                LinkToPreview: "aboba",
-                LinkToBlur: "aboba",
-                UserID: this.props.User.Id,
-                SubTypeID: 1,
-                Images: Images
-            }, this.pushContentCallback);
+        if(this.nameLengthIsCorrect(this.state.Name) && this.descriptionLengthIsCorrect(this.state.Description))
+        {
+            this.setState({
+                contentIsPushing: true,
+            });
+            console.log("Publish click");
+            let callback = (Images) => {
+                this.props.addNewPost({
+                    Name: this.state.Name,
+                    Description: this.state.Description,
+                    ContentType: "aboba",
+                    LinkToPreview: "aboba",
+                    LinkToBlur: "aboba",
+                    UserID: this.props.User.Id,
+                    SubTypeID: 1,
+                    Images: Images
+                }, this.pushContentCallback);
+            }
+            this.getImagesAsBase64(this.state.files, callback);
         }
-        this.getImagesAsBase64(this.state.files, callback);
+        else{
+            this.setState({
+                flagStart: false,
+            })
+        }
     }
-
+    //Функция, вызываемая после попытки загрузки контенты
     pushContentCallback(result)
     {
         this.setState({
@@ -159,6 +190,30 @@ class NewPostPage extends Component
             contentIsPushing: false,
             flagStart: false,
         })
+    }
+    //Функция, занимающаяся генерацией лейбла, распологающегося над полем ввода имени. Внутри используются внутренние состояния компонента
+    renderNameLabel()
+    {
+        /*Проверка на flagStart здесь нужна для того, чтобы в тот момент, когда пользователь открыл компонент первый раз
+        У него не было подсвеченно красным, что он сделал что-то не так
+        */
+        return(
+            this.nameLengthIsCorrect(this.state.Name) || this.state.flagStart ? 
+            <label>Название (Осталось символов: {this.state.maxNameCount - this.state.curNameLength})</label> :
+            <label className="error-message">Длина имени должна быть от 3 до 30 (Включительно)</label>
+        )
+    }
+    //Функция, занимающаяся генерацией лейбла, распологающегося над полем ввода "Описание". Внутри используются внутренние состояния компонента
+    renderDescriptionLabel()
+    {
+        /*Проверка на flagStart здесь нужна для того, чтобы в тот момент, когда пользователь открыл компонент первый раз
+        У него не было подсвеченно красным, что он сделал что-то не так
+        */
+        return(
+            this.descriptionLengthIsCorrect(this.state.Description) || this.state.flagStart ?
+            <label> О посте (Осталось символов: {this.state.maxAboutCount - this.state.curAboutLength})</label> :
+            <label className="error-message">Длина описания должна быть от 3 до 300 (Включительно)</label>
+        )
     }
 
     render()
@@ -183,14 +238,15 @@ class NewPostPage extends Component
                 </div>
             )
         }
+        console.log(this.state.flagStart)
         return(
                 <div className="main-content-block">
                     <div className="content-page create-post-page">
                         <h2>Новый пост</h2>
                         {!this.state.contentIsLoad && !this.state.flagStart ? <p className="error-message">Проверьте корректность введеных данных</p> : ""}
-                        <label>Название (Осталось символов: {this.state.maxNameCount - this.state.curNameLength})</label>
+                        {this.renderNameLabel()}
                         <input type="text" onChange={this.changeNameLength} defaultValue={this.state.Name}></input>
-                        <label>О посте (Осталось символов: {this.state.maxAboutCount - this.state.curAboutLength})</label>
+                        {this.renderDescriptionLabel()}
                         <textarea onChange={this.changeAboutLength} defaultValue={this.state.Description}></textarea>
                         <div className="add-images-block">
                             <div>
