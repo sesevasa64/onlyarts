@@ -106,11 +106,15 @@ class RegistrationForm extends React.Component
         });
     }
 
+    /*
+        Метод, обрабатывающий нажатие на кнопку "Регистрация"
+    */
+
     onRegButtonClick(event)
     {
-        let email_placeholder = "aboba@gmail.com";
-        let email_class = ""; 
-        let email_correct = false;
+        let email_placeholder = "aboba@gmail.com"; //Плейсхолдер, вставляющийся в поле для воода email
+        let email_class = "";  //класс стиля для лейбла, расположенного над полев ввода email
+        let email_correct = false; //флаг, отвечающий за понимание того, корректно ли был введен email
         //Проверяем корректность email
         if(!this.state.re_email.test(this.state.email))
         {
@@ -122,9 +126,9 @@ class RegistrationForm extends React.Component
             email_class = "correct-input";
             email_correct = true;
         }
-        let login_correct = false;
-        let login_class = ""; 
-        let login_error_str = "";
+        let login_correct = false; //Плейсхолдер, вставляющийся в поле для воода login
+        let login_class = ""; //Класс стиля для лейбла, расположенного над полев ввода login
+        let login_error_str = ""; //Флаг, отвечающий за понимание того, корректно ли был введен login
         //Проверяем корректность логина
         if(this.state.login.length > 5 && this.state.login.length < 21)
         {
@@ -137,9 +141,9 @@ class RegistrationForm extends React.Component
             login_error_str = "Пароль должен быть от 6 до 20 символов";
         }
         //Проверяем корректность никнейма
-        let nickname_class = "";
-        let nickname_correct = false;
-        let nickname_error_str = "";
+        let nickname_class = ""; //Плейсхолдер, вставляющийся в поле для воода nickname
+        let nickname_correct = false; //класс стиля для лейбла, расположенного над полев ввода nickname
+        let nickname_error_str = ""; //флаг, отвечающий за понимание того, корректно ли был введен nickname
 
         if(this.state.nickname.length > 5 && this.state.nickname.length < 21)
         {
@@ -167,8 +171,8 @@ class RegistrationForm extends React.Component
             nickname_class: nickname_class,
         });
 
-        if(this.state.email_correct&&this.state.password_correct
-            &&this.state.login_correct && this.state.nickname_correct)
+        if(email_correct&&this.state.password_correct
+            &&login_correct && nickname_correct)
         {
             this.postRegistration();
         }
@@ -193,7 +197,7 @@ class RegistrationForm extends React.Component
         .then((response) => {
             if(response.ok){
                 this.setState({
-                    regIsCorrect: true, //Устанавливаем, что регистраци прошла успешно
+                    regIsCorrect: true, //Устанавливаем, что регистрация прошла успешно
                 });
                 this.props.authFunc({
                     Login: user.Login,
@@ -209,6 +213,7 @@ class RegistrationForm extends React.Component
 
     render()
     {
+        //Если регистрация прошла успешно 
         if(this.state.regIsCorrect)
         {
             return (
@@ -260,10 +265,3 @@ class RegistrationForm extends React.Component
 }
 
 export default RegistrationForm;
-
-/*
-<label>Код подтверждения регистрации отправлен вам на почту {this.state.email}</label>
-                            <label>Введите код подтверждения</label>
-                            <input type="text"/>
-                            <button>Переотправить</button>
-*/
