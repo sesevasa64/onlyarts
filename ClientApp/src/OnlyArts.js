@@ -20,6 +20,7 @@ import {t1, t2, t3, t4} from './models/TestContentCard'
 import AuthForm from './components/AuthForm';
 import UserPage from './components/UserPage';
 import NewPostPage from './components/NewPostPage';
+import EditUserPage from './components/EditUserPage';
 
 const max_cont = 100;
 
@@ -312,6 +313,7 @@ class OnlyArts extends Component
                                               content={this.state.content_cards}
                                               title={"Главная страница"}/>}/>
               <Route path="/NewPost/" render={() => <NewPostPage User={this.state.User} addNewPost={this.addNewPost}/>}/>
+              <Route path="/EditUser/" render={() => <EditUserPage User={this.state.User}></EditUserPage>}></Route>
             </Switch>
           </div>
       </div>
