@@ -24,7 +24,15 @@
 {
     display: inline-block;
 }
-.box-header-left p
+.box-header-left *
 {
     margin-right: 10px;
+}
+.box-header-left img
+{
+    border-radius: 50%;
+}
+.box-header-left img:hover
+{
+    cursor: pointer;
 }
