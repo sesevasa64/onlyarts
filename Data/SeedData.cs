@@ -155,7 +155,8 @@ namespace onlyarts.Data
                     "https://api.nsn.fm/storage/medialib/360264/large_image-a12ba51225f6f81a83f167e668d83417.jpg",
                     "https://kurganfm.ru/wp-content/uploads/2019/08/1431031451_ThinkstockPhotos-174308224.jpg",
                     "https://eda-land.ru/images/article/orig/2018/07/kak-proverit-kachestvo-tvoroga-v-domashnih-usloviyah.jpg",
-                    "https://funik.ru/wp-content/uploads/2018/10/17478da42271207e1d86.jpg"
+                    "https://funik.ru/wp-content/uploads/2018/10/17478da42271207e1d86.jpg",
+                    "https://sun9-75.userapi.com/impg/n3ZaUpCjnyVELnb5_nB7IWshFADrqsHRU2THEA/no06JPFqh88.jpg?size=1080x973&quality=96&sign=478300ad5bc4113c7adba83f002ba564&type=album"
                 };
                 String[] name = new String[]
                 {
@@ -165,7 +166,8 @@ namespace onlyarts.Data
                     "Копейск",
                     "Спорт",
                     "Творог",
-                    "Котики"
+                    "Котики",
+                    "Котейки"
                 }; 
                 String[] description = new String[]
                 {
@@ -175,10 +177,11 @@ namespace onlyarts.Data
                     "Копейск. Просто Копейск. Просто копейка",
                     "Спорт пацаны, это наше все! ЗОЖ!!! ЗОЖ!!! ЗОЖ!!!",
                     "Люблю творог. Он такой красивый, он такой вкусный!",
-                    "Котики милые? Конечно они всегда милые!"
+                    "Котики милые? Конечно они всегда милые!",
+                    "Вам мало котиков? Ну вот держите!"
                 }; 
-                Content[] con = new Content[7];
-                for(int i = 0; i < 7; i++)
+                Content[] con = new Content[8];
+                for(int i = 0; i < 8; i++)
                 {
                     con[i] = new Content
                     {
@@ -218,12 +221,15 @@ namespace onlyarts.Data
                     "https://phonoteka.org/uploads/posts/2021-07/1625190189_5-phonoteka-org-p-zastavki-na-telefon-kotiki-krasivie-zastav-5.jpg",
                     "https://i02.fotocdn.net/s116/f3e8783ad7851098/public_pin_l/2633618515.jpg",
                     "https://crosti.ru/patterns/00/21/da/b144f6ffd7/picture.jpg",
-                    "https://funik.ru/wp-content/uploads/2018/10/cd494811d5a5edcb3159.jpg"
+                    "https://funik.ru/wp-content/uploads/2018/10/cd494811d5a5edcb3159.jpg",
+                    "https://sun9-75.userapi.com/impg/n3ZaUpCjnyVELnb5_nB7IWshFADrqsHRU2THEA/no06JPFqh88.jpg?size=1080x973&quality=96&sign=478300ad5bc4113c7adba83f002ba564&type=album",
+                    "https://sun9-11.userapi.com/impg/tZaRKXXWXro-7A_2qSyfCIeLGhcabZkbA3TuSg/GX2v5esmeoU.jpg?size=1280x960&quality=96&sign=622dee13393f6d626f716283110b1baa&type=album",
+                    "https://sun9-75.userapi.com/impg/nMdPWHpzl2a6_ZA2yT7TS64GZF0HVKNuhhUegQ/RAxlzfRgJtI.jpg?size=1200x628&quality=96&sign=8f59d991c9d61c8dc5eedf0881800390&type=album"
                 };
 
-                int[] n_img = new int[] {2, 2, 2, 2, 3, 4, 5};
-                Image[] img = new Image[20];
-                for(int i = 0, m = 0; i < 7; i++)
+                int[] n_img = new int[] {2, 2, 2, 2, 3, 4, 5, 3};
+                Image[] img = new Image[23];
+                for(int i = 0, m = 0; i < 8; i++)
                 {
                     for(int j = 0; j < n_img[i]; j++)
                     {
