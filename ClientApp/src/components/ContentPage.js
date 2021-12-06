@@ -7,6 +7,7 @@ import LoadingPage from './LoadingPage';
 import '../OnlyArts.css'
 import './css/ContentPage.css'
 
+let host_name = "https://" + document.location.host;
 
 function timeout(delay) {
     return new Promise( res => setTimeout(res, delay) );
@@ -14,7 +15,7 @@ function timeout(delay) {
 
 function getImagesByContentId(id, callback_func)
 {
-    fetch(`https://localhost:5001/api/images/contents/${id}`)
+    fetch(`${host_name}/api/images/contents/${id}`)
     .then((response)=>{
         if(response.ok)
         {
@@ -59,7 +60,7 @@ function ContentPage(props) {
       });
 
     useEffect(() => {
-      fetch(`https://localhost:5001/api/contents/${match.params.contentId}`)
+      fetch(`${host_name}/api/contents/${match.params.contentId}`)
         .then(res => res.json())
         .then(
           (result) => {
