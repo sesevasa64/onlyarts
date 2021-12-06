@@ -20,8 +20,11 @@ import {t1, t2, t3, t4} from './models/TestContentCard'
 import AuthForm from './components/AuthForm';
 import UserPage from './components/UserPage';
 import NewPostPage from './components/NewPostPage';
+import EditUserPage from './components/EditUserPage';
 
-const max_cont = 100;
+let host_name = "https://" + document.location.host;
+
+const max_cont = 18;
 
 class OnlyArts extends Component
 {
@@ -32,6 +35,7 @@ class OnlyArts extends Component
     {
       content_cards: [],
       current_content: 0,
+      loadContent: null,
 
       tags: [],
 
@@ -44,6 +48,7 @@ class OnlyArts extends Component
       User:{
         Login: ""
       },
+
     }
   }
 
@@ -51,8 +56,13 @@ class OnlyArts extends Component
   {
     this.userExit = this.userExit.bind(this);
     this.checkAuth();
+
+    this.loadPopularCards = this.loadPopularCards.bind(this);
+    this.setState({
+      loadContent: this.loadPopularCards,
+    })
     this.loadPopularCards(0, max_cont);
-    this.loadPopularTags(0, 3);
+    this.loadPopularTags(0, 10);
     this.addNewPost = this.addNewPost.bind(this);
     this.getUserByLogin = this.getUserByLogin.bind(this);
     this.onLikeClick = this.onLikeClick.bind(this);
@@ -67,7 +77,7 @@ class OnlyArts extends Component
   async loadPopularTags(from, to)
   {
     let tags = [];
-    let response = await fetch(`https://localhost:5001/api/tags/popular?min=${from}&max=${to}`)
+    let response = await fetch(`${host_name}/api/tags/popular?min=${from}&max=${to}`)
     if(response.ok)
     {
       tags = await response.json();
@@ -77,15 +87,21 @@ class OnlyArts extends Component
     }
   }
 
-  async loadPopularCards(from, to)
+  async loadPopularCards(from, to, callback)
   {
     let card;
     let answer = []; // Карточки на стринице
-    let response = await fetch(`https://localhost:5001/api/contents/popular?min=${from}&max=${to}`)
+    let response = await fetch(`${host_name}/api/contents/popular?min=${from}&max=${to}`);
+    console.log("PIDOR");
     if(response.ok)
     {
       card = await response.json();
       answer = card;
+      console.log(answer);
+    }
+    if(callback)
+    {
+      callback(response.ok);
     }
     this.setState({
        content_cards: answer,
@@ -94,7 +110,7 @@ class OnlyArts extends Component
 
   async getContentById(contentId)
   {
-    let response = await fetch(`https://localhost:5001/api/contents/${contentId}`);
+    let response = await fetch(`${host_name}/api/contents/${contentId}`);
     let json = null;
     if(response.ok)
     {
@@ -105,7 +121,7 @@ class OnlyArts extends Component
 
   async getUserByLogin(login)
   {
-    fetch(`https://localhost:5001/api/users?login=${login}`)
+    fetch(`${host_name}/api/users?login=${login}`)
     .then((response)=>{
       if(response.ok){
         let user = response.json();
@@ -201,7 +217,7 @@ class OnlyArts extends Component
   */
   authFunc(User, rememberAuth)
   {
-        fetch(`https://localhost:5001/api/users/auth`,{
+        fetch(`${host_name}/api/users/auth`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -252,7 +268,7 @@ class OnlyArts extends Component
       body: JSON.stringify(Content)
     }
     console.log(Content);
-    fetch(`https://localhost:5001/api/contents`, json_to_post).
+    fetch(`${host_name}/api/contents`, json_to_post).
     then((response) =>{
       console.log(response.ok)
       if(response.ok)
@@ -272,7 +288,7 @@ class OnlyArts extends Component
 
   async onLikeClick(content_id)
   {
-    let response = await fetch(`https://localhost:5001/api/content/${content_id}/like`,{
+    let response = await fetch(`${host_name}/api/content/${content_id}/like`,{
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -309,9 +325,11 @@ class OnlyArts extends Component
                                               title={`Карточки пользователя`}/>}/>
               </Route>
               <Route exact path="/" render={()=><CardsContentBox content_onClick={this.renderSelectedContent}
+                                              loadContent={this.state.loadContent}
                                               content={this.state.content_cards}
                                               title={"Главная страница"}/>}/>
               <Route path="/NewPost/" render={() => <NewPostPage User={this.state.User} addNewPost={this.addNewPost}/>}/>
+              <Route path="/EditUser/" render={() => <EditUserPage User={this.state.User}></EditUserPage>}></Route>
             </Switch>
           </div>
       </div>
