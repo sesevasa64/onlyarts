@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic; 
@@ -295,7 +296,7 @@ namespace onlyarts.Controllers
                 where user.Login == login
                 orderby content.ViewCount, content.LikesCount descending
                 select content
-            ).Include(contents => contents.User).Include(contents => contents.SubType)
+            ).Include(contents => contents.SubType)
             .ToList();
             if (min == 0 && max == 0) {
                 return Json(contents);
@@ -357,6 +358,21 @@ namespace onlyarts.Controllers
             catch (ArgumentException) {
                 return NotFound();
             }
+        }
+        [HttpGet("like")]
+        public ActionResult GetContentByName([FromQuery] string name)
+        {
+            var contents = (
+                from content in _context.Contents
+                where content.Name.Contains(name)
+                select content
+            ).Include(content => content.User)
+            .Include(content => content.SubType)
+            .ToList();
+            if (contents == null) {
+                return NotFound();
+            }
+            return Json(contents);
         }
         private List<Models.Content> GetUserContent(int id) 
         {
