@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,18 @@ namespace onlyarts.Controllers
             _context.SaveChanges();
             return Ok();
         }
+        [HttpPut]
+        public ActionResult Put(UserUpdateRequest request) 
+        {
+            var user = _helper.getByID<User>(request.Id);
+            if (user == null) {
+                return NotFound();
+            }
+            user.Nickname = request.Nickname;
+            user.Info = request.Info;
+            _context.SaveChanges();
+            return Ok();
+        }
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
@@ -78,33 +91,6 @@ namespace onlyarts.Controllers
                 return NotFound();
             }
             return Json(user);
-        }
-        [HttpGet("popular")]
-        public ActionResult Get([FromQuery] int min, [FromQuery] int max)
-        {
-            // Задача для Артема Юнусова
-            // Нужно вернуть список популярных юзеров с min по max позиции
-            var subsCount = (
-                from sub in _context.Subscriptions.Include(x => x.Author).Include(x => x.SubUser).AsEnumerable()
-                group sub by sub.Author into subGB
-                select new {User = subGB.Key, SubUser = from s in subGB select s.SubUser, Count = (from s in subGB select s.SubUser).Count()});
-            var users = (
-                from user in subsCount
-                orderby user.Count descending
-                select user.User).ToList();
-            if (min == 0 && max == 0) {
-                return Json(users);
-            }
-            if (users.Count < max)
-            {
-                return Json(users.GetRange(min, users.Count - min));
-            }
-            try {
-                return Json(users.GetRange(min, max - min));
-            }
-            catch (ArgumentException) {
-                return NotFound();
-            }
         }
         [HttpPost("auth")]
         public ActionResult Auth(AuthenticationRequest request) 
@@ -121,6 +107,31 @@ namespace onlyarts.Controllers
             return Json(new AuthenticationResponse {
                 AuthToken = _tokenGenerator.generateAuthToken(user)
             });
+        }
+        [HttpGet("popular")]
+        public ActionResult Get([FromQuery] int min, [FromQuery] int max)
+        {
+            var users = GetPopularUsers();
+            if (min >= users.Count) {
+                return NotFound();
+            }
+            return Json(_helper.GetMinMax<User>(users, min, max));
+        }
+        public List<User> GetPopularUsers()
+        {
+            // Задача для Артема Юнусова
+            // Нужно вернуть список популярных юзеров с min по max позиции
+            var subsCount = (
+                from sub in _context.Subscriptions.Include(x => x.Author).Include(x => x.SubUser).AsEnumerable()
+                group sub by sub.Author into subGB
+                select new {User = subGB.Key, SubUser = from s in subGB select s.SubUser, Count = (from s in subGB select s.SubUser).Count()}
+            );
+            var users = (
+                from user in subsCount
+                orderby user.Count descending
+                select user.User
+            ).ToList();
+            return users;
         }
     }
 }

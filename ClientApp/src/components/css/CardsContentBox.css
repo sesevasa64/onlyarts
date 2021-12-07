@@ -5,3 +5,11 @@
     grid-gap: 20px;
     width: 100%;
 }
+
+.bottom-buttons
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}

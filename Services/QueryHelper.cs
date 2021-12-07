@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using onlyarts.Extensions;
@@ -45,6 +46,17 @@ namespace onlyarts.Services
                 select _user
             ).SingleOrDefault();
             return user;
+        }
+        public List<T> GetMinMax<T>(List<T> collection, int min, int max)
+        {
+            var length = collection.Count;
+            if (min == 0 && max == 0) {
+                return collection;
+            }
+            if (max - min > length) {
+                return collection.GetRange(min, length - min);
+            }
+            return collection.GetRange(min, max - min);
         }
     }
 }

@@ -91,6 +91,17 @@ namespace onlyarts.Controllers
             }
             return Ok();
         }
+        [HttpPut]
+        public ActionResult Put(ContentUpdateRequest request) 
+        {
+            var content = _helper.getByID<Content>(request.Id);
+            if (content == null) {
+                return NotFound();
+            }
+            content.Description = request.Description;
+            _context.SaveChanges();
+            return Ok();
+        }
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
@@ -246,19 +257,10 @@ namespace onlyarts.Controllers
             ).Include(contents => contents.User)
             .Include(contents => contents.SubType)
             .ToList();
-            if (min == 0 && max == 0) {
-                return Json(contents);
-            }
-            if (contents.Count < max)
-            {
-                return Json(contents.GetRange(min, contents.Count - min));
-            }
-            try {
-                return Json(contents.GetRange(min, max - min));
-            } 
-            catch (ArgumentException) {
+            if (min >= contents.Count) {
                 return NotFound();
             }
+            return Json(_helper.GetMinMax<Content>(contents, min, max));
         }
         [HttpGet("popular/{name}")]
         public ActionResult Get(string name, [FromQuery] int min, [FromQuery] int max)
@@ -272,19 +274,10 @@ namespace onlyarts.Controllers
                 select content
             ).Include(contents => contents.User).Include(contents => contents.SubType)
             .ToList();
-            if (min == 0 && max == 0) {
-                return Json(contents);
-            }
-            if (contents.Count < max)
-            {
-                return Json(contents.GetRange(min, contents.Count - min));
-            }
-            try {
-                return Json(contents.GetRange(min, max - min));
-            } 
-            catch (ArgumentException) {
+            if (min >= contents.Count) {
                 return NotFound();
             }
+            return Json(_helper.GetMinMax<Content>(contents, min, max));
         }
         [HttpGet("popular/user/{login}")]
         public ActionResult GetContentByLogin(string login, [FromQuery] int min, [FromQuery] int max)
@@ -298,33 +291,19 @@ namespace onlyarts.Controllers
                 select content
             ).Include(contents => contents.SubType)
             .ToList();
-            if (min == 0 && max == 0) {
-                return Json(contents);
-            }
-            if (contents.Count < max)
-            {
-                return Json(contents.GetRange(min, contents.Count - min));
-            }
-            try {
-                return Json(contents.GetRange(min, max - min));
-            } 
-            catch (ArgumentException) {
+            if (min >= contents.Count) {
                 return NotFound();
             }
+            return Json(_helper.GetMinMax<Content>(contents, min, max));
         }
         [HttpGet("tags/{name}")]
         public ActionResult Get(string name, [FromQuery] int limit)
         {
             var content = GetContentsByTag(name);
-            if (limit == 0) {
+            if (limit == 0 || limit >= content.Count) {
                 return Json(content);
             }
-            try {
-                return Json(content.GetRange(0, limit));
-            } 
-            catch (ArgumentException) {
-                return NotFound();
-            }
+            return Json(content.GetRange(0, limit));
         }
         [HttpGet("users")]
         public ActionResult Get([FromQuery] string login)
@@ -349,15 +328,10 @@ namespace onlyarts.Controllers
         public ActionResult Get(int id, [FromQuery] int min, [FromQuery] int max)
         {
             var content = GetUserContent(id);
-            if (min == 0 & max == 0) {
-                return Json(content);
-            }
-            try {
-                return Json(content.GetRange(min, max - min));
-            } 
-            catch (ArgumentException) {
+            if (min >= content.Count) {
                 return NotFound();
             }
+            return Json(_helper.GetMinMax<Content>(content, min, max));
         }
         [HttpGet("like")]
         public ActionResult GetContentByName([FromQuery] string name)

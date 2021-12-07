@@ -46,16 +46,14 @@ namespace onlyarts.Controllers
         [HttpGet("users/{id}")]
         public ActionResult Get(int id, [FromQuery] int min, [FromQuery] int max)
         {
-            var content = GetUserSubs(id);
-            if (min == 0 & max == 0) {
-                return Json(content);
-            }
-            try {
-                return Json(content.GetRange(min, max - min));
-            } 
-            catch (ArgumentException) {
+            var subs = GetUserSubs(id);
+            if (min >= subs.Count) {
                 return NotFound();
             }
+            return Json((
+                from user in _helper.GetMinMax<User>(subs, min, max)
+                select new UserSubsResponse(user.Login, user.Nickname, user.LinkToAvatar)
+            ).ToList());
         }
         [HttpPost("{id}")]
         public ActionResult Post(int id)
@@ -66,9 +64,10 @@ namespace onlyarts.Controllers
         private List<Models.User> GetUserSubs(int id) 
         {
             var subscribers = (
-                        from subscriber in _context.Subscriptions
-                        where subscriber.Author.Id == id
-                        select subscriber.SubUser).ToList();
+                from subscriber in _context.Subscriptions
+                where subscriber.Author.Id == id
+                select subscriber.SubUser
+            ).ToList();
             return subscribers;
         }
     }
