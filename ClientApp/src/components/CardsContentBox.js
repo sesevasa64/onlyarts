@@ -4,6 +4,8 @@ import './css/CardsContentBox.css'
 import RoundButton from './RoundButton';
 import LoadingPage from './LoadingPage';
 
+
+
 class CardsContentBox extends Component
 {
     constructor(props)

@@ -2,12 +2,14 @@ import React, {Component, useState, useEffect} from 'react';
 import {useParams, useRouteMatch} from 'react-router-dom';
 import './css/UserPage.css';
 import '../OnlyArts.css';
+import CardsContentBox from './CardsContentBox';
 
 function UserPage(props)
 {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [user, setItems] = useState([]);
+    const [contents, setContents] = useState([]);
     const match = useRouteMatch({
         path: '/UserPage/:login',
         strict: true,
@@ -18,9 +20,16 @@ function UserPage(props)
         .then(res => res.json())
         .then(
           (result) => {
-            setIsLoaded(true);
-            
             setItems(result);
+            props.loadUserContent(result.Login, 0, 18, (items, suc) =>
+            {
+              if(suc)
+              {
+                setIsLoaded(true);
+                setContents(items);
+                console.log(items);
+              }
+            })
           },
           (error) => {
             setIsLoaded(true);
@@ -48,7 +57,9 @@ function UserPage(props)
                       <p className="user-about">{user.Info || "Да-да, инфы нет, соре. ПацаНы!!"}</p>
                   </div>
               </div>
-              {props.content}
+              <CardsContentBox content_onClick={props.renderSelectedContent}
+                               content={contents}
+                               title={`Карточки пользователя`}/>
           </div>
           );
       }
