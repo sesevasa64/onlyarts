@@ -141,6 +141,36 @@ class OnlyArts extends Component
       }
     })
   }
+  /*
+  Метод возвращающий контент пользователя по логину
+  login - логин пользователя
+  min - самый популярный
+  max - популярный контент на позииции max
+  callback(contents, sucLoad) - функция, передастся массив значений карточек и значение типа bool, указывающее на успешность запроса, где true - успешен, false - не успешен.  
+  */
+  async getContentByLogin(login, min, max, callback)
+  {
+    fetch(`${host_name}/api/contents/popular/user/${login}?min=${min}&max=${max}`)
+    .then((response) => {
+      if(response.ok)
+      {
+        let contents  = response.json();
+        return contents;
+      }
+      else
+      {
+        console.log("Ha-ha")
+        callback([], false);
+      }
+    })
+    .then((value)=>
+    {
+      if(value)
+      {
+        callback(value, true);
+      }
+    })
+  }
 
   renderSelectedContent(content)
   {
@@ -319,10 +349,9 @@ class OnlyArts extends Component
                 <ContentPage onLikeClick={this.onLikeClick}/>
               </Route>
               <Route path={'/UserPage/:login'}>
-                <UserPage content={<CardsContentBox
-                                              content_onClick={this.renderSelectedContent}
-                                              content={this.state.content_cards}
-                                              title={`Карточки пользователя`}/>}/>
+                <UserPage loadUserContent={this.getContentByLogin}
+                          renderSelectedContent = {this.renderSelectedContent}
+                          />
               </Route>
               <Route exact path="/" render={()=><CardsContentBox content_onClick={this.renderSelectedContent}
                                               loadContent={this.state.loadContent}

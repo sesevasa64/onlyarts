@@ -36,3 +36,18 @@
 {
     cursor: pointer;
 }
+.gcse-search
+{
+    background: rgba(0, 0, 0, 0);
+    width: 400px;
+}
+
+#___gcse_0
+{
+    width: 450px;
+}
+
+.gsc-control-cse
+{
+    border-radius: 2px;
+}

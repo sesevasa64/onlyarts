@@ -64,6 +64,7 @@ function ContentPage(props) {
         .then(res => res.json())
         .then(
           (result) => {
+            setIsLoaded(true);
             setItems(result);
           },
           (error) => {
@@ -121,92 +122,5 @@ function ContentPage(props) {
         }
     }
 }
-/*items.map(current_item =>(
-        <div className="main-content-block">
-            <div className="content-page">
-                <div className="left-flex-box">
-                    {renderImages(current_item)}
-                </div>
-                <div className="right-flex-box">
-                    <LineProfileData item={current_item}/>
-                </div>
-            </div>
-        </div>))*/
-/*
-function ContentPage (props)
-{
-    const {contentId} = useParams();
-    let primise = getContentById(contentId);
-    primise.then((content_item)=>
-    {
-        let images;
-        alert(content_item);
-
-        images = renderImages(content_item);
-        return(
-            <div className="content-page">
-            <div className="left-flex-box">
-                {images}
-            </div>
-            <div className="right-flex-box">
-                <LineProfileData content_item={content_item}/>
-            </div>
-            </div>
-        )
-    })
-} 
-
-class ContentPage extends Component
-{
-    constructor(props)
-    {
-        super(props);
-        this.setState({
-            //contentId: props.match.params.contentId,
-            content_item: Object,
-            isLoaded: false,
-        });
-    }
-
-    renderImages(content_item)
-    {
-        const images_box = [];
-        for(let i = 0; i < 3; i++)
-            images_box.push(
-                <img src={content_item.linkToPreview} width="100%" height="400px"></img>
-            )
-        return images_box;
-    }
-    componentDidMount()
-    {
-        fetch(`https://localhost:5001/api/contents/${1}`)
-        .then((response)=>response.json())
-        .then((response)=>
-        {
-            this.setState({content_item: response});
-            this.setState({isLoaded: true});
-        })
-    }
-
-    render() {
-        const {isLoaded, content_item } = this.state;
-        if(isLoaded)
-        {
-            const images = this.renderImages(content_item);
-            return(
-            <div className="content-page">
-            <div className="left-flex-box">
-                {images}
-            </div>
-            <div className="right-flex-box">
-                <LineProfileData content_item ={content_item}/>
-            </div>
-            </div>
-          )
-        }
-        else
-            return <div></div>
-    }
-}*/
 
 export default ContentPage;
