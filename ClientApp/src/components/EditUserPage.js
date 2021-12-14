@@ -54,7 +54,7 @@ class EditUserPage extends Component
             pageIsStart: false,
         })
         var NewUser = {
-            Id: this.state.User.Id,
+            Id: this.props.User.Id,
             Nickname: this.state.Nickname,
             Info: this.state.Info
         }
