@@ -35,6 +35,7 @@ function UserPage(props)
                 setContents(items);
                 console.log(items);
               }
+              setIsLoaded(true);
             })
           },
           (error) => {
