@@ -3,6 +3,7 @@ import {useParams, useRouteMatch} from 'react-router-dom';
 import './css/UserPage.css';
 import '../OnlyArts.css';
 import CardsContentBox from './CardsContentBox';
+import LoadingPage from './LoadingPage';
 
 function UserPage(props)
 {
@@ -26,6 +27,11 @@ function UserPage(props)
               if(suc)
               {
                 setIsLoaded(true);
+                for(var i = 0; i < items.length; i++)
+                {
+                  console.log(items[i]);
+                  items[i].User = user;
+                }
                 setContents(items);
                 console.log(items);
               }
@@ -38,10 +44,24 @@ function UserPage(props)
         )
     }, [])
   
-    if (error) {
-      return <div>Ошибка: {error.message}</div>;
-    } else if (!isLoaded) {
-      return <div className="content-page">Загрузка...</div>;
+    if (error)
+    {
+      return (
+      <div className="main-content-block">
+        <div className="content-page">
+          <div>Ошибка: {error.message}</div>
+        </div>
+      </div>
+      );
+    } else if (!isLoaded)
+    {
+      return(
+        <div className="main-content-block">
+                    <div className="content-page">
+                        <LoadingPage/>
+                    </div>
+        </div>
+      );
     } else {
       if(user.length!= 0){
         console.log(user);
