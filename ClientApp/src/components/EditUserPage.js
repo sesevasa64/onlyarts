@@ -58,7 +58,7 @@ class EditUserPage extends Component
             Nickname: this.state.Nickname,
             Info: this.state.Info
         }
-        this.props.updateUser(NewUser, (result)=>
+        this.props.changeUserInfo(NewUser, (result)=>
         {
             this.setState({
                 userIsSuccessfulLoad: result,
@@ -79,7 +79,7 @@ class EditUserPage extends Component
     renderInfoLabel()
     {
         return(
-            this.checkInfoname(this.state.Nickname) && !this.state.pageIsStart ?
+            this.checkInfoname(this.state.Info) && !this.state.pageIsStart ?
              <label>Изменить информацию о себе</label> :
              <label className="error-message">Описание должно иметь длину от {this.state.minInfoLength} до {this.state.maxInfoCount}</label>
         )
@@ -117,7 +117,7 @@ class EditUserPage extends Component
                         <input type="text" defaultValue={this.props.User.Nickname}
                         onChange={this.onNicknameChange}></input>
                         <label>Изменить информацию о себе {this.state.Info}</label> 
-                        <textarea className="input-description" type="text" value={this.props.User.Info}
+                        <textarea className="input-description" type="text" defaultValue={this.props.User.Info}
                         onChange={this.onInfoChange}></textarea>
                         <RoundButton value="Сохранить изменения" onClick={this.onPushClick}></RoundButton>
                     </div>

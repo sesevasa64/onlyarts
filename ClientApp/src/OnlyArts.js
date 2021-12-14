@@ -330,6 +330,39 @@ class OnlyArts extends Component
       console.log("Like");
     }
   }
+
+  /* 
+   Функция отправляющая PUT запрос на изменение информации о пользователе
+   Аргументы:
+   User is var with fields: {
+            Id: "",
+            Nickname: "",
+            Info: ""
+        }
+  */
+  changeUserInfo(UserInfo, callback)
+  {
+    if(UserInfo)
+    {
+      console.log(JSON.stringify(UserInfo))
+      fetch(`${host_name}/api/users`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(UserInfo)
+      })
+      .then((response)=>{
+        callback(response.ok)
+      })
+    }  
+    else
+    {
+      callback(false)
+    }
+
+  }
+
   render () {
     return (
       <div className="main-box">
@@ -337,7 +370,9 @@ class OnlyArts extends Component
           {!this.state.outputRegistationForm || <RegistrationForm authFunc={this.authFunc} close_onClick={this.renderRegistrationForm}/>}
           <div className="top-flex-div">
             <Logo/>
-            <HeaderOA isAuth={this.state.isAuth} User={this.state.User} onLoginClick={this.renderLoginBox} onExitClick={this.userExit}/>
+            <HeaderOA isAuth={this.state.isAuth} User={this.state.User}
+            onLoginClick={this.renderLoginBox} 
+            onExitClick={this.userExit}/>
           </div>
           <div className="menu-flex-div">
             <NavigationMenu User={this.state.User} isAuth={this.state.isAuth}/>
@@ -358,7 +393,10 @@ class OnlyArts extends Component
                                               content={this.state.content_cards}
                                               title={"Главная страница"}/>}/>
               <Route path="/NewPost/" render={() => <NewPostPage User={this.state.User} addNewPost={this.addNewPost}/>}/>
-              <Route path="/EditUser/" render={() => <EditUserPage User={this.state.User}></EditUserPage>}></Route>
+              <Route path="/EditUser/" render={() => 
+                <EditUserPage User={this.state.User} changeUserInfo={this.changeUserInfo}>
+                </EditUserPage>}>
+              </Route>
             </Switch>
           </div>
       </div>
