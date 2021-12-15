@@ -242,7 +242,7 @@ class RegistrationForm extends React.Component
                             <label className={!this.state.email_class || "uncorrect-output"}>{this.state.email_placeholder + '*'}</label>
                             <input className={this.state.email_class} type="text" placeholder="aboba@gmail.com" onChange={this.onEmailChange}/>
                             <label className={this.state.errorPassword ? "uncorrect-output" : "correct-output"}>
-                                {this.state.errorPassword ? this.state.errorPassword : "Повторите пароль"}
+                                {this.state.errorPassword ? this.state.errorPassword : "Введите пароль"}
                             </label>
                             <input id="password" type="password" onChange={this.onPasswordChange}/>
                             <label>Повторите пароль</label>

@@ -66,6 +66,7 @@ function ContentPage(props) {
           (result) => {
             setIsLoaded(true);
             setItems(result);
+            props.addViewToContent(match.params.contentId);
           },
           (error) => {
             setIsLoaded(true);
