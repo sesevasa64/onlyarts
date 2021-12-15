@@ -363,6 +363,22 @@ class OnlyArts extends Component
 
   }
 
+  patchViewToContent(contentId, callback)
+  {
+    fetch(`${host_name}/api/contents/${contentId}/view`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then((response)=>{
+      if(callback)
+      {
+        callback(response.ok);
+      }
+    })
+  }
+
   render () {
     return (
       <div className="main-box">
@@ -381,7 +397,7 @@ class OnlyArts extends Component
             <TagList tags={this.state.tags}/>
             <Switch>
               <Route path={'/ContentPage/:contentId'}> 
-                <ContentPage onLikeClick={this.onLikeClick}/>
+                <ContentPage addViewToContent={this.patchViewToContent} onLikeClick={this.onLikeClick}/>
               </Route>
               <Route path={'/UserPage/:login'}>
                 <UserPage loadUserContent={this.getContentByLogin}
