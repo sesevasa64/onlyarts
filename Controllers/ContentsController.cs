@@ -22,7 +22,7 @@ namespace onlyarts.Controllers
     {
         private readonly FileUploader _uploader;
         PropertyInfo[] content_props = typeof(Content).GetProperties();
-        private readonly string[] includes = new string[] {"User", "SubType"};
+        public static readonly string[] includes = new string[] {"User", "SubType"};
         public ContentsController(OnlyartsContext context, QueryHelper helper, FileUploader uploader) :
             base(context, helper)
         {
