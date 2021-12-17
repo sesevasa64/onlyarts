@@ -8,6 +8,7 @@ import likes from './resources/likes.png';
 function LineProfileData(props)
 {
   let User = props.item[0].User;
+  console.log(User);
   return (
     <div className="profile-line">
         <p className="content-name">{props.item[0].Name}</p><br/> 
@@ -20,9 +21,8 @@ function LineProfileData(props)
         </div>
         <div>
           <img src={views}></img> {props.item[0].ViewCount}
-          <img className="likes_button" src={likes} onClick={props.onLikeClick}></img> {props.item[0].LikesCount}
+          <img  className={`likes_button ${!props.liked || 'liked'}`} src={likes} onClick={props.onLikeClick}/> {props.item[0].LikesCount}
         </div>
-      
     </div>
   )
 }

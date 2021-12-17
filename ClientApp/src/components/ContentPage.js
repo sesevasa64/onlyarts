@@ -51,8 +51,9 @@ function renderImages(images)
 function ContentPage(props) {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
+    const [items, setContent] = useState([]);
     const [images, setImages] = useState([]);
+    const [liked, setLike] = useState([]);
     const match = useRouteMatch({
         path: '/ContentPage/:contentId',
         strict: true,
@@ -64,8 +65,10 @@ function ContentPage(props) {
         .then(
           (result) => {
             setIsLoaded(true);
-            setItems(result);
+            props.checkLike(match.params.contentId, props.User.Id, setLike);
+            console.log("PIDORAS")
             props.addViewToContent(match.params.contentId);
+            setContent(result);
           },
           (error) => {
             setIsLoaded(true);
@@ -105,7 +108,7 @@ function ContentPage(props) {
                             </div>
                         </div>
                         <div className="right-flex-box">
-                            <LineProfileData onLikeClick={() => props.onLikeClick(items.id)} item={items}/>
+                            <LineProfileData onLikeClick={() => props.onLikeClick(items[0].Id, props.User.Id)} liked={liked} item={items}/>
                         </div>
                     </div>
                 </div>

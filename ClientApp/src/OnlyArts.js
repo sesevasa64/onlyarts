@@ -338,21 +338,32 @@ class OnlyArts extends Component
     })
   }
 
-  async onLikeClick(content_id)
+  async onLikeClick(content_id, userID)
   {
-    let response = await fetch(`${host_name}/api/content/${content_id}/like`,{
+    
+    let response = await fetch(`${host_name}/api/contents/${content_id}/likes?userID=${userID}`,{
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'API-key': this.state.authToken
       } 
     });
+    console.log(`User ${userID} like ${content_id}`)
     if(response.ok)
     {
       console.log("Like");
     }
   }
 
+  checkLikeUser(content_id, userID, callback)
+  {
+    fetch(`${host_name}/api/reactions/like?userId=${userID}&contentId=${content_id}`)
+    .then((response)=>{
+      console.log(`${host_name}/api/reactions/like?userId=${userID}&contentId=${content_id}`);
+      console.log(`ok - ${response.ok}\tUserId=${userID}\contentId=${content_id}`)
+      callback(response.ok)
+    })
+  }
   /* 
    Функция отправляющая PUT запрос на изменение информации о пользователе
    Аргументы:
@@ -383,6 +394,11 @@ class OnlyArts extends Component
       callback(false)
     }
 
+  }
+
+  getUserSubscribers(user)
+  {
+    fetch.User
   }
 
   patchViewToContent(contentId, callback)
@@ -419,17 +435,16 @@ class OnlyArts extends Component
             <TagList selectTag={(tagname)=> this.loadPopularCardsByTagName(0, 18, ()=>{}, tagname)} tags={this.state.tags}/>
             <Switch>
               <Route path={'/ContentPage/:contentId'}> 
-                <ContentPage addViewToContent={this.patchViewToContent} onLikeClick={this.onLikeClick}/>
+                <ContentPage User={this.state.User} 
+                             addViewToContent={this.patchViewToContent}
+                             onLikeClick={this.onLikeClick}
+                             checkLike={this.checkLikeUser}/>
               </Route>
               <Route path={'/UserPage/:login'}>
-                <UserPage loadUserContent={this.getContentByLogin}
-                          renderSelectedContent = {this.renderSelectedContent}
-                          />
+                <UserPage loadUserContent={this.getContentByLogin} renderSelectedContent = {this.renderSelectedContent}/>
               </Route>
               <Route exact path="/" render={()=><CardsContentBox content_onClick={this.renderSelectedContent}
-                                              loadContent={this.state.loadContent}
-                                              content={this.state.content_cards}
-                                              title={this.state.title}/>}/>
+                                              loadContent={this.state.loadContent} content={this.state.content_cards} title={this.state.title}/>}/>
               <Route path="/NewPost/" render={() => <NewPostPage User={this.state.User} addNewPost={this.addNewPost}/>}/>
               <Route path="/EditUser/" render={() => 
                 <EditUserPage User={this.state.User} changeUserInfo={this.changeUserInfo}>
