@@ -30,13 +30,20 @@ namespace onlyarts.Controllers
         }
         protected override JsonResult Json(object o) 
         {
-            var content = o as Content;
-            IDictionary<string, object> result = new ExpandoObject();
-            foreach (PropertyInfo prop in content_props) {
-                result[prop.Name] = prop.GetValue(content, null);
+            List<Content> contents = o as List<Content>;
+            if (contents == null) {
+                contents = new List<Content>(){o as Content};
             }
-            result["LikesCount"] = _helper.GetLikesCount(content);
-            result["DislikesCount"] = _helper.GetDislikesCount(content);
+            List<IDictionary<string, object>> result = new List<IDictionary<string, object>>();
+            foreach (var content in contents) {
+                IDictionary<string, object> x = new ExpandoObject();
+                foreach (PropertyInfo prop in content.GetType().GetProperties()) {
+                    x[prop.Name] = prop.GetValue(content, null);
+                }
+                x["LikesCount"] = _helper.GetLikesCount(content);
+                x["DislikesCount"] = _helper.GetDislikesCount(content);
+                result.Add(x);
+            }
             return new JsonResult(result);
         }
         [HttpGet]
@@ -259,10 +266,12 @@ namespace onlyarts.Controllers
             // Нужно вернуть популярный контент с min по max позиции
             var contents = (
                 from content in _context.Contents
-                orderby content.ViewCount, _helper.GetLikesCount(content) descending
                 select content
             ).Include(contents => contents.User)
             .Include(contents => contents.SubType)
+            .AsEnumerable()
+            .OrderByDescending(contents => contents.ViewCount)
+            .ThenBy(contents => _helper.GetLikesCount(contents))
             .ToList();
             if (min >= contents.Count) {
                 return NotFound();
@@ -277,9 +286,12 @@ namespace onlyarts.Controllers
                 join tag in _context.LinkTags
                 on content equals tag.Content
                 where tag.Tag.TagName == name
-                orderby content.ViewCount, _helper.GetLikesCount(content) descending
                 select content
-            ).Include(contents => contents.User).Include(contents => contents.SubType)
+            ).Include(contents => contents.User)
+            .Include(contents => contents.SubType)
+            .AsEnumerable()
+            .OrderByDescending(contents => contents.ViewCount)
+            .ThenBy(contents => _helper.GetLikesCount(contents))
             .ToList();
             if (min >= contents.Count) {
                 return NotFound();
@@ -294,9 +306,12 @@ namespace onlyarts.Controllers
                 join user in _context.Users
                 on content.User equals user
                 where user.Login == login
-                orderby content.ViewCount, _helper.GetLikesCount(content) descending
                 select content
-            ).Include(contents => contents.SubType)
+            ).Include(content => content.User)
+            .Include(contents => contents.SubType)
+            .AsEnumerable()
+            .OrderByDescending(contents => contents.ViewCount)
+            .ThenBy(contents => _helper.GetLikesCount(contents))
             .ToList();
             if (min >= contents.Count) {
                 return NotFound();
