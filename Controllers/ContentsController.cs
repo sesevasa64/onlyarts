@@ -327,6 +327,24 @@ namespace onlyarts.Controllers
             }
             return Json(content.GetRange(0, limit));
         }
+        [HttpGet("tag/{name}")]
+        public ActionResult GetContents(string name, [FromQuery] int min, [FromQuery] int max)
+        {
+            var content = (
+                from contents in _context.Contents
+                join linkTag in _context.LinkTags 
+                on contents equals linkTag.Content
+                where linkTag.Tag.TagName == name
+                orderby contents.ViewCount, _helper.GetLikesCount(contents)
+                select contents
+            ).Include(contents => contents.User)
+            .Include(contents => contents.SubType).ToList();
+
+            if (min >= content.Count) {
+                return NotFound();
+            }
+            return Json(_helper.GetMinMax(content, min, max));
+        }
         [HttpGet("users")]
         public ActionResult Get([FromQuery] string login)
         {

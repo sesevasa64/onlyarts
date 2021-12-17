@@ -112,6 +112,24 @@ namespace onlyarts.Controllers
             }
             return Json(_helper.GetMinMax<User>(users, min, max));
         }
+        [HttpGet("subscribers/{login}")]
+        public ActionResult GetSubs(string login, [FromQuery] int min, [FromQuery] int max) 
+        {
+            var subs = GetSubscribers(login);
+            if (min >= subs.Count) {
+                return NotFound();
+            }
+            return Json(_helper.GetMinMax(subs, min, max));
+        }
+        public List<User> GetSubscribers(string login)
+        {
+            var subs = (from user in _context.Users
+                        join sub in _context.Subscriptions
+                        on user equals sub.SubUser
+                        where sub.Author.Login == login
+                        select sub.SubUser).ToList();
+            return subs;
+        }
         public List<User> GetPopularUsers()
         {
             // Задача для Артема Юнусова
