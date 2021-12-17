@@ -39,27 +39,37 @@ namespace onlyarts.Controllers
             }
             return Json(reaction);
         }
-        [HttpGet("{id}/like")]
-        public ActionResult CheckLike(int id, [FromQuery] int userId) 
+        [HttpGet("like")]
+        public ActionResult CheckLike([FromQuery] int userId, [FromQuery] int contentId) 
         {
-            return CheckReaction(id, userId, false);
+            return CheckReaction(contentId, userId, false);
         }
-        [HttpGet("{id}/dislike")]
-        public ActionResult CheckDislike(int id, [FromQuery] int userId) 
+        [HttpGet("dislike")]
+        public ActionResult CheckDislike([FromQuery] int userId, [FromQuery] int contentId) 
         {
-            return CheckReaction(id, userId, true);
+            return CheckReaction(contentId, userId, true);
         }
-        private ActionResult CheckReaction(int id, int userId, bool type) 
+        private ActionResult CheckReaction(int contentId, int userId, bool type) 
         {
-            var reaction = _helper.getByID<Reaction>(id, includes);
-            if (reaction == null) {
+            var content = _helper.getByID<Content>(contentId, ContentsController.includes);
+            if (content == null) {
                 return NotFound();
             }
             var user = _helper.getByID<User>(userId);
             if (user == null) {
                 return NotFound();
             }
-            return Json(reaction.User == user && reaction.Type == type);
+            var reaction = (
+                from _reaction in _context.Reactions
+                where _reaction.Content == content
+                && _reaction.User == user
+                && _reaction.Type == type
+                select _reaction
+            ).SingleOrDefault();
+            if (reaction == null) {
+                return NotFound();
+            }
+            return Ok();
         }
     }
 }
