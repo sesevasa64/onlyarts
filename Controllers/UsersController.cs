@@ -112,15 +112,6 @@ namespace onlyarts.Controllers
             }
             return Json(_helper.GetMinMax<User>(users, min, max));
         }
-        [HttpGet("subscriber")]
-        public ActionResult IsSubscriber(int id, int userId) 
-        {
-            var sub = _helper.getByID<Subscription>(id);
-            if (sub == null) {
-                return NotFound();
-            }
-            return Json(sub.Id == userId);
-        }
         public List<User> GetPopularUsers()
         {
             // Задача для Артема Юнусова
