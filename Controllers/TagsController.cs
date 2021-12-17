@@ -16,15 +16,9 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class TagsController : RestController
     {
-        private readonly QueryHelper _helper;
-        private readonly OnlyartsContext _context;
-        private readonly ILogger<TagsController> _logger;
-
-        public TagsController(ILogger<TagsController> logger, OnlyartsContext context, QueryHelper helper)
+        public TagsController(OnlyartsContext context, QueryHelper helper) :
+            base(context, helper)
         {
-            _helper = helper;
-            _logger = logger;
-            _context = context;
         }
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)

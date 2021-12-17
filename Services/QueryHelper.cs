@@ -58,5 +58,26 @@ namespace onlyarts.Services
             }
             return collection.GetRange(min, max - min);
         }
+        public int GetLikesCount(Content content) 
+        {
+            return GetReactionsCount(content, false);
+        }
+        public int GetDislikesCount(Content content) 
+        {
+            return GetReactionsCount(content, true);
+        }
+        private int GetReactionsCount(Content content, bool reactionType)
+        {
+            if (content == null) {
+                return -1;
+            }
+            var reactions = (
+                from _reaction in _context.Reactions
+                where _reaction.Content == content
+                && _reaction.Type == reactionType
+                select _reaction
+            ).Count();
+            return reactions;
+        }
     }
 }

@@ -193,8 +193,6 @@ namespace onlyarts.Data
                         ContentType = "pic",
                         LinkToPreview = link[i],
                         LinkToBlur = link[i],
-                        LikesCount = 0,
-                        DislikesCount = 0,
                         ViewCount = 0
                     };
                 }

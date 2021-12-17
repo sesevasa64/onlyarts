@@ -29,12 +29,6 @@ namespace onlyarts.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("DislikesCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LikesCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("LinkToBlur")
                         .HasColumnType("longtext");
 

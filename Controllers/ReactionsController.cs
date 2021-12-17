@@ -15,16 +15,11 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class ReactionsController : RestController
     {
-        private readonly QueryHelper _helper;
-        private readonly OnlyartsContext _context;
-        private readonly ILogger<UsersController> _logger;
         private readonly string[] includes = new string[] {"User", "Content"};
 
-        public ReactionsController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper)
+        public ReactionsController(OnlyartsContext context, QueryHelper helper) :
+            base(context, helper)
         {
-            _helper = helper;
-            _logger = logger;
-            _context = context;
         }
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)

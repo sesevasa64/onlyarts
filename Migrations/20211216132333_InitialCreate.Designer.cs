@@ -9,8 +9,8 @@ using onlyarts.Data;
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    [Migration("20211109165059_AddSubscription")]
-    partial class AddSubscription
+    [Migration("20211216132333_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,13 +31,10 @@ namespace onlyarts.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("DislikesCount")
-                        .HasColumnType("int");
+                    b.Property<string>("LinkToBlur")
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("LikesCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LinkToContent")
+                    b.Property<string>("LinkToPreview")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -59,6 +56,25 @@ namespace onlyarts.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Contents");
+                });
+
+            modelBuilder.Entity("onlyarts.Models.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ContentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LinkToImage")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContentId");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("onlyarts.Models.LinkTag", b =>
@@ -178,6 +194,15 @@ namespace onlyarts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Info")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LinkToAvatar")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Login")
                         .HasColumnType("longtext");
 
@@ -211,6 +236,15 @@ namespace onlyarts.Migrations
                     b.Navigation("SubType");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("onlyarts.Models.Image", b =>
+                {
+                    b.HasOne("onlyarts.Models.Content", "Content")
+                        .WithMany()
+                        .HasForeignKey("ContentId");
+
+                    b.Navigation("Content");
                 });
 
             modelBuilder.Entity("onlyarts.Models.LinkTag", b =>
