@@ -39,10 +39,27 @@ namespace onlyarts.Controllers
             }
             return Json(reaction);
         }
-        [HttpPost("{id}")]
-        public ActionResult Post(int id)
+        [HttpGet("{id}/like")]
+        public ActionResult CheckLike(int id, [FromQuery] int userId) 
         {
-            return Get(id);
+            return CheckReaction(id, userId, false);
+        }
+        [HttpGet("{id}/dislike")]
+        public ActionResult CheckDislike(int id, [FromQuery] int userId) 
+        {
+            return CheckReaction(id, userId, true);
+        }
+        private ActionResult CheckReaction(int id, int userId, bool type) 
+        {
+            var reaction = _helper.getByID<Reaction>(id, includes);
+            if (reaction == null) {
+                return NotFound();
+            }
+            var user = _helper.getByID<User>(userId);
+            if (user == null) {
+                return NotFound();
+            }
+            return Json(reaction.User == user && reaction.Type == type);
         }
     }
 }
