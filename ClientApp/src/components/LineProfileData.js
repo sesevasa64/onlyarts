@@ -7,19 +7,20 @@ import likes from './resources/likes.png';
 
 function LineProfileData(props)
 {
+  let User = props.item[0].User;
   return (
     <div className="profile-line">
-        <p className="content-name">{props.item.Name}</p><br/> 
+        <p className="content-name">{props.item[0].Name}</p><br/> 
         <div>
-          <img src={props.item.User.LinkToAvatar}/>
-          <p><Link to={`/UserPage/${props.item.User.Login}`}>{props.item.User.Nickname}</Link></p>
+          <img src={User.LinkToAvatar}/>
+          <p><Link to={`/UserPage/${User.Login}`}>{User.Nickname}</Link></p>
         </div>
         <div className="mini-card-about">
-          {props.item.Description}
+          {props.item[0].Description}
         </div>
         <div>
-          <img src={views}></img> {props.item.ViewCount}
-          <img className="likes_button" src={likes} onClick={props.onLikeClick}></img> {props.item.LikesCount}
+          <img src={views}></img> {props.item[0].ViewCount}
+          <img className="likes_button" src={likes} onClick={props.onLikeClick}></img> {props.item[0].LikesCount}
         </div>
       
     </div>
