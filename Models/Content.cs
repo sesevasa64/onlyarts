@@ -14,7 +14,7 @@ namespace onlyarts.Models
         //public int LikesCount { get; private set; }     //сделать вычисляемымым
         //public int DislikesCount { get; set; }  //сделать вычисляемымым
         public int ViewCount { get; set; } 
-
+        // Автор
         public User User { get; set; } 
         public SubType SubType { get; set; }
     }
