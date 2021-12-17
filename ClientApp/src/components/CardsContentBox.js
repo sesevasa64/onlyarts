@@ -17,15 +17,20 @@ class CardsContentBox extends Component
         };
     }
 
-    renderButtons(N)
+    renderButtons(Current_Number, N)
     {
         let items = [];
         let min = 0;
         let max = 18;
-        for(let i = 0; i < N; i++)
+        for(let i = Current_Number - 2; i < Current_Number + N; i++)
         {
+            if(i < 0)
+            {
+                continue;
+            }
+            console.log(i);
             items.push(
-                <RoundButton value={`${i+1}`} onClick={() => {
+                <RoundButton className="down-buttons-list" value={`${i+1}`} onClick={() => {
                     this.setState({
                         contentIsLoading: true
                     })
@@ -68,7 +73,15 @@ class CardsContentBox extends Component
                     this.renderMiniCards(content[i], "MiniCard-" + i)
                 );
             }
-            let buttons = this.renderButtons(10);
+            let buttons;
+            if(this.props.currentPageNumber)
+            {
+                buttons = this.renderButtons(this.props.currentPageNumber, 2);
+            }
+            else
+            {
+                buttons = this.renderButtons(0, 2);
+            }
             return (
                 <div className="main-content-block">
                     <h2 className="main-block-title">{this.props.title}</h2>
@@ -76,7 +89,7 @@ class CardsContentBox extends Component
                         {cards}
                     </div>
                     <div className="bottom-buttons">
-                            {buttons}
+                            {buttons} ...
                     </div>
                 </div>
             );

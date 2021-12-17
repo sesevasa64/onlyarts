@@ -48,7 +48,7 @@ class OnlyArts extends Component
       User:{
         Login: ""
       },
-
+      title: "Главная страницы"
     }
   }
 
@@ -92,7 +92,7 @@ class OnlyArts extends Component
     let card;
     let answer = []; // Карточки на стринице
     let response = await fetch(`${host_name}/api/contents/popular?min=${from}&max=${to}`);
-    console.log("PIDOR");
+
     if(response.ok)
     {
       card = await response.json();
@@ -105,6 +105,28 @@ class OnlyArts extends Component
     }
     this.setState({
        content_cards: answer,
+       title: "Главная страницы"
+    });
+  }
+
+  async loadPopularCardsByTagName(from, to, callback, tagname)
+  {
+    let card;
+    let answer = []; // Карточки на стринице
+    let response = await fetch(`${host_name}/api/contents/popular/${tagname}?min=${from}&max=${to}`);
+    if(response.ok)
+    {
+      card = await response.json();
+      answer = card;
+      console.log(answer);
+    }
+    if(callback)
+    {
+      callback(response.ok);
+    }
+    this.setState({
+       content_cards: answer,
+       title: tagname
     });
   }
 
@@ -391,10 +413,10 @@ class OnlyArts extends Component
             onExitClick={this.userExit}/>
           </div>
           <div className="menu-flex-div">
-            <NavigationMenu User={this.state.User} isAuth={this.state.isAuth}/>
+            <NavigationMenu onPopularClick={this.loadPopularCards} User={this.state.User} isAuth={this.state.isAuth}/>
           </div>
           <div className="center-flex-div">
-            <TagList tags={this.state.tags}/>
+            <TagList selectTag={(tagname)=> this.loadPopularCardsByTagName(0, 18, ()=>{}, tagname)} tags={this.state.tags}/>
             <Switch>
               <Route path={'/ContentPage/:contentId'}> 
                 <ContentPage addViewToContent={this.patchViewToContent} onLikeClick={this.onLikeClick}/>
@@ -407,7 +429,7 @@ class OnlyArts extends Component
               <Route exact path="/" render={()=><CardsContentBox content_onClick={this.renderSelectedContent}
                                               loadContent={this.state.loadContent}
                                               content={this.state.content_cards}
-                                              title={"Главная страница"}/>}/>
+                                              title={this.state.title}/>}/>
               <Route path="/NewPost/" render={() => <NewPostPage User={this.state.User} addNewPost={this.addNewPost}/>}/>
               <Route path="/EditUser/" render={() => 
                 <EditUserPage User={this.state.User} changeUserInfo={this.changeUserInfo}>

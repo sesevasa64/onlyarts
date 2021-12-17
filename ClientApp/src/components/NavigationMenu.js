@@ -12,8 +12,8 @@ function NavigationMenu(props)
     return(
         <div className="box-nav">
             <ul className="menu-main">
-                <li><Link to="/">Главная страница</Link></li>
-                <li><a>Популярные</a></li>
+                <li onClick={() => props.onPopularClick(0, 18, ()=>{})}><Link to="/">Главная страница</Link></li>
+                <li onClick={() => props.onPopularClick(0, 18, ()=>{})}><a>Популярные</a></li>
                 {!props.isAuth || <li><Link to="/NewPost/">Создать пост</Link></li>}
                 {!props.isAuth || <li><Link to={`/UserPage/${props.User.Login}`}>Моя страница</Link></li>}
                 {!props.isAuth || <li><a>Мои подписки</a></li>}
