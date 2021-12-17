@@ -15,15 +15,10 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class ImagesController : RestController
     {
-        private readonly QueryHelper _helper;
-        private readonly OnlyartsContext _context;
-        private readonly ILogger<UsersController> _logger;
         private readonly string[] includes = new string[] {"Content"};
-        public ImagesController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper)
+        public ImagesController(OnlyartsContext context, QueryHelper helper) :
+            base(context, helper)
         {
-            _helper = helper;
-            _logger = logger;
-            _context = context;
         }
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)

@@ -14,15 +14,10 @@ namespace onlyarts.Controllers
     [Route("api/[controller]")]
     public class UsersController : RestController
     {
-        private readonly QueryHelper _helper;
-        private readonly OnlyartsContext _context;
         private readonly TokenGenerator _tokenGenerator;
-        private readonly ILogger<UsersController> _logger;
-        public UsersController(ILogger<UsersController> logger, OnlyartsContext context, TokenGenerator tokenGenerator, QueryHelper helper)
+        public UsersController(OnlyartsContext context, TokenGenerator tokenGenerator, QueryHelper helper) :
+            base(context, helper)
         {
-            _helper = helper;
-            _logger = logger;
-            _context = context;
             _tokenGenerator = tokenGenerator;
         }
         [HttpGet]

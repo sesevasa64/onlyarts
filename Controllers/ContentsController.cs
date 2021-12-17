@@ -1,6 +1,8 @@
 using System;
 using System.Net;
 using System.Linq;
+using System.Dynamic;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
@@ -19,16 +21,23 @@ namespace onlyarts.Controllers
     public class ContentsController : RestController
     {
         private readonly FileUploader _uploader;
-        private readonly QueryHelper _helper;
-        private readonly OnlyartsContext _context;
-        private readonly ILogger<UsersController> _logger;
+        PropertyInfo[] content_props = typeof(Content).GetProperties();
         private readonly string[] includes = new string[] {"User", "SubType"};
-        public ContentsController(ILogger<UsersController> logger, OnlyartsContext context, QueryHelper helper, FileUploader uploader)
+        public ContentsController(OnlyartsContext context, QueryHelper helper, FileUploader uploader) :
+            base(context, helper)
         {
-            _helper = helper;
-            _logger = logger;
-            _context = context;
             _uploader = uploader;
+        }
+        protected override JsonResult Json(object o) 
+        {
+            var content = o as Content;
+            IDictionary<string, object> result = new ExpandoObject();
+            foreach (PropertyInfo prop in content_props) {
+                result[prop.Name] = prop.GetValue(content, null);
+            }
+            result["LikesCount"] = _helper.GetLikesCount(content);
+            result["DislikesCount"] = _helper.GetDislikesCount(content);
+            return new JsonResult(result);
         }
         [HttpGet]
         public ActionResult Get([FromQuery] int[] id)
@@ -57,8 +66,6 @@ namespace onlyarts.Controllers
                 ContentType = request.ContentType,
                 LinkToPreview = request.LinkToPreview,
                 LinkToBlur = request.LinkToBlur,
-                LikesCount = 0,
-                DislikesCount = 0,
                 ViewCount = 0,
                 User = user,
                 SubType = subType
@@ -118,7 +125,7 @@ namespace onlyarts.Controllers
             if (content == null) {
                 return NotFound();
             }
-            return Json(content.LikesCount);
+            return Json(_helper.GetLikesCount(content));
         }
         [HttpGet("{id}/dislikes")]
         public ActionResult GetDislikes(int id)
@@ -127,7 +134,7 @@ namespace onlyarts.Controllers
             if (content == null) {
                 return NotFound();
             }
-            return Json(content.DislikesCount);
+            return Json(_helper.GetDislikesCount(content));
         }
         [HttpPatch("{id}/likes")]
         public ActionResult PatchLikes(int id, [FromQuery] int userID = -1)
@@ -252,7 +259,7 @@ namespace onlyarts.Controllers
             // Нужно вернуть популярный контент с min по max позиции
             var contents = (
                 from content in _context.Contents
-                orderby content.ViewCount, content.LikesCount descending
+                orderby content.ViewCount, _helper.GetLikesCount(content) descending
                 select content
             ).Include(contents => contents.User)
             .Include(contents => contents.SubType)
@@ -270,7 +277,7 @@ namespace onlyarts.Controllers
                 join tag in _context.LinkTags
                 on content equals tag.Content
                 where tag.Tag.TagName == name
-                orderby content.ViewCount, content.LikesCount descending
+                orderby content.ViewCount, _helper.GetLikesCount(content) descending
                 select content
             ).Include(contents => contents.User).Include(contents => contents.SubType)
             .ToList();
@@ -287,7 +294,7 @@ namespace onlyarts.Controllers
                 join user in _context.Users
                 on content.User equals user
                 where user.Login == login
-                orderby content.ViewCount, content.LikesCount descending
+                orderby content.ViewCount, _helper.GetLikesCount(content) descending
                 select content
             ).Include(contents => contents.SubType)
             .ToList();

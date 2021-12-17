@@ -1,4 +1,5 @@
 using onlyarts.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace onlyarts.Models
 {
@@ -10,8 +11,8 @@ namespace onlyarts.Models
         public string ContentType { get; set; }     //pic или vid
         public string LinkToPreview { get; set; }   //ссылка на превью
         public string LinkToBlur { get; set; }  //ссылка на размытое превью
-        public int LikesCount { get; set; }     //сделать вычисляемымым
-        public int DislikesCount { get; set; }  //сделать вычисляемымым
+        //public int LikesCount { get; private set; }     //сделать вычисляемымым
+        //public int DislikesCount { get; set; }  //сделать вычисляемымым
         public int ViewCount { get; set; } 
 
         public User User { get; set; } 
