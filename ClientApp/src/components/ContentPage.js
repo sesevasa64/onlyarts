@@ -43,7 +43,7 @@ function renderImages(images)
             <div className="container-img">
                 <img src={images[i]}></img>
             </div>
-        )
+        );
     return images_box;
 }
 
@@ -58,7 +58,6 @@ function ContentPage(props) {
         strict: true,
         sensitive: true,
       });
-
     useEffect(() => {
       fetch(`${host_name}/api/contents/${match.params.contentId}`)
         .then(res => res.json())
