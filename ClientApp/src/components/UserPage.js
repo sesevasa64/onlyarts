@@ -4,6 +4,7 @@ import './css/UserPage.css';
 import '../OnlyArts.css';
 import CardsContentBox from './CardsContentBox';
 import LoadingPage from './LoadingPage';
+import { SubscribersPage } from './SubscribersPage';
 
 function UserPage(props)
 {
@@ -11,6 +12,8 @@ function UserPage(props)
     const [isLoaded, setIsLoaded] = useState(false);
     const [user, setItems] = useState([]);
     const [contents, setContents] = useState([]);
+    const [subscribers, setSubs] = useState([]);
+    const [toNextUser, isNext] = useState([]);
     const match = useRouteMatch({
         path: '/UserPage/:login',
         strict: true,
@@ -22,18 +25,21 @@ function UserPage(props)
         .then(
           (result) => {
             setItems(result);
+            console.log(match.params.login);
             props.loadUserContent(result.Login, 0, 18, (items, suc) =>
             {
               if(suc)
               {
                 setIsLoaded(true);
+
                 for(var i = 0; i < items.length; i++)
                 {
-                  console.log(items[i]);
                   items[i].User = user;
                 }
                 setContents(items);
-                console.log(items);
+                props.getSubscribers(match.params.login, 0, 18, (value)=>{
+                  setSubs(value);
+                });
               }
               setIsLoaded(true);
             })
@@ -58,17 +64,17 @@ function UserPage(props)
     {
       return(
         <div className="main-content-block">
-                    <div className="content-page">
-                        <LoadingPage/>
-                    </div>
+          <div className="content-page">
+            <LoadingPage/>
+            </div>
         </div>
       );
     } else {
       if(user.length!= 0){
-        console.log(user);
+        console.log(match.params.login);
         return (
           <div className="main-content-block">
-              <div className="user-info-box">
+              <div className={`user-info-box || ${toNextUser}`}>
                   <div className="user-avatar-container">
                       <img className="user-avatar" width="200px" height="200px" src={user.LinkToAvatar}></img>
                   </div>
@@ -81,6 +87,7 @@ function UserPage(props)
               <CardsContentBox content_onClick={props.renderSelectedContent}
                                content={contents}
                                title={`Карточки пользователя`}/>
+              <SubscribersPage isNext={isNext} users={subscribers}></SubscribersPage>
           </div>
           );
       }

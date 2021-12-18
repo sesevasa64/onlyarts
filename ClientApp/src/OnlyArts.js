@@ -396,9 +396,17 @@ class OnlyArts extends Component
 
   }
 
-  getUserSubscribers(user)
+  getUserSubscribers(user_login, min, max, callback)
   {
-    fetch.User
+    fetch(`${host_name}/api/users/subscribers/${user_login}?min=${min}&max=${max}`)
+    .then((response) => response.json())
+    .then((value) => {
+      console.log("Get subscribers");
+      if(value){
+        console.log(value);
+        callback(value);
+      }
+    })
   }
 
   patchViewToContent(contentId, callback)
@@ -413,6 +421,7 @@ class OnlyArts extends Component
       if(callback)
       {
         callback(response.ok);
+        
       }
     })
   }
@@ -441,7 +450,8 @@ class OnlyArts extends Component
                              checkLike={this.checkLikeUser}/>
               </Route>
               <Route path={'/UserPage/:login'}>
-                <UserPage loadUserContent={this.getContentByLogin} renderSelectedContent = {this.renderSelectedContent}/>
+                <UserPage loadUserContent={this.getContentByLogin} renderSelectedContent = {this.renderSelectedContent}
+                getSubscribers={this.getUserSubscribers}/>
               </Route>
               <Route exact path="/" render={()=><CardsContentBox content_onClick={this.renderSelectedContent}
                                               loadContent={this.state.loadContent} content={this.state.content_cards} title={this.state.title}/>}/>
