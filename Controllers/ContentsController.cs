@@ -105,7 +105,6 @@ namespace onlyarts.Controllers
             }
             return Ok();
         }
-        [HttpPut]
         public ActionResult Put(ContentUpdateRequest request) 
         {
             var content = _helper.getByID<Content>(request.Id);
