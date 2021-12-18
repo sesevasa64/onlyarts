@@ -426,6 +426,15 @@ class OnlyArts extends Component
     });
   }
 
+
+  checkSubscriberUser(author_id, user_id, callback)
+  {
+    fetch(`${host_name}/api/subs/check?authorId=${author_id}&userId=${user_id}`)
+    .then((response) => callback(response.ok));
+    console.log(`${author_id} ${user_id}`)
+  }
+
+
   patchViewToContent(contentId, callback)
   {
     fetch(`${host_name}/api/contents/${contentId}/view`, {
@@ -438,10 +447,10 @@ class OnlyArts extends Component
       if(callback)
       {
         callback(response.ok);
-
       }
     })
   }
+
 
   render () {
     console.clear();
@@ -470,6 +479,7 @@ class OnlyArts extends Component
               <Route path={'/UserPage/:login'}>
                 <UserPage
                 User = {this.state.User} 
+                checkSubscriberUser = {this.checkSubscriberUser}
                 loadUserContent={this.getContentByLogin}
                 subscribeOnUser = {this.subscribeOnUser}
                 renderSelectedContent = {this.renderSelectedContent}

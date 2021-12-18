@@ -6,6 +6,7 @@ import CardsContentBox from './CardsContentBox';
 import LoadingPage from './LoadingPage';
 import { SubscribersPage } from './SubscribersPage';
 import RoundButton from './RoundButton';
+let host_name = "https://" + document.location.host;
 
 function UserPage(props)
 {
@@ -15,13 +16,14 @@ function UserPage(props)
     const [contents, setContents] = useState([]);
     const [subscribers, setSubs] = useState([]);
     const [toNextUser, isNext] = useState([]);
+    const [isSubscriber, setIsSub] = useState([]);
     const match = useRouteMatch({
         path: '/UserPage/:login',
         strict: true,
         sensitive: true,
       });
     useEffect(() => {
-      fetch(`https://localhost:5001/api/users?login=${match.params.login}`)
+      fetch(`${host_name}/api/users?login=${match.params.login}`)
         .then(res => res.json())
         .then(
           (result) => {
@@ -38,10 +40,13 @@ function UserPage(props)
                 }
                 setContents(items);
                 props.getSubscribers(match.params.login, 0, 50, (value)=>{
-                  setSubs(value);
+                setSubs(value);
+                props.checkSubscriberUser(result.Id, props.User.Id, (result) => {
+                  setIsSub(result);
+                  setIsLoaded(true);
                 });
-              }
-              setIsLoaded(true);
+                });
+              };
             })
           },
           (error) => {
@@ -81,7 +86,7 @@ function UserPage(props)
                       <p className="user-nickname">{user.Nickname}</p>
                       <p className="user-about-header">Обо мне</p>
                       <p className="user-about">{user.Info || "Да-да, инфы нет, соре. ПацаНы!!"}</p>
-                      {!props.User.Login || <RoundButton value="Подписаться" onClick={() => props.subscribeOnUser(props.User.Id, user.Id, 1, (value)=>{})}></RoundButton>}
+                      {!props.User.Login || <RoundButton value={isSubscriber ? "Подписаться" : "Отписаться"} onClick={() => props.subscribeOnUser(props.User.Id, user.Id, 1, (value)=>{})}></RoundButton>}
                   </div>
               </div>
               <CardsContentBox content_onClick={props.renderSelectedContent}
