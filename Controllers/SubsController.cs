@@ -50,14 +50,27 @@ namespace onlyarts.Controllers
                 select new UserSubsResponse(user.Login, user.Nickname, user.LinkToAvatar)
             ).ToList());
         }
-        [HttpGet("{id}/check")]
-        public ActionResult IsSubscriber(int id, [FromQuery] int userId) 
+        [HttpGet("check")]
+        public ActionResult IsSubscriber([FromQuery] int authorId, [FromQuery] int userId) 
         {
-            var sub = _helper.getByID<Subscription>(id, includes);
+            var author = _helper.getByID<User>(authorId);
+            if (author == null) {
+                return NotFound();
+            }
+            var subUser = _helper.getByID<User>(userId);
+            if (subUser == null) {
+                return NotFound();
+            }
+            var sub = (
+                from _sub in _context.Subscriptions
+                where _sub.Author == author
+                && _sub.SubUser == subUser
+                select _sub
+            ).SingleOrDefault();
             if (sub == null) {
                 return NotFound();
             }
-            return Json(sub.SubUser.Id == userId);
+            return Ok();
         }
         // Метод, который возвращает подписчиков юзера с идентификатором id
         private List<Models.User> GetUserSubs(int id) 

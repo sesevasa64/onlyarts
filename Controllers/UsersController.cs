@@ -47,17 +47,34 @@ namespace onlyarts.Controllers
         {
             var author = _helper.getByID<User>(request.AuthorId);
             var user = _helper.getByID<User>(request.SubUserId);
+            if (request.AuthorId == request.SubUserId) {
+                return Conflict();
+            }
             if (author == null || user == null) {
                 return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+            var subs = (from subscriptions in _context.Subscriptions
+                        where subscriptions.Author.Id == request.AuthorId && subscriptions.SubUser.Id == request.SubUserId
+                        select subscriptions).SingleOrDefault();
+            if (subs != null) {
+                return Conflict();
             }
             var subtype = (
                 from subtypes in _context.SubTypes
                 where subtypes.Id == request.SubTypeId
                 select subtypes 
             ).SingleOrDefault();
-            var sub = new Subscription 
+            DateTime endsubdate = new DateTime();
+            if (subtype.SubLevel == 0) {
+                endsubdate = new DateTime(9999, 1, 1);
+            }
+            else {
+                TimeSpan duration = new System.TimeSpan(subtype.Duration, 0, 0, 0);
+                endsubdate = endsubdate.Add(duration);
+            }
+            var sub = new Subscription
             {
-                EndSubDate = DateTime.Now,
+                EndSubDate = endsubdate,
                 SubUser = user,
                 Author = author,
                 SubType = subtype
