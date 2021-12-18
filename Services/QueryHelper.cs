@@ -55,7 +55,7 @@ namespace onlyarts.Services
             }
             if (max > length) 
             {
-                return collection.GetRange(min, max - min);
+                return collection.GetRange(min, length - min);
             }
             if (max - min > length) {
                 return collection.GetRange(min, length - min);
