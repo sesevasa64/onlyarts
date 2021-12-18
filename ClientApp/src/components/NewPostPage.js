@@ -161,7 +161,7 @@ class NewPostPage extends Component
             this.setState({
                 contentIsPushing: true,
             });
-            console.log("Publish click");
+            
             let callback = (Images) => {
                 this.props.addNewPost({
                     Name: this.state.Name,
@@ -238,7 +238,7 @@ class NewPostPage extends Component
                 </div>
             )
         }
-        console.log(this.state.flagStart)
+
         return(
                 <div className="main-content-block">
                     <div className="content-page create-post-page">

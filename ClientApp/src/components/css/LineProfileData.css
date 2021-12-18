@@ -16,7 +16,6 @@
 .profile-line img
 {
   border-radius: 50%;
-  background: lightgray;
   width: 25px;
   height: 25px;
 }
@@ -32,6 +31,10 @@
 .content-name
 {
     text-align: center;
+}
+
+.liked{
+  background: red;
 }
 
 .likes_button:hover

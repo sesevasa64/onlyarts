@@ -8,7 +8,6 @@ function TagList(props)
         tags_list.push(
             <li key={i} onClick={() => props.selectTag(props.tags[i].TagName)}>{props.tags[i].TagName}</li>
         );
-    console.log(tags_list);
     return(
         <div className="box-tags">
                 <p>Популярные теги</p>

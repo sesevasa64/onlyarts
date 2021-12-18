@@ -26,7 +26,6 @@ class SubscribersPage extends Component
             items.push(
                 <div className='user-card'>
                     <a onClick={() => {
-                        console.log("Privet");
                         this.props.isNext(true)}} href={`/UserPage/${users[i].Login}`}>
                         <img src={`${users[i].LinkToAvatar}`}></img>
                         <p>{users[i].Nickname}</p>
