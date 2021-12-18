@@ -43,6 +43,12 @@
     cursor: pointer;
 }
 
+.line-stats
+{
+  display: flex;
+  flex-direction: row;
+}
+
 @media (max-width: 1200px)
 {
     .profile-line

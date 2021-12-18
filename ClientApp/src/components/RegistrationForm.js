@@ -6,7 +6,7 @@ import '../OnlyArts.css';
 import MD5 from '../models/md5.js';
 import HashModel from '../models/HashModel.js';
 let hash_model = new HashModel(MD5);
-
+let host_name = "https://" + document.location.host;
 
 class RegistrationForm extends React.Component
 {
@@ -187,7 +187,7 @@ class RegistrationForm extends React.Component
             Nickname: this.state.nickname,
             LinkToAvatar: this.state.linkToAvatar ? this.state.linkToAvatar : null
         }
-        fetch('https://localhost:5001/api/users',{
+        fetch(`${host_name}/api/users`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'

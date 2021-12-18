@@ -342,7 +342,7 @@ class OnlyArts extends Component
       headers: {
         'Content-Type': 'application/json',
         'API-key': this.state.authToken
-      } 
+      }
     });
     
   }
@@ -414,6 +414,16 @@ class OnlyArts extends Component
     .then((response) => {
       callback(response.ok)
     })
+  }
+
+  unsubscribeOnUser(user_id, author_id)
+  {
+    fetch(`${host_name}/api/users/unsubscribe?authorID=${author_id}&subuserID=${user_id}`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      }
+    });
   }
 
   patchViewToContent(contentId, callback)
