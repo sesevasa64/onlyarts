@@ -86,7 +86,7 @@ function UserPage(props)
                       <p className="user-nickname">{user.Nickname}</p>
                       <p className="user-about-header">Обо мне</p>
                       <p className="user-about">{user.Info || "Да-да, инфы нет, соре. ПацаНы!!"}</p>
-                      {!props.User.Login || <RoundButton value={isSubscriber ? "Подписаться" : "Отписаться"} onClick={() => props.subscribeOnUser(props.User.Id, user.Id, 1, (value)=>{})}></RoundButton>}
+                      {!props.User.Login || <RoundButton value={!isSubscriber ? "Подписаться" : "Отписаться"} onClick={() => props.subscribeOnUser(props.User.Id, user.Id, 1, (value)=>{})}></RoundButton>}
                   </div>
               </div>
               <CardsContentBox content_onClick={props.renderSelectedContent}
