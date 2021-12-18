@@ -42,6 +42,27 @@ namespace onlyarts.Controllers
             }
             return Json(user);
         }
+        [HttpPost("subscribe")]
+        public ActionResult Post(UserSubscribeRequest request)
+        {
+            var author = _helper.getByID<User>(request.AuthorId);
+            var user = _helper.getByID<User>(request.SubUserId);
+            var subtype = (
+                from subtypes in _context.SubTypes
+                where subtypes.Id == request.SubTypeId
+                select subtypes 
+            ).SingleOrDefault();
+            var sub = new Subscription 
+            {
+                EndSubDate = DateTime.Now,
+                SubUser = user,
+                Author = author,
+                SubType = subtype
+            };
+            _context.Subscriptions.Add(sub);
+            _context.SaveChanges();
+            return Ok();
+        }
         [HttpDelete("unsubscribe")]
         public ActionResult DeleteLikes([FromQuery] int authorID, [FromQuery] int subuserID)
         {

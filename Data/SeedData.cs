@@ -133,7 +133,7 @@ namespace onlyarts.Data
                         ContentType = "pic",
                         LinkToPreview = str_content[i],
                         LinkToBlur = str_content[i],
-                        ViewCount = 0,
+                        ViewCount = 100 * i,
                         User = user[Convert.ToInt32(str_content[i + 3])],
                         SubType = subtype[0]
                     };
