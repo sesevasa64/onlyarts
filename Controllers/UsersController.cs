@@ -47,6 +47,9 @@ namespace onlyarts.Controllers
         {
             var author = _helper.getByID<User>(request.AuthorId);
             var user = _helper.getByID<User>(request.SubUserId);
+            if (author == null || user == null) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
             var subtype = (
                 from subtypes in _context.SubTypes
                 where subtypes.Id == request.SubTypeId
@@ -64,7 +67,7 @@ namespace onlyarts.Controllers
             return Ok();
         }
         [HttpDelete("unsubscribe")]
-        public ActionResult DeleteLikes([FromQuery] int authorID, [FromQuery] int subuserID)
+        public ActionResult DeleteSubscriber([FromQuery] int authorID, [FromQuery] int subuserID)
         {
             if (authorID == -1 || subuserID == -1) {
                 return StatusCode((int)HttpStatusCode.NotAcceptable);
