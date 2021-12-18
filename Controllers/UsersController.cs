@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,20 @@ namespace onlyarts.Controllers
                 return NotFound();
             }
             return Json(user);
+        }
+        [HttpDelete("unsubscribe")]
+        public ActionResult DeleteLikes([FromQuery] int authorID, [FromQuery] int subuserID)
+        {
+            if (authorID == -1 || subuserID == -1) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+            var sub = GetSubByUsersId(authorID, subuserID);
+            if (sub == null) {
+                return NotFound();
+            }
+            _context.Remove(sub);
+            _context.SaveChanges();
+            return Ok();
         }
         [HttpPost]
         public ActionResult Post(RegistrationRequest request)
@@ -130,7 +145,7 @@ namespace onlyarts.Controllers
                         select sub.SubUser).ToList();
             return subs;
         }
-        public List<User> GetPopularUsers()
+        private List<User> GetPopularUsers()
         {
             // Задача для Артема Юнусова
             // Нужно вернуть список популярных юзеров с min по max позиции
@@ -145,6 +160,15 @@ namespace onlyarts.Controllers
                 select user.User
             ).ToList();
             return users;
+        }
+        private Subscription GetSubByUsersId(int AuthorID, int SubUserID) 
+        {
+            var subs = (
+                from sub in _context.Subscriptions
+                where sub.Author.Id == AuthorID && sub.SubUser.Id == SubUserID 
+                select sub
+            ).SingleOrDefault();
+            return subs;
         }
     }
 }

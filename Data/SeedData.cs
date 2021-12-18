@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using onlyarts.Models;
@@ -14,67 +15,41 @@ namespace onlyarts.Data
                     serviceProvider.GetRequiredService<
                     DbContextOptions<OnlyartsContext>>()))
             {
+                //теги
+                var tags = context.Tags.Where(T => T.Id > 0);
+                context.Tags.RemoveRange(tags);
+                
+                String[] str_tag = File.ReadAllLines("Data\\tags.txt");
+                Tag[] tag = new Tag[str_tag.Length];
+                for(int i = 0; i < str_tag.Length; i++)
+                {
+                    tag[i] = new Tag
+                    {
+                        Id = i + 1,
+                        TagName = str_tag[i]
+                    };
+                }
+
+                context.Tags.AddRange(tag);
+                context.SaveChanges();
+
                 //пользователи и боты
-                User[] user = new User[5];
-                String[][] us = new String[][]
+                 var users = context.Users.Where(U => U.Id > 0);
+                context.Users.RemoveRange(users);
+            
+                String[] str_user = File.ReadAllLines("Data\\users.txt");
+                User[] user = new User[(str_user.Length + 1) / 7];
+                for(int i = 0; i < str_user.Length; i += 7)
                 {
-                    new String[]
-                    {
-                        "alexeisuhanov", 
-                        "cringe1", 
-                        "Alex", 
-                        "asd@mail.ru", 
-                        "https://img5.goodfon.ru/wallpaper/nbig/a/fd/cyberpunk-2077-samurai-logo.jpg",
-                        "Ну да, я Лёха, просто Лёха"
-                    },
-                    new String[] 
-                    {
-                        "a.yunusov", 
-                        "b@sed", 
-                        "Yun", 
-                        "zxcvn@mail.ru", 
-                        "https://realava.ru/wp-content/gallery/kartinki-na-avu-dlya-patsanov/Q71nV-KbbXc.jpg",
-                        "Учу C#"
-                    },
-                    new String[] 
-                    {
-                        "oleg.rad", 
-                        "b@sed", 
-                        "Radius", 
-                        "qwerty@mail.ru", 
-                        "https://i.pinimg.com/736x/4b/7b/b4/4b7bb44e4cfcc154af52ef6b6f3f8f1f.jpg",
-                        "Квантовый человек"
-                    },
-                    new String[] 
-                    {
-                        "sesevasa", 
-                        "zxc1000-7", 
-                        "Aboba",
-                        "fghjd@mail.ru",
-                        "https://i.pinimg.com/originals/db/66/49/db664957ab0ba56c9b74b691c545bfde.jpg",
-                        "Торчист - питонист"
-                    },
-                    new String[] 
-                    {
-                        "sokolik",
-                        "sd1928!log",
-                        "sokol",
-                        "sawqdq@mail.ru",
-                        "https://mobimg.b-cdn.net/v3/fetch/c4/c493aac67877288476b0fc52d55f55cf.jpeg",
-                        "Вы думаете я вас не переиграю? Я вас уничтожу!"
-                    }
-                }; 
-                for(int i = 0; i < 5; i++)
-                {
-                    user[i] =  new User 
+                    user[i / 7] =  new User 
                     { 
-                        Id = i + 1, 
-                        Login = us[i][0],
-                        Password = us[i][1],
-                        Nickname = us[i][2],
-                        Email = us[i][3],
-                        LinkToAvatar = us[i][4],
-                        Info = us[i][5],
+                        Id = i / 7 + 1, 
+                        Login = str_user[i],
+                        Password = str_user[i + 1],
+                        Nickname = str_user[i + 2],
+                        Email = str_user[i + 3],
+                        LinkToAvatar = str_user[i + 4],
+                        Info = str_user[i + 5],
                         RegisDate = DateTime.Now,
                         Money = 0
                     };
@@ -96,42 +71,35 @@ namespace onlyarts.Data
                         };
                 }
 
+                context.Users.AddRange(user);
+                context.Users.AddRange(bot);
+                context.SaveChanges();
 
                 //типы подписок
-                SubType FreeSub = new SubType
+                var subtypes = context.SubTypes.Where(C => C.Id > 0);
+                context.SubTypes.RemoveRange(subtypes);
+        
+                String[] str_subtype = File.ReadAllLines("Data\\subtypes.txt");
+                SubType[] subtype = new SubType[(str_subtype.Length + 1) / 5];
+                for(int i = 0; i < str_subtype.Length; i += 5)
                 {
-                    Id = 1,
-                    Type = "Бесплатная",
-                    Cost = 0,
-                    Duration = 0,   
-                    SubLevel = 0
-                };
-                SubType PaidSub_1 = new SubType
-                {
-                    Id = 2,
-                    Type = "Платная подписка, на 1 месяц",
-                    Cost = 100,
-                    Duration = 30,   
-                    SubLevel = 1
-                };
-                SubType PaidSub_2 = new SubType
-                {
-                    Id = 3,
-                    Type = "Платная подписка, на 6 месяц",
-                    Cost = 500,
-                    Duration = 180,   
-                    SubLevel = 1
-                };
-                SubType VeryPaidSub = new SubType
-                {
-                    Id = 4,
-                    Type = "Очень платная подписка",
-                    Cost = 500,
-                    Duration = 30,   
-                    SubLevel = 2
-                };
+                    subtype[i / 5] = new SubType
+                    {
+                        Id = i / 5 + 1,
+                        Type = str_subtype[i],
+                        Cost = Convert.ToDecimal(str_subtype[i + 1]),
+                        Duration = Convert.ToInt32(str_subtype[i + 2]),   
+                        SubLevel = Convert.ToByte(str_subtype[i + 3])
+                    };
+                }
+
+                context.SubTypes.AddRange(subtype);
+                context.SaveChanges();
 
                 //подписки
+                var subscriptions = context.Subscriptions.Where(U => U.Id > 0);
+                context.Subscriptions.RemoveRange(subscriptions);
+                
                 DateTime date1 = new DateTime(9999, 1, 1); 
                 Subscription[] sub = new Subscription[100];
                 for(int i = 0; i < 100; i++)
@@ -142,149 +110,124 @@ namespace onlyarts.Data
                             EndSubDate = date1,
                             SubUser = bot[i],
                             Author = user[i / 20],
-                            SubType = FreeSub
+                            SubType = subtype[0]
                         };
                 }
 
+                context.Subscriptions.AddRange(sub);
+                context.SaveChanges();
+
                 //контент
-                String[] link = new String[] 
+                var contents = context.Contents.Where(C => C.Id > 0);
+                context.Contents.RemoveRange(contents);
+                
+                String[] str_content = File.ReadAllLines("Data\\contents.txt");
+                Content[] content = new Content[(str_content.Length + 1) / 5];
+                for(int i = 0; i < str_content.Length; i += 5)
                 {
-                    "https://img-fotki.yandex.ru/get/5800/18746936.23/0_6929f_3ff82e94_XXL.jpg",
-                    "https://i.mycdn.me/i?r=AzEPZsRbOZEKgBhR0XGMT1RkMYCDWEYeb5SlcObYi8Mo1KaKTM5SRkZCeTgDn6uOyic",
-                    "https://avatars.mds.yandex.net/i?id=b65bd6f623c3ee550acc09c2fd9a7ef6-4504894-images-thumbs&n=13",
-                    "https://api.nsn.fm/storage/medialib/360264/large_image-a12ba51225f6f81a83f167e668d83417.jpg",
-                    "https://kurganfm.ru/wp-content/uploads/2019/08/1431031451_ThinkstockPhotos-174308224.jpg",
-                    "https://eda-land.ru/images/article/orig/2018/07/kak-proverit-kachestvo-tvoroga-v-domashnih-usloviyah.jpg",
-                    "https://funik.ru/wp-content/uploads/2018/10/17478da42271207e1d86.jpg",
-                    "https://sun9-75.userapi.com/impg/n3ZaUpCjnyVELnb5_nB7IWshFADrqsHRU2THEA/no06JPFqh88.jpg?size=1080x973&quality=96&sign=478300ad5bc4113c7adba83f002ba564&type=album"
-                };
-                String[] name = new String[]
-                {
-                    "Ночной Челябинск",
-                    "Ночной Екатиренбург",
-                    "Pepe",
-                    "Копейск",
-                    "Спорт",
-                    "Творог",
-                    "Котики",
-                    "Котейки"
-                }; 
-                String[] description = new String[]
-                {
-                    "Челябинск ночью",
-                    "Екатиренбург ночью",
-                    "С сыном",
-                    "Копейск. Просто Копейск. Просто копейка",
-                    "Спорт пацаны, это наше все! ЗОЖ!!! ЗОЖ!!! ЗОЖ!!!",
-                    "Люблю творог. Он такой красивый, он такой вкусный!",
-                    "Котики милые? Конечно они всегда милые!",
-                    "Вам мало котиков? Ну вот держите!"
-                }; 
-                Content[] con = new Content[8];
-                for(int i = 0; i < 8; i++)
-                {
-                    con[i] = new Content
+                    content[i / 5] = new Content
                     {
-                        Id = i + 1,
-                        User = user[i / 2],
-                        SubType = FreeSub,
-                        Name = name[i],
-                        Description = description[i],
+                        Id = i / 5 + 1,
+                        Name = str_content[i + 1],
+                        Description = str_content[i + 2],
                         ContentType = "pic",
-                        LinkToPreview = link[i],
-                        LinkToBlur = link[i],
-                        ViewCount = 0
+                        LinkToPreview = str_content[i],
+                        LinkToBlur = str_content[i],
+                        ViewCount = 0,
+                        User = user[Convert.ToInt32(str_content[i + 3])],
+                        SubType = subtype[0]
                     };
                 }
 
+                context.Contents.AddRange(content);
+                context.SaveChanges();
+
                 //изображения в контенте
-                String[] link_img = new String[]
+                var images = context.Images.Where(Im => Im.Id > 0);
+                context.Images.RemoveRange(images);
+        
+                String[] str_image = File.ReadAllLines("Data\\images.txt");
+                Image[] image = new Image[str_image.Length / 2];
+                for(int i = 0; i < str_image.Length; i += 2)
                 {
-                    "https://img-fotki.yandex.ru/get/5800/18746936.23/0_6929f_3ff82e94_XXL.jpg",
-                    "https://nashchelyabinsk.ru/media/images/bb4bb9fca82847be952dccfe1a1d17fe.normal.jpg",
-                    "https://i.mycdn.me/i?r=AzEPZsRbOZEKgBhR0XGMT1RkMYCDWEYeb5SlcObYi8Mo1KaKTM5SRkZCeTgDn6uOyic",
-                    "http://ekaterinburg-2018.ru/upload/5953696b47254562d7b89ff61c4f90b4.jpg",
-                    "https://avatars.mds.yandex.net/i?id=b65bd6f623c3ee550acc09c2fd9a7ef6-4504894-images-thumbs&n=13",
-                    "https://cs11.pikabu.ru/post_img/2019/10/07/8/og_og_157045542525526807.jpg",
-                    "https://maps.spravka-region.ru/img/212/05053017434787899.jpg",
-                    "http://photocdn.photogoroda.com/source2/cn3159/r5507/c5522/18912333.jpg?v=20171213112136",
-                    "https://avatars.mds.yandex.net/get-zen_doc/3582174/pub_6085a9d211963e55626a2364_6085aa3b5bfb251ca7cb1b0f/scale_1200",
-                    "https://edutorg.ru/image/cache/catalog/tovary/trenazheri-shtangi-diski-ganteli/gantel-v-vinilovoj-obolochke-9lb-4-05-kg-700x700.jpg",
-                    "https://images.ru.prom.st/420780686_w640_h640_shtangi-razbornye-kupit.jpg",
-                    "https://avatars.mds.yandex.net/get-zen_doc/1714257/pub_5ecaa0918689093b98383f17_5ecaa58116dc9e6bc0902fb1/scale_1200",
-                    "https://mykaleidoscope.ru/uploads/posts/2021-09/1632866239_9-mykaleidoscope-ru-p-tvorog-s-klubnikoi-krasivo-foto-10.jpg",
-                    "https://www.zastavki.com/pictures/originals/2019Food_Cottage_cheese_with_berries_in_a_wooden_bowl_on_the_table_with_apples_131863_.jpg",
-                    "https://ufkis33.ru/800/600/https/cdn.bellinigroup.ru/upload/202004/5e9805d4252de_1080x1080_fit.jpeg",
-                    "https://krasivosti.pro/uploads/posts/2021-07/1626113550_58-krasivosti-pro-p-dobrii-kotik-koti-krasivo-foto-64.jpg",
-                    "https://phonoteka.org/uploads/posts/2021-07/1625190189_5-phonoteka-org-p-zastavki-na-telefon-kotiki-krasivie-zastav-5.jpg",
-                    "https://i02.fotocdn.net/s116/f3e8783ad7851098/public_pin_l/2633618515.jpg",
-                    "https://crosti.ru/patterns/00/21/da/b144f6ffd7/picture.jpg",
-                    "https://funik.ru/wp-content/uploads/2018/10/cd494811d5a5edcb3159.jpg",
-                    "https://sun9-75.userapi.com/impg/n3ZaUpCjnyVELnb5_nB7IWshFADrqsHRU2THEA/no06JPFqh88.jpg?size=1080x973&quality=96&sign=478300ad5bc4113c7adba83f002ba564&type=album",
-                    "https://sun9-11.userapi.com/impg/tZaRKXXWXro-7A_2qSyfCIeLGhcabZkbA3TuSg/GX2v5esmeoU.jpg?size=1280x960&quality=96&sign=622dee13393f6d626f716283110b1baa&type=album",
-                    "https://sun9-75.userapi.com/impg/nMdPWHpzl2a6_ZA2yT7TS64GZF0HVKNuhhUegQ/RAxlzfRgJtI.jpg?size=1200x628&quality=96&sign=8f59d991c9d61c8dc5eedf0881800390&type=album"
-                };
-
-                int[] n_img = new int[] {2, 2, 2, 2, 3, 4, 5, 3};
-                Image[] img = new Image[23];
-                for(int i = 0, m = 0; i < 8; i++)
-                {
-                    for(int j = 0; j < n_img[i]; j++)
+                    image[i / 2] = new Image
                     {
-                        img[m] = new Image
-                        {
-                            Id = m + 1,
-                            LinkToImage = link_img[m],
-                            Content = con[i]
-                        };
-                        m++;
-                    }
+                        Id = i / 2 + 1,
+                        LinkToImage = str_image[i],
+                        Content = content[Convert.ToInt32(str_image[i + 1])]
+                    };
                 }
-                
-                //теги
-                Tag T1 = new Tag
-                {
-                    Id = 1,
-                    TagName = "фото"
-                };
-                Tag T2 = new Tag
-                {
-                    Id = 2,
-                    TagName = "арт"
-                };
-                Tag T3 = new Tag
-                {
-                    Id = 3,
-                    TagName = "мем"
-                };
-                Tag T4 = new Tag
-                {
-                    Id = 4,
-                    TagName = "спорт"
-                };
-                Tag T5 = new Tag
-                {
-                    Id = 5,
-                    TagName = "еда"
-                };
-
-
+               
+                context.Images.AddRange(image);
+                context.SaveChanges();
 
                 //линк тег
-                LinkTag[] LT = new LinkTag[10];
-                Tag[] LT_tag = new Tag[] 
-                {T1, T2, T2, T3, T1, T1, T4, T1, T5, T1};
-                Content[] LT_content = new Content[] 
-                {con[0], con[1], con[2], con[2], con[3], con[4], con[4], con[5], con[5], con[6]};
-                for(int i = 0; i < 10; i++)
+                var linktags = context.LinkTags.Where(LT => LT.Id > 0);
+                context.LinkTags.RemoveRange(linktags);
+
+                int[] LT_tag = new int[]
+                {
+                    0, 1, 
+                    0, 1, 
+                    2, 
+                    0, 1,
+                    0, 3,
+                    0, 4,
+                    0, 5,
+                    0, 5,
+                    6, 
+                    6,
+                    0, 7, 
+                    7, 14,
+                    0,
+                    0, 8,
+                    9, 14,
+                    10, 14,
+                    11, 14,
+                    0, 12,
+                    13,
+                    9, 14
+                };
+                int[] LT_content = new int[]
+                {
+                    0, 0, 
+                    1, 1, 
+                    2, 
+                    3, 3, 
+                    4, 4,
+                    5, 5,
+                    6, 6, 
+                    7, 7,
+                    8, 
+                    9,
+                    10, 10, 
+                    11, 11,
+                    12,
+                    13, 13,
+                    14, 14,
+                    15, 15, 
+                    16, 16,
+                    17, 17,
+                    18, 
+                    19, 19
+                };
+                LinkTag[] LT = new LinkTag[LT_tag.Length];
+                for(int i = 0; i < LT_tag.Length; i++)
                 {
                     LT[i] = new LinkTag
                     {
                         Id = i + 1,
-                        Tag = LT_tag[i],
-                        Content = LT_content[i]
+                        Tag = tag[LT_tag[i]],
+                        Content = content[LT_content[i]]
                     };
                 }
+
+                context.LinkTags.AddRange(LT);
+                context.SaveChanges();
+
+                //реакции
+                var reaction = context.Reactions.Where(Im => Im.Id > 0);
+                context.Reactions.RemoveRange(reaction);
 
                 Reaction[] reac = new Reaction[700];
                 for(int i = 0; i < 700; i++)
@@ -293,48 +236,11 @@ namespace onlyarts.Data
                     {
                         Id = i + 1,
                         Type = Convert.ToBoolean(i % 2),
-                        User = bot[i / 7],
-                        Content = con[i / 100]
+                        User = bot[i / content.Length],
+                        Content = content[i % content.Length]
                     };
                 }
-                var users = context.Users.Where(U => U.Id > 0);
-                context.Users.RemoveRange(users);
-                context.Users.AddRange(user);
-                context.Users.AddRange(bot);
-                context.SaveChanges();
-
-                var subtypes = context.SubTypes.Where(C => C.Id > 0);
-                context.SubTypes.RemoveRange(subtypes);
-                context.SubTypes.AddRange(FreeSub, PaidSub_1, PaidSub_2, VeryPaidSub);
-                context.SaveChanges();
-
-                var tags = context.Tags.Where(T => T.Id > 0);
-                context.Tags.RemoveRange(tags);
-                context.Tags.AddRange(T1,T2,T3, T4, T5);
-                context.SaveChanges();
-
-                var subscriptions = context.Subscriptions.Where(U => U.Id > 0);
-                context.Subscriptions.RemoveRange(subscriptions);
-                context.Subscriptions.AddRange(sub);
-                context.SaveChanges();
-
-                var contents = context.Contents.Where(C => C.Id > 0);
-                context.Contents.RemoveRange(contents);
-                context.Contents.AddRange(con);
-                context.SaveChanges();
-
-                var linktags = context.LinkTags.Where(LT => LT.Id > 0);
-                context.LinkTags.RemoveRange(linktags);
-                context.LinkTags.AddRange(LT);
-                context.SaveChanges();
-
-                var images = context.Images.Where(Im => Im.Id > 0);
-                context.Images.RemoveRange(images);
-                context.Images.AddRange(img);
-                context.SaveChanges();
-
-                var reaction = context.Reactions.Where(Im => Im.Id > 0);
-                context.Reactions.RemoveRange(reaction);
+                
                 context.Reactions.AddRange(reac);
                 context.SaveChanges();
             }
