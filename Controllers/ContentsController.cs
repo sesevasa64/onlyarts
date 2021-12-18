@@ -245,7 +245,7 @@ namespace onlyarts.Controllers
             if (content == null) {
                 return NotFound();
             }
-            return Json(content.ViewCount);
+            return new JsonResult(content.ViewCount);
         }
         [HttpPatch("{id}/view")]
         public ActionResult PatchViewCount(int id)
@@ -334,11 +334,13 @@ namespace onlyarts.Controllers
                 join linkTag in _context.LinkTags 
                 on contents equals linkTag.Content
                 where linkTag.Tag.TagName == name
-                orderby contents.ViewCount, _helper.GetLikesCount(contents)
                 select contents
             ).Include(contents => contents.User)
-            .Include(contents => contents.SubType).ToList();
-
+            .Include(contents => contents.SubType)
+            .AsEnumerable()
+            .OrderByDescending(contents => contents.ViewCount)
+            .ThenBy(contents => _helper.GetLikesCount(contents))
+            .ToList();
             if (min >= content.Count) {
                 return NotFound();
             }
