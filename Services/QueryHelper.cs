@@ -53,6 +53,10 @@ namespace onlyarts.Services
             if (min == 0 && max == 0) {
                 return collection;
             }
+            if (max > length) 
+            {
+                return collection.GetRange(min, max - min);
+            }
             if (max - min > length) {
                 return collection.GetRange(min, length - min);
             }
