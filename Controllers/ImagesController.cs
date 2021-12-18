@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using onlyarts.Services;
 using onlyarts.Models;
 using onlyarts.Data;
@@ -21,7 +22,8 @@ namespace onlyarts.Controllers
         {
         }
         [HttpGet]
-        public ActionResult Get([FromQuery] int[] id)
+        [SwaggerOperation(Summary = "Роут для получения списка изображений по их id")]
+        public ActionResult GetMultipleById([FromQuery] int[] id)
         {
             var images = _helper.getMultipleByID<Image>(id, includes);
             if (images.Count == 0) {
@@ -30,7 +32,8 @@ namespace onlyarts.Controllers
             return Json(images);
         }
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        [SwaggerOperation(Summary = "Роут для получения изображения по id")]
+        public ActionResult GetById(int id)
         {
             var images = _helper.getByID<Image>(id, includes);
             if (images == null) {
@@ -38,12 +41,8 @@ namespace onlyarts.Controllers
             }
             return Json(images);
         }
-        [HttpPost("{id}")]
-        public ActionResult Post(int id)
-        {
-            return Get(id);
-        }
         [HttpGet("contents/{id}")]
+        [SwaggerOperation(Summary = "Роут для получения изображений контента по id")]
         public ActionResult GetByContentId(int id)
         {
             var content = _helper.getByID<Content>(id);

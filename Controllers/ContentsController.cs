@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using onlyarts.Services;
 using onlyarts.Models;
 using onlyarts.Data;
@@ -47,7 +48,8 @@ namespace onlyarts.Controllers
             return new JsonResult(result);
         }
         [HttpGet]
-        public ActionResult Get([FromQuery] int[] id)
+        [SwaggerOperation(Summary = "Роут для получения списка контента по их id")]
+        public ActionResult GetMultipleById([FromQuery] int[] id)
         {
             var contents = _helper.getMultipleByID<User>(id, includes);
             if (contents.Count == 0) {
@@ -56,6 +58,7 @@ namespace onlyarts.Controllers
             return Json(contents);
         }
         [HttpPost]
+        [SwaggerOperation(Summary = "Роут для добавления нового контента")]
         public ActionResult Post(ContentRequest request)
         {
             if (request.Images.Count == 0) {
@@ -105,6 +108,8 @@ namespace onlyarts.Controllers
             }
             return Ok();
         }
+        [HttpPut]
+        [SwaggerOperation(Summary = "Роут для обновления контента по id")]
         public ActionResult Put(ContentUpdateRequest request) 
         {
             var content = _helper.getByID<Content>(request.Id);
@@ -116,7 +121,8 @@ namespace onlyarts.Controllers
             return Ok();
         }
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        [SwaggerOperation(Summary = "Роут для получения контента по id")]
+        public ActionResult GetById(int id)
         {
             var content = _helper.getByID<Content>(id, includes);
             if (content == null) {
@@ -125,6 +131,7 @@ namespace onlyarts.Controllers
             return Json(content);
         }
         [HttpGet("{id}/likes")]
+        [SwaggerOperation(Summary = "Роут для получения лайков контента по его id")]
         public ActionResult GetLikes(int id)
         {
             var content = _helper.getByID<Content>(id);
@@ -134,6 +141,7 @@ namespace onlyarts.Controllers
             return Json(_helper.GetLikesCount(content));
         }
         [HttpGet("{id}/dislikes")]
+        [SwaggerOperation(Summary = "Роут для получения дизлайков контента по его id")]
         public ActionResult GetDislikes(int id)
         {
             var content = _helper.getByID<Content>(id);
@@ -143,6 +151,7 @@ namespace onlyarts.Controllers
             return Json(_helper.GetDislikesCount(content));
         }
         [HttpPatch("{id}/likes")]
+        [SwaggerOperation(Summary = "Роут для добавления к контенту нового лайка по его id")]
         public ActionResult PatchLikes(int id, [FromQuery] int userID = -1)
         {
             if (userID == -1) {
@@ -165,7 +174,32 @@ namespace onlyarts.Controllers
             _context.SaveChanges();
             return Ok();
         }
+        [HttpPatch("{id}/dislikes")]
+        [SwaggerOperation(Summary = "Роут для добавления к контенту нового дизлайка по его id")]
+        public ActionResult PatchDislikes(int id, [FromQuery] int userID = -1)
+        {
+            if (userID == -1) {
+                return StatusCode((int)HttpStatusCode.NotAcceptable);
+            }
+            var content = _helper.getByID<Content>(id);
+            if (content == null) {
+                return NotFound();
+            }
+            var user = _helper.getByID<User>(userID);
+            if (user == null) {
+                return NotFound();
+            }
+            var reactions = GetUserReactionsOnContent(user, content);
+            if (reactions != null) {
+                return Conflict();
+            }
+            var reaction = CreateReaction(user, content, true);
+            _context.Reactions.Add(reaction);
+            _context.SaveChanges();
+            return Ok();
+        }
         [HttpDelete("{id}/likes")]
+        [SwaggerOperation(Summary = "Роут для удаления лайка с контента по его id")]
         public ActionResult DeleteLikes(int id, [FromQuery] int userID = -1)
         {
             if (userID == -1) {
@@ -190,30 +224,8 @@ namespace onlyarts.Controllers
             _context.SaveChanges();
             return Ok();
         }
-        [HttpPatch("{id}/dislikes")]
-        public ActionResult PatchDislikes(int id, [FromQuery] int userID = -1)
-        {
-            if (userID == -1) {
-                return StatusCode((int)HttpStatusCode.NotAcceptable);
-            }
-            var content = _helper.getByID<Content>(id);
-            if (content == null) {
-                return NotFound();
-            }
-            var user = _helper.getByID<User>(userID);
-            if (user == null) {
-                return NotFound();
-            }
-            var reactions = GetUserReactionsOnContent(user, content);
-            if (reactions != null) {
-                return Conflict();
-            }
-            var reaction = CreateReaction(user, content, true);
-            _context.Reactions.Add(reaction);
-            _context.SaveChanges();
-            return Ok();
-        }
         [HttpDelete("{id}/dislikes")]
+        [SwaggerOperation(Summary = "Роут для удаления дизлайка с контента по его id")]
         public ActionResult DeleteDislikes(int id, [FromQuery] int userID = -1)
         {
             if (userID == -1) {
@@ -239,6 +251,7 @@ namespace onlyarts.Controllers
             return Ok();
         }
         [HttpGet("{id}/view")]
+        [SwaggerOperation(Summary = "Роут для получения просмотров контента по его id")]
         public ActionResult GetViewCount(int id)
         {
             var content = _helper.getByID<Content>(id);
@@ -248,6 +261,7 @@ namespace onlyarts.Controllers
             return new JsonResult(content.ViewCount);
         }
         [HttpPatch("{id}/view")]
+        [SwaggerOperation(Summary = "Роут для добавления нового просмотра к контенту по его id")]
         public ActionResult PatchViewCount(int id)
         {
             var content = _helper.getByID<Content>(id);
@@ -259,6 +273,7 @@ namespace onlyarts.Controllers
             return Ok();
         }
         [HttpGet("popular")]
+        [SwaggerOperation(Summary = "Роут для получения популярного контента")]
         public ActionResult Get([FromQuery] int min, [FromQuery] int max)
         {
             // Задача для Артема Юнусова
@@ -278,6 +293,7 @@ namespace onlyarts.Controllers
             return Json(_helper.GetMinMax<Content>(contents, min, max));
         }
         [HttpGet("popular/{name}")]
+        [SwaggerOperation(Summary = "Роут для получения популярного контента с тегом name")]
         public ActionResult Get(string name, [FromQuery] int min, [FromQuery] int max)
         {
             var contents = (
@@ -298,6 +314,7 @@ namespace onlyarts.Controllers
             return Json(_helper.GetMinMax<Content>(contents, min, max));
         }
         [HttpGet("popular/user/{login}")]
+        [SwaggerOperation(Summary = "Роут для получения популярного контента юзера по его логину")]
         public ActionResult GetContentByLogin(string login, [FromQuery] int min, [FromQuery] int max)
         {
             var contents = (
@@ -318,7 +335,8 @@ namespace onlyarts.Controllers
             return Json(_helper.GetMinMax<Content>(contents, min, max));
         }
         [HttpGet("tags/{name}")]
-        public ActionResult Get(string name, [FromQuery] int limit)
+        [SwaggerOperation(Summary = "Роут для получения контента с тегом name")]
+        public ActionResult GetСontentByTagName(string name, [FromQuery] int limit)
         {
             var content = GetContentsByTag(name);
             if (limit == 0 || limit >= content.Count) {
@@ -327,6 +345,7 @@ namespace onlyarts.Controllers
             return Json(content.GetRange(0, limit));
         }
         [HttpGet("tag/{name}")]
+        [SwaggerOperation(Summary = "Роут для получения контента с тегом name")]
         public ActionResult GetContents(string name, [FromQuery] int min, [FromQuery] int max)
         {
             var content = (
@@ -347,7 +366,8 @@ namespace onlyarts.Controllers
             return Json(_helper.GetMinMax(content, min, max));
         }
         [HttpGet("users")]
-        public ActionResult Get([FromQuery] string login)
+        [SwaggerOperation(Summary = "Роут для получения контента юзера по его логину")]
+        public ActionResult GetUserContentByLogin([FromQuery] string login)
         {
             var user = _helper.getUserByLogin(login);
             if (user == null) {
@@ -366,7 +386,8 @@ namespace onlyarts.Controllers
             return Json(content);
         }
         [HttpGet("users/{id}")]
-        public ActionResult Get(int id, [FromQuery] int min, [FromQuery] int max)
+        [SwaggerOperation(Summary = "Роут для получения контента юзера по его id")]
+        public ActionResult GetUserContentById(int id, [FromQuery] int min, [FromQuery] int max)
         {
             var content = GetUserContent(id);
             if (min >= content.Count) {
@@ -375,6 +396,7 @@ namespace onlyarts.Controllers
             return Json(_helper.GetMinMax<Content>(content, min, max));
         }
         [HttpGet("like")]
+        [SwaggerOperation(Summary = "Роут для получения похожего контента")]
         public ActionResult GetContentByName([FromQuery] string name)
         {
             var contents = (

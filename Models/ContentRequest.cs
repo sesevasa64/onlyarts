@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace onlyarts.Models
 {
+    [SwaggerSchema(Description = "Модель запроса добавления нового контента")]
     public class ContentRequest
     {
         public string Name { get; set; }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using onlyarts.Services;
 using onlyarts.Models;
 using onlyarts.Data;
@@ -21,7 +22,8 @@ namespace onlyarts.Controllers
         {
         }
         [HttpGet]
-        public ActionResult Get([FromQuery] int[] id)
+        [SwaggerOperation(Summary = "Роут для получения списка подписок по их id")]
+        public ActionResult GetMultipleById([FromQuery] int[] id)
         {
             var subs = _helper.getMultipleByID<Subscription>(id, includes);
             if (subs.Count == 0) {
@@ -30,7 +32,8 @@ namespace onlyarts.Controllers
             return Json(subs);
         }
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        [SwaggerOperation(Summary = "Роут для получения подписки по id")]
+        public ActionResult GetById(int id)
         {
             var subs = _helper.getByID<Subscription>(id, includes);
             if (subs == null) {
@@ -39,7 +42,8 @@ namespace onlyarts.Controllers
             return Json(subs);
         }
         [HttpGet("users/{id}")]
-        public ActionResult Get(int id, [FromQuery] int min, [FromQuery] int max)
+        [SwaggerOperation(Summary = "Роут для получения подписчиков юзера по id")]
+        public ActionResult GetUserSubsById(int id, [FromQuery] int min, [FromQuery] int max)
         {
             var subs = GetUserSubs(id);
             if (min >= subs.Count) {
@@ -51,6 +55,7 @@ namespace onlyarts.Controllers
             ).ToList());
         }
         [HttpGet("check")]
+        [SwaggerOperation(Summary = "Роут для проверки того, является ли юзер userId подписчиком автора authorId")]
         public ActionResult IsSubscriber([FromQuery] int authorId, [FromQuery] int userId) 
         {
             var author = _helper.getByID<User>(authorId);

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using onlyarts.Services;
 using onlyarts.Models;
 using onlyarts.Data;
@@ -22,6 +23,7 @@ namespace onlyarts.Controllers
             _tokenGenerator = tokenGenerator;
         }
         [HttpGet]
+        [SwaggerOperation(Summary = "Роут для получения списка юзеров по их id")]
         public ActionResult Get([FromQuery] int[] id, [FromQuery] string login)
         {
             bool isIdEmpty = id.Length == 0;
@@ -43,6 +45,7 @@ namespace onlyarts.Controllers
             return Json(user);
         }
         [HttpPost("subscribe")]
+        [SwaggerOperation(Summary = "Роут для оформления новой подписки")]
         public ActionResult Post(UserSubscribeRequest request)
         {
             var author = _helper.getByID<User>(request.AuthorId);
@@ -84,6 +87,7 @@ namespace onlyarts.Controllers
             return Ok();
         }
         [HttpDelete("unsubscribe")]
+        [SwaggerOperation(Summary = "Роут для отмены подписки юзера subuserID от автора authorID")]
         public ActionResult DeleteSubscriber([FromQuery] int authorID, [FromQuery] int subuserID)
         {
             if (authorID == -1 || subuserID == -1) {
@@ -98,6 +102,7 @@ namespace onlyarts.Controllers
             return Ok();
         }
         [HttpPost]
+        [SwaggerOperation(Summary = "Роут для регистрации нового пользователя")]
         public ActionResult Post(RegistrationRequest request)
         {
             var check = (
@@ -123,6 +128,7 @@ namespace onlyarts.Controllers
             return Ok();
         }
         [HttpPut]
+        [SwaggerOperation(Summary = "Роут для обновления информации о юзере")]
         public ActionResult Put(UserUpdateRequest request) 
         {
             var user = _helper.getByID<User>(request.Id);
@@ -135,7 +141,8 @@ namespace onlyarts.Controllers
             return Ok();
         }
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        [SwaggerOperation(Summary = "Роут для получения юзера по id")]
+        public ActionResult GetById(int id)
         {
             var user = _helper.getByID<User>(id);
             if (user == null) {
@@ -144,6 +151,7 @@ namespace onlyarts.Controllers
             return Json(user);
         }
         [HttpPost("auth")]
+        [SwaggerOperation(Summary = "Роут для прохождении аутентификации пользователя")]
         public ActionResult Auth(AuthenticationRequest request) 
         {
             var user = (
@@ -160,7 +168,8 @@ namespace onlyarts.Controllers
             });
         }
         [HttpGet("popular")]
-        public ActionResult Get([FromQuery] int min, [FromQuery] int max)
+        [SwaggerOperation(Summary = "Роут для получения популярных юзеров")]
+        public ActionResult GetPopular([FromQuery] int min, [FromQuery] int max)
         {
             var users = GetPopularUsers();
             if (min >= users.Count) {
@@ -169,6 +178,7 @@ namespace onlyarts.Controllers
             return Json(_helper.GetMinMax<User>(users, min, max));
         }
         [HttpGet("subscribers/{login}")]
+        [SwaggerOperation(Summary = "Роут для получения подписчиков юзера по его логину")]
         public ActionResult GetSubs(string login, [FromQuery] int min, [FromQuery] int max) 
         {
             var subs = GetSubscribers(login);
@@ -177,7 +187,7 @@ namespace onlyarts.Controllers
             }
             return Json(_helper.GetMinMax(subs, min, max));
         }
-        public List<User> GetSubscribers(string login)
+        private List<User> GetSubscribers(string login)
         {
             var subs = (from user in _context.Users
                         join sub in _context.Subscriptions

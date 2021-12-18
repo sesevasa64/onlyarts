@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 using onlyarts.Services;
 using onlyarts.Models;
 using onlyarts.Data;
@@ -22,7 +23,8 @@ namespace onlyarts.Controllers
         {
         }
         [HttpGet]
-        public ActionResult Get([FromQuery] int[] id)
+        [SwaggerOperation(Summary = "Роут для получения списка реакций по их id")]
+        public ActionResult GetMultipleById([FromQuery] int[] id)
         {
             var reactions = _helper.getMultipleByID<Reaction>(id, includes);
             if (reactions.Count == 0) {
@@ -31,7 +33,8 @@ namespace onlyarts.Controllers
             return Json(reactions);
         }
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        [SwaggerOperation(Summary = "Роут для получения реакции по id")]
+        public ActionResult GetById(int id)
         {
             var reaction = _helper.getByID<Reaction>(id, includes);
             if (reaction == null) {
@@ -40,11 +43,13 @@ namespace onlyarts.Controllers
             return Json(reaction);
         }
         [HttpGet("like")]
+        [SwaggerOperation(Summary = "Роут для проверки наличия лайка юзера userId на контенте contentId")]
         public ActionResult CheckLike([FromQuery] int userId, [FromQuery] int contentId) 
         {
             return CheckReaction(contentId, userId, false);
         }
         [HttpGet("dislike")]
+        [SwaggerOperation(Summary = "Роут для проверки наличия дизлайка юзера userId на контенте contentId")]
         public ActionResult CheckDislike([FromQuery] int userId, [FromQuery] int contentId) 
         {
             return CheckReaction(contentId, userId, true);

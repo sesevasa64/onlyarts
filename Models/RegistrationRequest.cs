@@ -1,5 +1,8 @@
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace onlyarts.Models
 {
+    [SwaggerSchema(Description = "Модель регистрации нового пользователя")]
     public class RegistrationRequest
     {   
         public string Login { get; set; }

@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.OpenApi.Models;
 using onlyarts.Services;
 using onlyarts.Data;
 
@@ -31,6 +33,17 @@ namespace onlyarts
             services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "OnlyArts API",
+                    Description = "ASP.NET Core Web API"
+                });
             });
             
             var connectionString = Configuration.GetConnectionString("UsersContext");
@@ -70,6 +83,11 @@ namespace onlyarts
         {
             if (env.IsDevelopment())
             {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "OnlyArts API V1");
+                });
                 app.UseDeveloperExceptionPage();
             }
             else

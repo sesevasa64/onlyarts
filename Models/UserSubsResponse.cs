@@ -1,5 +1,8 @@
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace onlyarts.Models
 {
+    [SwaggerSchema(Description = "Модель ответа на запрос информации о подписчиках автора")]
     public class UserSubsResponse
     {
         public UserSubsResponse(string login, string nickname, string linkToAvatar)

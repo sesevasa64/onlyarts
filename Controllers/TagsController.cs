@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 using onlyarts.Services;
 using onlyarts.Models;
 using onlyarts.Data;
@@ -21,7 +22,8 @@ namespace onlyarts.Controllers
         {
         }
         [HttpGet]
-        public ActionResult Get([FromQuery] int[] id)
+        [SwaggerOperation(Summary = "Роут для получения списка тегов по их id")]
+        public ActionResult GetMultipleById([FromQuery] int[] id)
         {
             var tags = _helper.getMultipleByID<Tag>(id);
             if (tags.Count == 0) {
@@ -31,7 +33,8 @@ namespace onlyarts.Controllers
         }
         [Authorize]
         [HttpGet("{id}")]
-        public ActionResult Get(int id)
+        [SwaggerOperation(Summary = "Роут для получения тега по id")]
+        public ActionResult GetById(int id)
         {
             var tag = _helper.getByID<Tag>(id);
             if (tag == null) {
@@ -39,13 +42,9 @@ namespace onlyarts.Controllers
             }
             return Json(tag);
         }
-        [HttpPost("{id}")]
-        public ActionResult Post(int id)
-        {
-            return Get(id);
-        }
         [HttpGet("popular")]
-        public ActionResult Get([FromQuery] int min, [FromQuery] int max)
+        [SwaggerOperation(Summary = "Роут для получения популярных тегов")]
+        public ActionResult GetPopularTags([FromQuery] int min, [FromQuery] int max)
         {
             // Подсчёт количества встречающихся тегов
             // На выходе {Tag ; Количество упоминаний тега в контентах}

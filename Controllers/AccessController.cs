@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Swashbuckle.AspNetCore.Annotations;
 using onlyarts.Services;
 using onlyarts.Models;
 using onlyarts.Data;
@@ -21,6 +22,7 @@ namespace onlyarts.Controllers
         {
         }
         [HttpGet]
+        [SwaggerOperation(Summary = "Роут для проверки доступности контента")]
         public ActionResult Get([FromQuery] int userId, [FromQuery] int contentId)
         {
             var subUser = _helper.getByID<User>(userId);
