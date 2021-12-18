@@ -19,7 +19,7 @@ namespace onlyarts.Data
                 var tags = context.Tags.Where(T => T.Id > 0);
                 context.Tags.RemoveRange(tags);
                 
-                String[] str_tag = File.ReadAllLines("Data\\tags.txt");
+                String[] str_tag = File.ReadAllLines("Data/tags.txt");
                 Tag[] tag = new Tag[str_tag.Length];
                 for(int i = 0; i < str_tag.Length; i++)
                 {
@@ -37,7 +37,7 @@ namespace onlyarts.Data
                  var users = context.Users.Where(U => U.Id > 0);
                 context.Users.RemoveRange(users);
             
-                String[] str_user = File.ReadAllLines("Data\\users.txt");
+                String[] str_user = File.ReadAllLines("Data/users.txt");
                 User[] user = new User[(str_user.Length + 1) / 7];
                 for(int i = 0; i < str_user.Length; i += 7)
                 {
@@ -79,7 +79,7 @@ namespace onlyarts.Data
                 var subtypes = context.SubTypes.Where(C => C.Id > 0);
                 context.SubTypes.RemoveRange(subtypes);
         
-                String[] str_subtype = File.ReadAllLines("Data\\subtypes.txt");
+                String[] str_subtype = File.ReadAllLines("Data/subtypes.txt");
                 SubType[] subtype = new SubType[(str_subtype.Length + 1) / 5];
                 for(int i = 0; i < str_subtype.Length; i += 5)
                 {
@@ -121,7 +121,7 @@ namespace onlyarts.Data
                 var contents = context.Contents.Where(C => C.Id > 0);
                 context.Contents.RemoveRange(contents);
                 
-                String[] str_content = File.ReadAllLines("Data\\contents.txt");
+                String[] str_content = File.ReadAllLines("Data/contents.txt");
                 Content[] content = new Content[(str_content.Length + 1) / 5];
                 for(int i = 0; i < str_content.Length; i += 5)
                 {
@@ -146,7 +146,7 @@ namespace onlyarts.Data
                 var images = context.Images.Where(Im => Im.Id > 0);
                 context.Images.RemoveRange(images);
         
-                String[] str_image = File.ReadAllLines("Data\\images.txt");
+                String[] str_image = File.ReadAllLines("Data/images.txt");
                 Image[] image = new Image[str_image.Length / 2];
                 for(int i = 0; i < str_image.Length; i += 2)
                 {

@@ -9,7 +9,7 @@ using onlyarts.Data;
 namespace onlyarts.Migrations
 {
     [DbContext(typeof(OnlyartsContext))]
-    [Migration("20211216132333_InitialCreate")]
+    [Migration("20211218090053_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
