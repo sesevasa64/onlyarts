@@ -342,7 +342,7 @@ class OnlyArts extends Component
       headers: {
         'Content-Type': 'application/json',
         'API-key': this.state.authToken
-      } 
+      }
     });
     
   }
@@ -416,6 +416,25 @@ class OnlyArts extends Component
     })
   }
 
+  unsubscribeOnUser(user_id, author_id)
+  {
+    fetch(`${host_name}/api/users/unsubscribe?authorID=${author_id}&subuserID=${user_id}`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      }
+    });
+  }
+
+
+  checkSubscriberUser(author_id, user_id, callback)
+  {
+    fetch(`${host_name}/api/subs/check?authorId=${author_id}&userId=${user_id}`)
+    .then((response) => callback(response.ok));
+    console.log(`${author_id} ${user_id}`)
+  }
+
+
   patchViewToContent(contentId, callback)
   {
     fetch(`${host_name}/api/contents/${contentId}/view`, {
@@ -428,10 +447,10 @@ class OnlyArts extends Component
       if(callback)
       {
         callback(response.ok);
-
       }
     })
   }
+
 
   render () {
     console.clear();
@@ -460,6 +479,7 @@ class OnlyArts extends Component
               <Route path={'/UserPage/:login'}>
                 <UserPage
                 User = {this.state.User} 
+                checkSubscriberUser = {this.checkSubscriberUser}
                 loadUserContent={this.getContentByLogin}
                 subscribeOnUser = {this.subscribeOnUser}
                 renderSelectedContent = {this.renderSelectedContent}

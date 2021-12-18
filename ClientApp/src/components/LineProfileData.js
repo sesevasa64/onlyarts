@@ -4,6 +4,7 @@ import '../OnlyArts.css'
 import './css/LineProfileData.css'
 import views from './resources/views.png';
 import likes from './resources/likes.png';
+import dilike from './resources/dislike.png';
 
 function LineProfileData(props)
 {
@@ -19,9 +20,10 @@ function LineProfileData(props)
         <div className="mini-card-about">
           {props.item[0].Description}
         </div>
-        <div>
+        <div className='line-stats'>
           <img src={views}></img> {props.item[0].ViewCount}
           <img  className={`likes_button ${!props.liked || 'liked'}`} src={likes} onClick={props.onLikeClick}/> {props.item[0].LikesCount}
+          <img  className={`likes_button`} src={dilike}/>{props.item[0].DislikesCount}
         </div>
     </div>
   )
