@@ -16,23 +16,19 @@ class DragAndDrop extends Component
     }
 
     dragOverHandler(ev) {
-        console.log('File(s) in drop zone');
-      
-        // Prevent default behavior (Prevent file from being opened)
         ev.preventDefault();
     }
 
     dropHandler(ev)
     {
-        console.log('File(s) dropped');
 
         ev.preventDefault();
         if (ev.dataTransfer.items) {
             let files_str = this.state.files_str;
             let added_files = [];
-            // Use DataTransferItemList interface to access the file(s)
+            
             for (var i = 0; i < ev.dataTransfer.items.length; i++) {
-            // If dropped items aren't files, reject them
+            
             if (ev.dataTransfer.items[i].kind === 'file') {
                 var file = ev.dataTransfer.items[i].getAsFile();
                 if(this.state.file_ext.test(file.name))
@@ -47,9 +43,9 @@ class DragAndDrop extends Component
             })
         }
         } else {
-            // Use DataTransfer interface to access the file(s)
+            
             for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-                console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
+                //console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
             }
         }
     }

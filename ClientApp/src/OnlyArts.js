@@ -21,6 +21,7 @@ import AuthForm from './components/AuthForm';
 import UserPage from './components/UserPage';
 import NewPostPage from './components/NewPostPage';
 import EditUserPage from './components/EditUserPage';
+import { SubscribersPage } from './components/SubscribersPage';
 
 let host_name = "https://" + document.location.host;
 
@@ -97,7 +98,6 @@ class OnlyArts extends Component
     {
       card = await response.json();
       answer = card;
-      console.log(answer);
     }
     if(callback)
     {
@@ -118,7 +118,6 @@ class OnlyArts extends Component
     {
       card = await response.json();
       answer = card;
-      console.log(answer);
     }
     if(callback)
     {
@@ -181,7 +180,6 @@ class OnlyArts extends Component
       }
       else
       {
-        console.log("Ha-ha")
         callback([], false);
       }
     })
@@ -296,7 +294,7 @@ class OnlyArts extends Component
 
     /*
     Content = {
-      "Name": Name1
+      "Name": Name1,
       "Description": Description1,
       "ContentType": ContentType1,
       "LinkToPreview": LinkToPreview1,
@@ -319,10 +317,8 @@ class OnlyArts extends Component
       },
       body: JSON.stringify(Content)
     }
-    console.log(Content);
     fetch(`${host_name}/api/contents`, json_to_post).
     then((response) =>{
-      console.log(response.ok)
       if(response.ok)
       {
         callback_func(true);
@@ -348,19 +344,13 @@ class OnlyArts extends Component
         'API-key': this.state.authToken
       } 
     });
-    console.log(`User ${userID} like ${content_id}`)
-    if(response.ok)
-    {
-      console.log("Like");
-    }
+    
   }
 
   checkLikeUser(content_id, userID, callback)
   {
     fetch(`${host_name}/api/reactions/like?userId=${userID}&contentId=${content_id}`)
     .then((response)=>{
-      console.log(`${host_name}/api/reactions/like?userId=${userID}&contentId=${content_id}`);
-      console.log(`ok - ${response.ok}\tUserId=${userID}\contentId=${content_id}`)
       callback(response.ok)
     })
   }
@@ -377,7 +367,6 @@ class OnlyArts extends Component
   {
     if(UserInfo)
     {
-      console.log(JSON.stringify(UserInfo))
       fetch(`${host_name}/api/users`, {
         method: "PUT",
         headers: {
@@ -401,11 +390,29 @@ class OnlyArts extends Component
     fetch(`${host_name}/api/users/subscribers/${user_login}?min=${min}&max=${max}`)
     .then((response) => response.json())
     .then((value) => {
-      console.log("Get subscribers");
       if(value){
-        console.log(value);
         callback(value);
       }
+    })
+  }
+
+  subscribeOnUser(user_id, author_id, sub_id, callback)
+  {
+    let SubscribeObject = {
+      AuthorId: author_id,
+      SubUserId: user_id,
+      SubTypeId: sub_id
+    }
+
+    fetch(`${host_name}/api/users/subscribe`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify(SubscribeObject)
+    })
+    .then((response) => {
+      callback(response.ok)
     })
   }
 
@@ -421,12 +428,13 @@ class OnlyArts extends Component
       if(callback)
       {
         callback(response.ok);
-        
+
       }
     })
   }
 
   render () {
+    console.clear();
     return (
       <div className="main-box">
           {(this.state.outputLoginBox && !this.state.isAuth) ? <AuthForm authFunc={this.authFunc} closeBox={this.renderLoginBox} reg_onClick = {this.renderRegistrationForm}/> : "" }
@@ -450,7 +458,11 @@ class OnlyArts extends Component
                              checkLike={this.checkLikeUser}/>
               </Route>
               <Route path={'/UserPage/:login'}>
-                <UserPage loadUserContent={this.getContentByLogin} renderSelectedContent = {this.renderSelectedContent}
+                <UserPage
+                User = {this.state.User} 
+                loadUserContent={this.getContentByLogin}
+                subscribeOnUser = {this.subscribeOnUser}
+                renderSelectedContent = {this.renderSelectedContent}
                 getSubscribers={this.getUserSubscribers}/>
               </Route>
               <Route exact path="/" render={()=><CardsContentBox content_onClick={this.renderSelectedContent}

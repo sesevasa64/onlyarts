@@ -255,9 +255,9 @@ class RegistrationForm extends React.Component
                                 <img width="100px" height="100px" src={this.state.linkToAvatar}></img>
                             </div>
                             <button onClick={this.onRegButtonClick}>Зарегистрироваться</button>
+                            <button onClick={()=> this.props.close_onClick(false)}>Закрыть</button>
                         </div>
                     </div>
-                    <p onClick={()=> this.props.close_onClick(false)}>Закрыть</p>
                 </div>
             </div>
         );

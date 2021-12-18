@@ -5,6 +5,7 @@ import '../OnlyArts.css';
 import CardsContentBox from './CardsContentBox';
 import LoadingPage from './LoadingPage';
 import { SubscribersPage } from './SubscribersPage';
+import RoundButton from './RoundButton';
 
 function UserPage(props)
 {
@@ -25,7 +26,6 @@ function UserPage(props)
         .then(
           (result) => {
             setItems(result);
-            console.log(match.params.login);
             props.loadUserContent(result.Login, 0, 18, (items, suc) =>
             {
               if(suc)
@@ -37,7 +37,7 @@ function UserPage(props)
                   items[i].User = user;
                 }
                 setContents(items);
-                props.getSubscribers(match.params.login, 0, 18, (value)=>{
+                props.getSubscribers(match.params.login, 0, 50, (value)=>{
                   setSubs(value);
                 });
               }
@@ -71,7 +71,6 @@ function UserPage(props)
       );
     } else {
       if(user.length!= 0){
-        console.log(match.params.login);
         return (
           <div className="main-content-block">
               <div className={`user-info-box || ${toNextUser}`}>
@@ -82,9 +81,11 @@ function UserPage(props)
                       <p className="user-nickname">{user.Nickname}</p>
                       <p className="user-about-header">Обо мне</p>
                       <p className="user-about">{user.Info || "Да-да, инфы нет, соре. ПацаНы!!"}</p>
+                      {!props.User.Login || <RoundButton value="Подписаться" onClick={() => props.subscribeOnUser(props.User.Id, user.Id, 1, (value)=>{})}></RoundButton>}
                   </div>
               </div>
               <CardsContentBox content_onClick={props.renderSelectedContent}
+                               loadContent={(min, max, callback) => props.loadUserContent(user.Login, min, max, callback)}
                                content={contents}
                                title={`Карточки пользователя`}/>
               <SubscribersPage isNext={isNext} users={subscribers}></SubscribersPage>

@@ -22,13 +22,12 @@ class CardsContentBox extends Component
         let items = [];
         let min = 0;
         let max = 18;
-        for(let i = Current_Number - 2; i < Current_Number + N; i++)
+        for(let i = Current_Number - 2; i < Current_Number + N + 1; i++)
         {
             if(i < 0)
             {
                 continue;
             }
-            console.log(i);
             items.push(
                 <RoundButton className="down-buttons-list" value={`${i+1}`} onClick={() => {
                     this.setState({
@@ -36,7 +35,6 @@ class CardsContentBox extends Component
                     })
                     this.props.loadContent((max - min + 1) * i , max * (i + 1),
                     (loadCorrect)=>{
-                        console.log(true);
                         this.setState({
                             contentIsLoading: false,
                             contentIsSuccessfulLoad: loadCorrect,

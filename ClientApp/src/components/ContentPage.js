@@ -28,7 +28,6 @@ function getImagesByContentId(id, callback_func)
     })
     .then((value)=>{
         if(value){
-            console.log(value);
             callback_func(value);
         }
         callback_func(0);
@@ -66,7 +65,6 @@ function ContentPage(props) {
           (result) => {
             setIsLoaded(true);
             props.checkLike(match.params.contentId, props.User.Id, setLike);
-            console.log("PIDORAS")
             props.addViewToContent(match.params.contentId);
             setContent(result);
           },
